@@ -8,6 +8,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import rs.ac.uns.ftn.informatika.rest.authentification.AuthenticationResponse;
+import rs.ac.uns.ftn.informatika.rest.jwt.JwtUtil;
+import rs.ac.uns.ftn.informatika.rest.paged_result.PagedResults;
+import rs.ac.uns.ftn.informatika.rest.paged_result.PagedResults;
 import rs.ac.uns.ftn.informatika.rest.service.UserService;
 import rs.ac.uns.ftn.informatika.rest.domain.User;
 
@@ -24,16 +28,22 @@ public class UserController {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private JwtUtil jwtUtil;
+
     @Operation(description = "Get all users",method="GET")
     @GetMapping(value = "/all", produces= MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<UserDTO>> getAllUsers() {
+    public ResponseEntity<PagedResults<UserDTO>> getAllUsers() {
         List<User> users = userService.findAll();
 
         List<UserDTO> usersDTO = new ArrayList<>();
         for (User user : users) {
             usersDTO.add(new UserDTO(user));
         }
-        return new ResponseEntity<>(usersDTO, HttpStatus.OK);
+        PagedResults<UserDTO> pagedResults = new PagedResults<>();
+        pagedResults.setResults(usersDTO);
+        pagedResults.setTotalCount(users.size());
+        return new ResponseEntity<>(pagedResults, HttpStatus.OK);
     }
 
     @GetMapping
@@ -60,7 +70,7 @@ public class UserController {
 
     @Operation(description = "Create new user", method = "POST")
     @PostMapping(value="/signup" ,consumes = MediaType.APPLICATION_JSON_VALUE,produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<UserDTO> saveUser(@RequestBody UserDTO user) {
+    public ResponseEntity<?> saveUser(@RequestBody UserDTO user) {
         User savedUser = new User();
 
             savedUser.setName(user.name);
@@ -70,7 +80,11 @@ public class UserController {
             savedUser.setEmail(user.email);
             savedUser.setAdress(user.adress);
             savedUser = userService.save(savedUser);
-            return new ResponseEntity<>(new UserDTO(savedUser),HttpStatus.CREATED);
+
+            String token = jwtUtil.generateToken(savedUser.getUsername());
+
+            AuthenticationResponse response = new AuthenticationResponse(token);
+            return new ResponseEntity<>(response,HttpStatus.CREATED);
     }
 
     @Operation(description = "Updates an existing greeting",method = "PUT")

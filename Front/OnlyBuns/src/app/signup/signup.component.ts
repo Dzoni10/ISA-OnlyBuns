@@ -1,17 +1,37 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { LoginService } from '../login-service.service';
 import { Router } from '@angular/router';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Registration } from '../model/registration.model';
+import { RegisterUser } from '../model/register-user.model';
+import { PagedResults } from '../model/paged-results.model';
 
 @Component({
   selector: 'app-signup',
   templateUrl: './signup.component.html',
   styleUrls: ['./signup.component.css']
 })
-export class SignupComponent {
+export class SignupComponent implements OnInit {
 
   constructor(private loginService:LoginService,private router: Router){}
+
+  allUsers: RegisterUser[]=[]
+
+  ngOnInit(): void{
+    this.getUsers()
+  }
+
+  getUsers():void{
+    this.loginService.getUsers().subscribe({
+      next: (result: PagedResults<RegisterUser>)=>{
+        this.allUsers = result.results;
+      },
+      error:(err:any)=>{
+        console.log(err)
+      }
+    });
+  }
+
 
   registrationForm = new FormGroup({
     name:new FormControl('',[Validators.required]),
@@ -34,16 +54,35 @@ export class SignupComponent {
     };
 
     if(this.registrationForm.valid){
-      if(this.registrationForm.value.password === this.registrationForm.value.password2)
-      {
+      if(this.registrationForm.value.password === this.registrationForm.value.password2){
+        if(this.allUsers && this.allUsers.length>0){
+        const usernameExist = this.allUsers.some((user)=>user.username == registration.username);
+        
+        if(usernameExist)
+        {
+          alert("Korisnicko ime vec postoji izaberite drugo");
+        }else
+        {
         this.loginService.register(registration).subscribe({
         next: ()=>{
+          alert("Idite na mejl i potvrdite registraciju");
           this.registrationForm.reset();
+        },
+        error: (err) => {
+          console.error("Došlo je do greške:", err);
+          alert("Registracija nije uspela. Pokušajte ponovo." + err.value);
         },
       });
       }
-      else
-      alert("Ponovno unesena lozinka se ne poklapa")
+    }else{
+      alert("Nema dostupnih podataka o korisnicima");
+    }
+    }
+    else{
+      alert("POnovno unesena lozinka se ne poklapa");
     }
   }
+  }
+
 }
+

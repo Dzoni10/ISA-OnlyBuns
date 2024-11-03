@@ -82,6 +82,21 @@
     
 }
 
+.button-logout
+{
+  background-color: #4e3094 !important; 
+  color: #ededed !important; 
+  box-shadow: none !important; 
+  border: 2px solid #1b0260 !important; 
+  border-radius: 30px !important; 
+  font-family: 'Lulo Clean', serif !important;
+  font-size: 16px !important;
+  margin: 10px !important;
+  width: 80px;
+  height: 34px;
+  
+}
+
 .button-login:hover {
   background-color: #825bbd !important; 
   color: #031926 !important; 
