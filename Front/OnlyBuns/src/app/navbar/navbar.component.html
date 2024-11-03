@@ -4,8 +4,11 @@
       alt="Angular Logo"
       src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTtjKcwH4uRsFFjeWtjVAtTShePzoWGDYoyew&s"
     />
-    <span>OnlyBuns</span>
-      <div class="spacer"></div>
+    <span class="title">OnlyBuns</span>
+      <div>
+        <button class="button-login" *ngIf="user && user.username ===''" mat-raised-button [routerLink]="['login']">LogIn</button>
+        <button class="button-logout" *ngIf="user && user.username !==''" mat-raised-button (click)="onLogout()">LogOut</button>
+      </div>
       
   </div>
   

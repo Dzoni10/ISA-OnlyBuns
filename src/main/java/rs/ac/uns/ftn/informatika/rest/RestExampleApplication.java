@@ -4,9 +4,12 @@ import org.modelmapper.ModelMapper;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @SpringBootApplication
-public class RestExampleApplication {
+public class RestExampleApplication implements WebMvcConfigurer {
 
 	@Bean
 	public ModelMapper getModelMapper() {
@@ -17,4 +20,12 @@ public class RestExampleApplication {
 		SpringApplication.run(RestExampleApplication.class, args);
 	}
 
+	@Override
+	public void addCorsMappings(CorsRegistry registry) {
+		registry.addMapping("/api/**") // Dozvoljava CORS za sve putanje koje počinju sa /api
+				.allowedOrigins("http://localhost:4200") // Dozvoljava Angular port
+				.allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
+				.allowedHeaders("*")
+				.allowCredentials(true);
+	}
 }
