@@ -79,10 +79,12 @@ export class SignupComponent implements OnInit {
     }
     }
     else{
-      alert("POnovno unesena lozinka se ne poklapa");
+      alert("Ponovno unesena lozinka se ne poklapa");
     }
   }
   }
+
+
 
 }
 
