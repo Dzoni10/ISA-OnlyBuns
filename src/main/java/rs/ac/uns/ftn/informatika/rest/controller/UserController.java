@@ -59,7 +59,7 @@ public class UserController {
     }
 
     @Operation(description = "Create new user", method = "POST")
-    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE,produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value="/signup" ,consumes = MediaType.APPLICATION_JSON_VALUE,produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<UserDTO> saveUser(@RequestBody UserDTO user) {
         User savedUser = new User();
 
