@@ -28,8 +28,20 @@ login(): void{
   if (this.loginForm.valid){
     this.loginService.login(login).subscribe({
       next: ()=>{
+        alert("Uspesno logovanje");
         this.router.navigate(['/']);
       },
+      error:(err)=>
+      {
+        switch(err.status){
+          case 404:
+            alert("Korisnik sa tim podacima ne postoji");
+            break;
+          case 401:
+              alert("Verifikujte nalog preko mejla da bi mogli da se ulogujete");
+              break;
+        } 
+      }
     });
   }
   }

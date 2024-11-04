@@ -6,8 +6,8 @@
     />
     <span class="title">OnlyBuns</span>
       <div>
-        <button class="button-login" *ngIf="user && user.username ===''" mat-raised-button [routerLink]="['login']">LogIn</button>
-        <button class="button-logout" *ngIf="user && user.username !==''" mat-raised-button (click)="onLogout()">LogOut</button>
+        <button class="button-login" *ngIf="user && user.email ===''" mat-raised-button [routerLink]="['login']">LogIn</button>
+        <button class="button-logout" *ngIf="user && user.email !==''" mat-raised-button (click)="onLogout()">LogOut</button>
       </div>
       
   </div>

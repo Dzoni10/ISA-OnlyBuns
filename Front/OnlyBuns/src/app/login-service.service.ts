@@ -16,7 +16,7 @@ import { PagedResults } from './model/paged-results.model';
   providedIn: 'root'
 })
 export class LoginService {
-  user$=new BehaviorSubject<User>({username:"",id:0});
+  user$=new BehaviorSubject<User>({email:"",id:0});
   constructor(private http: HttpClient, private tokenStorage: TokenStorage, private router: Router) { }
 
 
@@ -25,6 +25,7 @@ export class LoginService {
       .post<AuthenticationResponse>(environment.apiHost + 'users/login', login)
       .pipe(
         tap((authenticationResponse) => {
+          console.log("odgovor sa servera za login", authenticationResponse)
           this.tokenStorage.saveAccessToken(authenticationResponse.accessToken);
           this.setUser();
         })
@@ -34,19 +35,17 @@ export class LoginService {
   logout(): void {
     this.router.navigate(['/']).then(_ => {
       this.tokenStorage.clear();
-      this.user$.next({username: "", id: 0 });
+      this.user$.next({email: "", id: 0 });
       }
     );
   }
 
-  register(registration: Registration): Observable<AuthenticationResponse> {
+  register(registration: Registration): Observable<User> {
     return this.http
-    .post<AuthenticationResponse>(environment.apiHost + 'users/signup', registration)
+    .post<User>(environment.apiHost + 'users/signup', registration)
     .pipe(
-      tap((authenticationResponse) => {
-        console.log("odgovor sa servera", authenticationResponse)
-        this.tokenStorage.saveAccessToken(authenticationResponse.accessToken);
-       // this.setUser();
+      tap((user) => {
+        console.log("Korisnik je registrovan")
       })
   );
       
@@ -69,7 +68,7 @@ export class LoginService {
     const accessToken = this.tokenStorage.getAccessToken() || "";
     const user: User = {
       id: +jwtHelperService.decodeToken(accessToken).id,
-      username: jwtHelperService.decodeToken(accessToken).username
+      email: jwtHelperService.decodeToken(accessToken).email
     };
     this.user$.next(user);
   }

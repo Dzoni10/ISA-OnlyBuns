@@ -9,6 +9,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import rs.ac.uns.ftn.informatika.rest.authentification.AuthenticationResponse;
+import rs.ac.uns.ftn.informatika.rest.dto.LogInRequest;
 import rs.ac.uns.ftn.informatika.rest.jwt.JwtUtil;
 import rs.ac.uns.ftn.informatika.rest.paged_result.PagedResults;
 import rs.ac.uns.ftn.informatika.rest.paged_result.PagedResults;
@@ -79,12 +80,10 @@ public class UserController {
             savedUser.setUsername(user.username);
             savedUser.setEmail(user.email);
             savedUser.setAdress(user.adress);
+            savedUser.setLoginStatus(false);
             savedUser = userService.save(savedUser);
 
-            String token = jwtUtil.generateToken(savedUser.getUsername());
-
-            AuthenticationResponse response = new AuthenticationResponse(token);
-            return new ResponseEntity<>(response,HttpStatus.CREATED);
+            return new ResponseEntity<>(new UserDTO(savedUser),HttpStatus.CREATED);
     }
 
     @Operation(description = "Updates an existing greeting",method = "PUT")
@@ -101,6 +100,7 @@ public class UserController {
         user.setSurname(userDTO.surname);
         user.setAdress(userDTO.adress);
         user.setEmail(userDTO.email);
+        user.setLoginStatus(userDTO.loginStatus);
 
         user = userService.save(user);
         return new ResponseEntity<>(new UserDTO(user),HttpStatus.OK);
@@ -128,6 +128,29 @@ public class UserController {
             usersDTO.add(new UserDTO(user));
         }
         return new ResponseEntity<>(usersDTO, HttpStatus.OK);
+    }
+
+
+    @PostMapping(value="/login")
+    public ResponseEntity<?> login(@RequestBody LogInRequest logInRequest) {
+        User user = userService.findByEmail(logInRequest.getEmail());
+
+        if(user==null || !user.getEmail().equals(logInRequest.getEmail()))
+        {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        UserDTO userDTO = new UserDTO();
+
+                if(user.getLoginStatus()) {
+                    String token = jwtUtil.generateToken(user.getEmail());
+                    AuthenticationResponse response = new AuthenticationResponse(token);
+                    return new ResponseEntity<>(response, HttpStatus.ACCEPTED);
+                }
+                else
+                {
+                    return new ResponseEntity<>(new UserDTO(user), HttpStatus.UNAUTHORIZED);
+                }
     }
 }
 

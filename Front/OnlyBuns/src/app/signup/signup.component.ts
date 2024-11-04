@@ -32,7 +32,6 @@ export class SignupComponent implements OnInit {
     });
   }
 
-
   registrationForm = new FormGroup({
     name:new FormControl('',[Validators.required]),
     surname:new FormControl('',[Validators.required]),
@@ -56,17 +55,19 @@ export class SignupComponent implements OnInit {
     if(this.registrationForm.valid){
       if(this.registrationForm.value.password === this.registrationForm.value.password2){
         if(this.allUsers && this.allUsers.length>0){
-        const usernameExist = this.allUsers.some((user)=>user.username == registration.username);
-        
-        if(usernameExist)
+          
+        const usernameMailExist = this.allUsers.some((user)=>((user.email === registration.email) || (user.username === registration.username)));
+        if(usernameMailExist)
         {
-          alert("Korisnicko ime vec postoji izaberite drugo");
-        }else
+          alert("Korisnicko ime ili mejl vec postoje izaberite druge");
+        }
+        else
         {
         this.loginService.register(registration).subscribe({
         next: ()=>{
           alert("Idite na mejl i potvrdite registraciju");
           this.registrationForm.reset();
+          this.router.navigate(['/login']);
         },
         error: (err) => {
           console.error("Došlo je do greške:", err);
@@ -83,8 +84,6 @@ export class SignupComponent implements OnInit {
     }
   }
   }
-
-
 
 }
 
