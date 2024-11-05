@@ -30,11 +30,14 @@ public class User {
     @Column(name="adress",nullable = false,length = 50)
     private String adress;
 
+    @Column(name="loginStatus",nullable = false)
+    private boolean loginStatus;
+
     public User(){
         super();
     }
 
-    public User(String name, String surname, String username, String password,String email, String adress) {
+    public User(String name, String surname, String username, String password,String email, String adress, boolean loginStatus) {
         super();
         this.name = name;
         this.surname = surname;
@@ -42,6 +45,7 @@ public class User {
         this.password = password;
         this.email = email;
         this.adress = adress;
+        this.loginStatus = loginStatus;
     }
 
     public User(UserDTO user){
@@ -52,6 +56,7 @@ public class User {
         this.password = user.password;
         this.adress = user.adress;
         this.email = user.email;
+        this.loginStatus=user.loginStatus;
     }
 
 
@@ -69,5 +74,7 @@ public class User {
     public void setEmail(String email) {this.email = email;}
     public String getAdress() {return adress;}
     public void setAdress(String adress) {this.adress = adress;}
+    public boolean getLoginStatus() {return loginStatus;}
+    public void setLoginStatus(boolean loginStatus) {this.loginStatus = loginStatus;}
 
 }

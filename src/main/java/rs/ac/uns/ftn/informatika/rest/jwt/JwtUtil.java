@@ -13,7 +13,7 @@ public class JwtUtil {
         return Jwts.builder()
                 .setSubject(username)
                 .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis()+1000*60*60*10)) //traje 10 sati xD
+                .setExpiration(new Date(System.currentTimeMillis()+1000*60*60*10)) //traje 10 sati XD
                 .signWith(SignatureAlgorithm.HS256,SECRET_KEY)
                 .compact();
     }

@@ -9,15 +9,16 @@ public class UserDTO {
     public String password;
     public String email;
     public String adress;
+    public boolean loginStatus;
 
     public UserDTO() {}
 
     public UserDTO(User user)
     {
-        this(user.getId(),user.getName(),user.getSurname(),user.getUsername(),user.getPassword(),user.getEmail(),user.getAdress());
+        this(user.getId(),user.getName(),user.getSurname(),user.getUsername(),user.getPassword(),user.getEmail(),user.getAdress(),user.getLoginStatus());
     }
 
-    public UserDTO(int id, String name, String surname, String username, String password,String email,String adress) {
+    public UserDTO(int id, String name, String surname, String username, String password,String email,String adress,boolean loginStatus) {
         this.id = id;
         this.name = name;
         this.surname = surname;
@@ -25,5 +26,6 @@ public class UserDTO {
         this.password = password;
         this.email = email;
         this.adress = adress;
+        this.loginStatus = loginStatus;
     }
 }
