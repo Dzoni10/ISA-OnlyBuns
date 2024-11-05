@@ -1,6 +1,7 @@
 package rs.ac.uns.ftn.informatika.rest.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
+import org.apache.catalina.connector.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -11,10 +12,14 @@ import org.springframework.web.bind.annotation.*;
 import rs.ac.uns.ftn.informatika.rest.authentification.AuthenticationResponse;
 import rs.ac.uns.ftn.informatika.rest.dto.LogInRequest;
 import rs.ac.uns.ftn.informatika.rest.jwt.JwtUtil;
+import rs.ac.uns.ftn.informatika.rest.mapper.UserDTOMapper;
 import rs.ac.uns.ftn.informatika.rest.paged_result.PagedResults;
 import rs.ac.uns.ftn.informatika.rest.paged_result.PagedResults;
+import rs.ac.uns.ftn.informatika.rest.service.EmailService;
 import rs.ac.uns.ftn.informatika.rest.service.UserService;
 import rs.ac.uns.ftn.informatika.rest.domain.User;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,12 +30,16 @@ import rs.ac.uns.ftn.informatika.rest.dto.UserDTO;
 @RequestMapping("/api/users")
 public class UserController {
 
-    //private final UserService userService;
+    @Autowired
+    private EmailService emailService;
+
     @Autowired
     private UserService userService;
 
     @Autowired
     private JwtUtil jwtUtil;
+    @Autowired
+    private UserDTOMapper userDTOMapper;
 
     @Operation(description = "Get all users",method="GET")
     @GetMapping(value = "/all", produces= MediaType.APPLICATION_JSON_VALUE)
@@ -71,20 +80,44 @@ public class UserController {
 
     @Operation(description = "Create new user", method = "POST")
     @PostMapping(value="/signup" ,consumes = MediaType.APPLICATION_JSON_VALUE,produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> saveUser(@RequestBody UserDTO user) {
+    public ResponseEntity<?> saveUser(@RequestBody UserDTO userDTO) {
         User savedUser = new User();
 
-            savedUser.setName(user.name);
-            savedUser.setSurname(user.surname);
-            savedUser.setPassword(user.password);
-            savedUser.setUsername(user.username);
-            savedUser.setEmail(user.email);
-            savedUser.setAdress(user.adress);
+            savedUser.setName(userDTO.name);
+            savedUser.setSurname(userDTO.surname);
+            savedUser.setPassword(userDTO.password);
+            savedUser.setUsername(userDTO.username);
+            savedUser.setEmail(userDTO.email);
+            savedUser.setAdress(userDTO.adress);
             savedUser.setLoginStatus(false);
             savedUser = userService.save(savedUser);
 
+            String activationLink = "http://localhost:8080/api/users/verify?email=" +savedUser.getEmail();
+
+            try {
+                emailService.sendVerificationEmail(userDTO,activationLink);
+            }catch (Exception e){
+                return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            }
+
+
             return new ResponseEntity<>(new UserDTO(savedUser),HttpStatus.CREATED);
     }
+
+
+    @GetMapping(value = "/verify")
+    public ResponseEntity<String> verifyUser(@RequestParam("email") String email){
+        User user = userService.findByEmail(email);
+
+        if(user!=null){
+            user.setLoginStatus(true);
+            userService.save(user);
+            return new ResponseEntity<>("Success   Activation",HttpStatus.ACCEPTED);
+        }
+
+        return new ResponseEntity<>("UnsuccessefullAcitvation",HttpStatus.NOT_FOUND);
+    }
+
 
     @Operation(description = "Updates an existing greeting",method = "PUT")
     @PutMapping( consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)

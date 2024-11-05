@@ -64,8 +64,8 @@ export class SignupComponent implements OnInit {
         else
         {
         this.loginService.register(registration).subscribe({
-        next: ()=>{
-          alert("Idite na mejl i potvrdite registraciju");
+        next: (usr)=>{
+          alert("Mejl za aktivaciju je poslat, idite na mejl i potvrdite registraciju");
           this.registrationForm.reset();
           this.router.navigate(['/login']);
         },

@@ -15,7 +15,7 @@ public class UserDTOMapper {
         this.modelMapper = modelMapper;
     }
 
-    public static User fromDTOtoUser(UserDTO userDTO){
+    public User fromDTOtoUser(UserDTO userDTO){
         return modelMapper.map(userDTO, User.class);
     }
 

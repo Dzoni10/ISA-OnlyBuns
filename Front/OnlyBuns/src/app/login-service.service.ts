@@ -62,7 +62,6 @@ export class LoginService {
     this.setUser();
   }
 
-
   private setUser(): void {
     const jwtHelperService = new JwtHelperService();
     const accessToken = this.tokenStorage.getAccessToken() || "";
