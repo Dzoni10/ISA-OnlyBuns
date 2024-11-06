@@ -1,0 +1,64 @@
+.sidebar {
+    width: 250px; /* Wider sidebar */
+    background: linear-gradient(to bottom right, #5a3d99, #4a9ddf);
+    color: white;
+    height: calc(100vh - 60px); /* Adjusted for navbar padding */
+    padding-top: 60px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    border-radius: 0 20px 20px 0;
+    box-shadow: 4px 0 12px rgba(0, 0, 0, 0.1);
+  
+    ul {
+      list-style: none;
+      padding: 0;
+      width: 100%;
+  
+      li {
+        display: flex;
+        align-items: center;
+        margin: 20px 0; /* Increased spacing */
+        padding: 12px 20px;
+        border-radius: 12px;
+        cursor: pointer;
+        transition: background 0.3s ease, transform 0.3s ease;
+  
+        i {
+          font-size: 28px; /* Larger icon */
+          color: white;
+          margin-right: 20px;
+
+        }
+  
+        fa-icon {
+            width: 30px; /* Adjust this width as needed */
+            margin-right: 10px;
+            color: white;
+            font-size: 24px;
+          }
+    
+          /* Ensure text aligns consistently */
+          span {
+            font-size: 20px;
+            font-weight: 500;
+            line-height: 1;
+            text-align: left;
+            flex-grow: 1; /* Pushes the text to align on the same line */
+          }
+  
+        &:hover {
+          background-color: rgba(255, 255, 255, 0.25);
+          transform: scale(1.05);
+        }
+      }
+    }
+  
+    .active {
+      background-color: rgba(255, 255, 255, 0.3);
+      color: #f0f4ff;
+      font-weight: bold;
+    }
+  }
+  
+  

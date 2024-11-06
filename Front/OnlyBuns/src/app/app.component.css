@@ -1,0 +1,25 @@
+ :host {
+    display: flex;
+  }
+  
+  .main-content {
+    flex: 1;
+    padding-left: 200px; /* Matches the sidebar width */
+    background-color: #f0f4ff; /*Light background for main content*/
+  }
+  
+  .app-layout {
+  display: flex;
+  height: 100vh; /* Full height for sidebar and content */
+}
+
+app-side-navbar {
+  width: 250px; /* Fixed sidebar width */
+  height: 100%; /* Full height for the sidebar */
+}
+
+.main-content {
+  flex-grow: 1;
+  padding: 20px; /* Consistent padding for all components */
+  overflow-y: auto; /* Scrollable if content overflows */
+}

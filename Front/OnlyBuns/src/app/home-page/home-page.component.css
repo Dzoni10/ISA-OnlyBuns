@@ -1,0 +1,31 @@
+.home-container {
+    display: flex;
+  }
+  
+  .content-area {
+    flex-grow: 1;
+    padding: 20px;
+  }
+  
+  .create-post-button {
+    background-color: #4e3094 !important; 
+    color: #ededed !important; 
+    box-shadow: none !important; 
+    border: 2px solid #1b0260 !important; 
+    border-radius: 10px !important; 
+    font-family: 'Lulo Clean', serif !important;
+    font-size: 20px !important;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-left: 20px;
+    margin-top: 60px;
+    width: 130px;
+    height: 34px;
+    &:hover {
+        background-color: #825bbd !important; 
+        color: #031926 !important; 
+        box-shadow: none !important; 
+      
+    }
+  }
+  
