@@ -15,6 +15,9 @@ import { NavbarComponent } from './navbar/navbar.component';
 import { LoginComponent } from './login/login.component';
 import { SignupComponent } from './signup/signup.component';
 import { HttpClientModule } from '@angular/common/http';
+import { SideNavbarComponent } from './side-navbar/side-navbar.component';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { HomePageComponent } from './home-page/home-page.component';
 
 @NgModule({
   declarations: [
@@ -22,6 +25,8 @@ import { HttpClientModule } from '@angular/common/http';
     NavbarComponent,
     LoginComponent,
     SignupComponent,
+    SideNavbarComponent,
+    HomePageComponent,
     
   ],
   imports: [
@@ -33,7 +38,8 @@ import { HttpClientModule } from '@angular/common/http';
     MatButtonModule,
     MatInputModule,
     ReactiveFormsModule,
-    HttpClientModule
+    HttpClientModule,
+    FontAwesomeModule
   ],
   providers: [{
     provide: JWT_OPTIONS,
