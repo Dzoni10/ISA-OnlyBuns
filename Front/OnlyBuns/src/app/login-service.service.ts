@@ -17,6 +17,8 @@ import { PagedResults } from './model/paged-results.model';
 })
 export class LoginService {
   user$=new BehaviorSubject<User>({email:"",id:0});
+  logged = new BehaviorSubject<boolean>(false);  // Globalna promenljiva za praćenje logovanja
+
   constructor(private http: HttpClient, private tokenStorage: TokenStorage, private router: Router) { }
 
 
@@ -28,6 +30,7 @@ export class LoginService {
           console.log("odgovor sa servera za login", authenticationResponse)
           this.tokenStorage.saveAccessToken(authenticationResponse.accessToken);
           this.setUser();
+          this.logged.next(true);
         })
       );
   }
@@ -36,6 +39,7 @@ export class LoginService {
     this.router.navigate(['/']).then(_ => {
       this.tokenStorage.clear();
       this.user$.next({email: "", id: 0 });
+      this.logged.next(false);
       }
     );
   }
@@ -50,8 +54,22 @@ export class LoginService {
   );
       
   }
+
+  changePassword(registerUser:RegisterUser): Observable<String>{
+    alert(registerUser.id + "  " + registerUser.name + "  " + registerUser.surname + "  " + registerUser.email + "  " + registerUser.adress + "  " + registerUser.password + "  " + registerUser.username)
+    return this.http.post<String>(environment.apiHost + 'users/changePassword',registerUser)
+    .pipe(
+      tap((cc)=>{
+        console.log("Lozinka je promenjena");
+      })
+    );
+  }
   getUsers(): Observable<PagedResults<RegisterUser>>{
     return this.http.get<PagedResults<RegisterUser>>(environment.apiHost +'/users/all');
+  }
+
+  getUserForProfile(id: number): Observable<RegisterUser>{
+    return this.http.get<RegisterUser>(environment.apiHost + '/users/' + id);
   }
 
   checkIfUserExists(): void {
@@ -65,9 +83,10 @@ export class LoginService {
   private setUser(): void {
     const jwtHelperService = new JwtHelperService();
     const accessToken = this.tokenStorage.getAccessToken() || "";
+    const decodeToken = jwtHelperService.decodeToken(accessToken);
     const user: User = {
-      id: +jwtHelperService.decodeToken(accessToken).id,
-      email: jwtHelperService.decodeToken(accessToken).email
+      id: +decodeToken.id,
+      email: decodeToken.email
     };
     this.user$.next(user);
   }

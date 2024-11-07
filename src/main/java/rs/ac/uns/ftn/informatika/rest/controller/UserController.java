@@ -1,5 +1,6 @@
 package rs.ac.uns.ftn.informatika.rest.controller;
 
+import ch.qos.logback.core.boolex.EvaluationException;
 import io.swagger.v3.oas.annotations.Operation;
 import org.apache.catalina.connector.Response;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -104,6 +105,24 @@ public class UserController {
             return new ResponseEntity<>(new UserDTO(savedUser),HttpStatus.CREATED);
     }
 
+    @PostMapping(value="/changePassword")
+    public ResponseEntity<String> changePassword(@RequestBody UserDTO userDTO){
+            User user = new User();
+
+            user.setId(userDTO.id);
+            user.setName(userDTO.name);
+            user.setSurname(userDTO.surname);
+            user.setPassword(userDTO.password);
+            user.setUsername(userDTO.username);
+            user.setEmail(userDTO.email);
+            user.setAdress(userDTO.adress);
+            user.setLoginStatus(userDTO.loginStatus);
+
+            userService.save(user);
+
+            return new ResponseEntity<>("Password changed", HttpStatus.OK);
+
+    }
 
     @GetMapping(value = "/verify")
     public ResponseEntity<String> verifyUser(@RequestParam("email") String email){
@@ -168,7 +187,7 @@ public class UserController {
     public ResponseEntity<?> login(@RequestBody LogInRequest logInRequest) {
         User user = userService.findByEmail(logInRequest.getEmail());
 
-        if(user==null || !user.getEmail().equals(logInRequest.getEmail()))
+        if(user==null || ( !user.getEmail().equals(logInRequest.getEmail()) && !user.getPassword().equals(logInRequest.getPassword())))
         {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
@@ -176,7 +195,7 @@ public class UserController {
         UserDTO userDTO = new UserDTO();
 
                 if(user.getLoginStatus()) {
-                    String token = jwtUtil.generateToken(user.getEmail());
+                    String token = jwtUtil.generateToken(user.getEmail(),user.getId());
                     AuthenticationResponse response = new AuthenticationResponse(token);
                     return new ResponseEntity<>(response, HttpStatus.ACCEPTED);
                 }

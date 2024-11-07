@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormControl,FormGroup,Validators} from '@angular/forms';
 import { Router } from '@angular/router';
 import { Login } from '../model/login.model';
@@ -10,7 +10,9 @@ import { LoginService } from '../login-service.service';
   styleUrls: ['./login.component.css']
 })
 
-export class LoginComponent {
+export class LoginComponent implements OnInit {
+
+  logged = false;
 
   constructor( private router: Router, private loginService: LoginService){}
 
@@ -18,6 +20,13 @@ loginForm = new FormGroup({
   email: new FormControl('',[Validators.required]),
   password: new FormControl('',[Validators.required])
 });
+
+
+ngOnInit(): void {
+  this.loginService.logged.subscribe(isLogged=>{
+    this.logged=isLogged;
+  });
+}
 
 login(): void{
   const login: Login={

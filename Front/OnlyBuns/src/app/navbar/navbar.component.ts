@@ -11,6 +11,8 @@ import { LoginService } from '../login-service.service';
 export class NavbarComponent implements OnInit {
 
   user: User | undefined;
+  logged = false;
+
   constructor(private logService: LoginService){}
 
   ngOnInit(): void {
@@ -18,8 +20,15 @@ export class NavbarComponent implements OnInit {
     this.logService.user$.subscribe(user=>{
       this.user = user;
     });
+
+    this.logService.logged.subscribe(isLogged=>{
+      this.logged = isLogged;
+    })
   }
+
+
   onLogout(): void{
     this.logService.logout();
+    alert(this.logged)
   }
 }
