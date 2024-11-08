@@ -30,8 +30,7 @@ import { FormsModule } from '@angular/forms';
     SignupComponent,
     SideNavbarComponent,
     HomePageComponent,
-    ProfileComponent,
-    
+    ProfileComponent    
   ],
   imports: [
     BrowserModule,

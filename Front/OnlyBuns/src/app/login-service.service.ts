@@ -56,7 +56,6 @@ export class LoginService {
   }
 
   changePassword(registerUser:RegisterUser): Observable<String>{
-    alert(registerUser.id + "  " + registerUser.name + "  " + registerUser.surname + "  " + registerUser.email + "  " + registerUser.adress + "  " + registerUser.password + "  " + registerUser.username)
     return this.http.post<String>(environment.apiHost + 'users/changePassword',registerUser)
     .pipe(
       tap((cc)=>{

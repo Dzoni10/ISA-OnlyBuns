@@ -8,15 +8,15 @@
         <fa-icon [icon]="faTrending"></fa-icon>
         <span>Trending </span>
       </li>
-      <li routerLinkActive="active">
+      <li *ngIf="logged" routerLinkActive="active">
         <fa-icon [icon]="faMap"></fa-icon>
         <span>Posts Near Map </span>
       </li>
-      <li routerLinkActive="active">
+      <li *ngIf="logged" routerLinkActive="active">
         <fa-icon [icon]="faChat"></fa-icon>
         <span>Chat</span>
       </li>
-      <li [routerLink]="['profile']" routerLinkActive="active">
+      <li [routerLink]="['profile']" *ngIf="logged" routerLinkActive="active">
         <fa-icon [icon]="faProfile"></fa-icon>
         <span>Profile Page </span>
       </li>
