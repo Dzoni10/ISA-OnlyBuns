@@ -18,6 +18,9 @@ import { HttpClientModule } from '@angular/common/http';
 import { SideNavbarComponent } from './side-navbar/side-navbar.component';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { HomePageComponent } from './home-page/home-page.component';
+import { ProfileComponent } from './profile/profile.component';
+import { MatCardModule } from '@angular/material/card';
+import { FormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -27,6 +30,7 @@ import { HomePageComponent } from './home-page/home-page.component';
     SignupComponent,
     SideNavbarComponent,
     HomePageComponent,
+    ProfileComponent,
     
   ],
   imports: [
@@ -39,7 +43,9 @@ import { HomePageComponent } from './home-page/home-page.component';
     MatInputModule,
     ReactiveFormsModule,
     HttpClientModule,
-    FontAwesomeModule
+    FontAwesomeModule,
+    MatCardModule,
+    FormsModule
   ],
   providers: [{
     provide: JWT_OPTIONS,
