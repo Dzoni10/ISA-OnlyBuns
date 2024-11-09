@@ -12,6 +12,8 @@ import VectorSource from 'ol/source/Vector';
 import VectorLayer from 'ol/layer/Vector';
 import { Coordinate } from 'ol/coordinate';
 import { Style, Icon, Circle as CircleStyle, Fill, Stroke } from 'ol/style';
+import { PostService } from '../post-service.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-post-creation',
@@ -38,14 +40,16 @@ export class PostCreationComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private cdr: ChangeDetectorRef,
-    private renderer: Renderer2
+    private renderer: Renderer2,
+    private postService: PostService,
+    private router: Router,
   ) {}
 
   ngOnInit(): void {
     this.createPostForm = this.fb.group({
       description: ['', [Validators.required]],
       image: [null, Validators.required],
-      location: ['']  // Add location to the form group
+      location: ['', Validators.required],   // Add location to the form group
     });
 
     // Log the initial coordinates
@@ -206,12 +210,33 @@ export class PostCreationComponent implements OnInit {
   }
 
   onSubmit(): void {
-    if (this.createPostForm.valid) {
-      const formData = new FormData();
-      formData.append('description', this.createPostForm.get('description')?.value);
-      formData.append('image', this.selectedFile as Blob);
-      console.log('Form submitted with: ', formData);
+    if (this.createPostForm.invalid) {
+      return; // Prevent form submission if invalid
     }
+
+    const postData = this.createPostForm.value;
+    
+    // Prepare the form data to send to the backend
+    const formData = {
+      creatorId: 1,  // Example creatorId, replace with actual value
+      creationTime: new Date().toISOString(),
+      description: postData.description,
+      location: {
+        latitude: this.currentCoordinates[0],  // Set latitude
+        longitude: this.currentCoordinates[1]  // Set longitude
+      }
+    };
+
+    // Call createPost method from PostService
+    this.postService.createPost(formData).subscribe({
+      next: (response) => {
+        console.log('Post created successfully', response);
+        this.router.navigate(['/posts']);  // Navigate to posts list or any other desired route
+      },
+      error: (error) => {
+        console.error('Error creating post', error);
+      }
+    });
   }
 
   onClearImage(): void {

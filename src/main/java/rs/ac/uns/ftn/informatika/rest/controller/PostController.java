@@ -14,6 +14,7 @@ import rs.ac.uns.ftn.informatika.rest.mapper.PostDTOMapper;
 import rs.ac.uns.ftn.informatika.rest.paged_result.PagedResults;
 import rs.ac.uns.ftn.informatika.rest.service.PostService;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -49,7 +50,7 @@ public class PostController {
         Post savedPost = new Post();
 
         savedPost.setCreatorId(postDTO.creatorId);
-        savedPost.setCreationTime(postDTO.creationTime);
+        savedPost.setCreationTime(LocalDateTime.now());
         savedPost.setDescription(postDTO.description);
         if (postDTO.location != null) {
             Location location = new Location(postDTO.location.latitude, postDTO.location.longitude);

@@ -24,6 +24,7 @@ import { CreatePostComponent } from './create-post/create-post.component';
 import { MatIconModule } from '@angular/material/icon';
 import { MatCardModule } from '@angular/material/card';
 import { PostCreationComponent } from './post-creation/post-creation.component';
+import { PostService } from './post-service.service';
 
 @NgModule({
   declarations: [
@@ -63,7 +64,8 @@ import { PostCreationComponent } from './post-creation/post-creation.component';
     provide: HTTP_INTERCEPTORS,
     useClass: JwtInterceptor,
     multi: true,
-  }
+  },
+  PostService
 ],
   bootstrap: [AppComponent]
 })
