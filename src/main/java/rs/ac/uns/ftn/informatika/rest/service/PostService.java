@@ -7,6 +7,7 @@ import org.springframework.data.domain.Pageable;
 import rs.ac.uns.ftn.informatika.rest.Interface.RepositoryInterfaces.PostRepositoryInterface;
 import rs.ac.uns.ftn.informatika.rest.domain.Post;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -43,5 +44,13 @@ public class PostService {
 
     public void remove(int id) {
         postRepositoryInterface.deleteById(id);
+    }
+
+    public Post updatePost(int id, Post postDetails) {
+        return postRepositoryInterface.findById(id).map(post -> {
+            post.setDescription(postDetails.getDescription());
+            post.setCreationTime(LocalDateTime.now());
+            return postRepositoryInterface.save(post);
+        }).orElse(null);
     }
 }

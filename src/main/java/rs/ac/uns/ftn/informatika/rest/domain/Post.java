@@ -6,7 +6,7 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name="app-post")
+@Table(name="app_post")
 public class Post {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
