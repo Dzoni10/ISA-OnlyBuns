@@ -1,3 +1,4 @@
+
 import { Component, OnInit } from '@angular/core';
 import { PostService } from '../post.service';
 import { Post } from '../model/post.model';
@@ -5,12 +6,16 @@ import { PagedResults } from '../model/paged-results.model';
 import { faComments, faUser, faThumbsUp, faCommentDots , faEdit, faTrash, faCheck, faTimes} from '@fortawesome/free-solid-svg-icons';
 import { RegisterUser } from '../model/register-user.model';
 import { LoginService } from '../login-service.service';
+import { Router } from '@angular/router';
+
 
 @Component({
   selector: 'app-home-page',
   templateUrl: './home-page.component.html',
-  styleUrls: ['./home-page.component.css']
+  styleUrls: ['./home-page.component.css'],
+  standalone: false
 })
+
 export class HomePageComponent implements OnInit {
   
   posts: Post[] = []; 
@@ -25,7 +30,7 @@ export class HomePageComponent implements OnInit {
   faCheck = faCheck;
   faTimes = faTimes;
 
-  constructor(private postService: PostService, private loginService: LoginService) { }
+  constructor(private postService: PostService, private loginService: LoginService, private router: Router) { }
 
   ngOnInit(): void {
     this.loadPosts(); 
@@ -116,4 +121,8 @@ export class HomePageComponent implements OnInit {
     );
   }
 
+
+  createPost(){
+    this.router.navigate(['createPost']);
+  }
 }

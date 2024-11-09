@@ -21,14 +21,20 @@ public class Post {
     @Column(name="creationTime",nullable = false)
     private LocalDateTime creationTime;
 
+    @Embedded
+    private Location location;
+
+
+
     public Post() {
         super();
     }
-    public Post(int creatorId, String description, LocalDateTime creationTime) {
+    public Post(int creatorId, String description, Location location/* LocalDateTime creationTime*/) {
         super();
         this.creatorId = creatorId;
         this.description = description;
-        this.creationTime = creationTime;
+        this.creationTime = LocalDateTime.now();
+        this.location = location;
     }
 
     public Post(PostDTO post){
@@ -48,6 +54,14 @@ public class Post {
 
     public int getId() {
         return id;
+    }
+
+    public Location getLocation() {
+        return location;
+    }
+
+    public void setLocation(Location location) {
+        this.location = location;
     }
 
     public void setId(int id) {

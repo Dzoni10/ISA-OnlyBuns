@@ -9,16 +9,18 @@ public class PostDTO {
     public int creatorId;
     public String description;
     public LocalDateTime creationTime;
+    public LocationDTO location;
 
-    public PostDTO(int id, int creatorId, LocalDateTime creationTime, String description) {
+    public PostDTO(int id, int creatorId, LocalDateTime creationTime, String description, LocationDTO location) {
         this.creationTime = creationTime;
         this.description = description;
         this.id = id;
         this.creatorId = creatorId;
+        this.location = location;
     }
     public PostDTO() {}
 
     public PostDTO(Post post) {
-        this(post.getId(), post.getCreatorId(),post.getCreationTime(), post.getDescription());
+        this(post.getId(), post.getCreatorId(),post.getCreationTime(), post.getDescription(), new LocationDTO(post.getLocation()));
     }
 }
