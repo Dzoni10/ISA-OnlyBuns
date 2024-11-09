@@ -19,8 +19,11 @@ import { SideNavbarComponent } from './side-navbar/side-navbar.component';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { HomePageComponent } from './home-page/home-page.component';
 import { ProfileComponent } from './profile/profile.component';
-import { MatCardModule } from '@angular/material/card';
 import { FormsModule } from '@angular/forms';
+import { MatIconModule } from '@angular/material/icon';
+import { MatCardModule } from '@angular/material/card';
+import { PostCreationComponent } from './post-creation/post-creation.component';
+import { PostService } from './post-service.service';
 
 @NgModule({
   declarations: [
@@ -30,7 +33,10 @@ import { FormsModule } from '@angular/forms';
     SignupComponent,
     SideNavbarComponent,
     HomePageComponent,
-    ProfileComponent    
+    ProfileComponent,
+    PostCreationComponent,
+    
+
   ],
   imports: [
     BrowserModule,
@@ -44,7 +50,9 @@ import { FormsModule } from '@angular/forms';
     HttpClientModule,
     FontAwesomeModule,
     MatCardModule,
-    FormsModule
+    FormsModule,
+    MatIconModule,
+  
   ],
   providers: [{
     provide: JWT_OPTIONS,
@@ -55,7 +63,8 @@ import { FormsModule } from '@angular/forms';
     provide: HTTP_INTERCEPTORS,
     useClass: JwtInterceptor,
     multi: true,
-  }
+  },
+  PostService
 ],
   bootstrap: [AppComponent]
 })
