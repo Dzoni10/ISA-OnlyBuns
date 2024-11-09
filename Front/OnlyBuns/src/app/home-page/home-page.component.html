@@ -1,6 +1,47 @@
 <div class="home-container">
-    <div class="content-area">
-      <button class="create-post-button" [routerLink]="['/postcreate']" routerLinkActive="active" >+ Create Post</button>
-      <!-- List of posts will go here -->
+
+  <div class="content-area">
+    <button class="create-post-button" [routerLink]="['/postcreate']" routerLinkActive="active">+ Create Post</button>
+    
+    <div class="posts-container">
+      <div *ngFor="let post of posts" class="post-card">
+        <div class="post-actions-top-right" *ngIf="post.creatorId === registerUser?.id">
+          <button *ngIf="!post.isEditing" (click)="editPost(post)" class="post-action-button">
+            <fa-icon [icon]="faEdit"></fa-icon> Edit
+          </button>
+          <div *ngIf="post.isEditing">
+            <button (click)="confirmEdit(post)" class="post-action-button">
+              <fa-icon [icon]="faCheck"></fa-icon> Confirm
+            </button>
+            <button (click)="cancelEdit(post)" class="post-action-button">
+              <fa-icon [icon]="faTimes"></fa-icon> Cancel
+            </button>
+          </div>
+
+          <button *ngIf="!post.isEditing"  (click)="deletePost(post.id)" class="post-action-button">
+            <fa-icon [icon]="faTrash"></fa-icon> Delete
+          </button>
+        </div>
+
+        <h3 class="post-title">Post #{{ post.id }}</h3>
+        
+        <p *ngIf="!post.isEditing" class="post-description">{{ post.description }}</p>
+        <textarea *ngIf="post.isEditing" [(ngModel)]="post.description" class="edit-description" rows="4"></textarea>
+
+        <img src="https://www.vetcarepethospital.ca/wp-content/uploads/sites/247/2022/03/petrabbitcare-1-1280x650.jpg" alt="Zec" class="post-image">
+        <div class="post-footer">
+          <span class="post-creator">Creator ID: {{ post.creatorId }}</span>
+          <span class="post-time">{{ post.creationTime | date: 'short' }}</span>
+        </div>
+        <div class="post-actions">
+          <button (click)="likePost(post.id)" class="post-action-button">
+            <fa-icon [icon]="faLike"></fa-icon> Like
+          </button>
+          <button (click)="commentPost(post.id)" class="post-action-button">  
+            <fa-icon [icon]="faComment"></fa-icon> Comment
+          </button>
+        </div>
+      </div>
     </div>
   </div>
+</div>
