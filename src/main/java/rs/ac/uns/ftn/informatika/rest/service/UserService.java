@@ -7,16 +7,43 @@ import rs.ac.uns.ftn.informatika.rest.Interface.RepositoryInterfaces.UserReposit
 import rs.ac.uns.ftn.informatika.rest.domain.User;
 import rs.ac.uns.ftn.informatika.rest.dto.UserDTO;
 import org.springframework.data.domain.Page;
+import com.google.common.hash.BloomFilter;
+import com.google.common.hash.Funnels;
 
+import java.nio.charset.StandardCharsets;
 import java.util.Collection;
 import java.util.List;
 
 @Service
 public class UserService{
 
-    @Autowired
-    private UserRepositoryInterface userRepositoryInterface;
 
+    private final UserRepositoryInterface userRepositoryInterface;
+    private final BloomFilter<CharSequence> usernameBloomFilter;
+
+
+    @Autowired
+    public UserService(UserRepositoryInterface userRepositoryInterface) {
+        this.userRepositoryInterface = userRepositoryInterface;
+
+        List<User> allUsers = userRepositoryInterface.findAll();
+
+        this.usernameBloomFilter = BloomFilter.create(Funnels.stringFunnel(StandardCharsets.UTF_8),allUsers.size(),0.01);
+
+        for (User user : allUsers) {
+            usernameBloomFilter.put(user.getUsername());
+            usernameBloomFilter.put(user.getEmail());
+        }
+
+    }
+
+    public boolean isUsernameExist(String username) {
+        return usernameBloomFilter.mightContain(username);
+    }
+
+    public boolean isEmailExist(String email){
+        return usernameBloomFilter.mightContain(email);
+    }
 
     public List<User> findAll() {
         return userRepositoryInterface.findAll();

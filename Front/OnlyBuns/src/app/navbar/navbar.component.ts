@@ -6,6 +6,7 @@ import { LoginService } from '../login-service.service';
   selector: 'app-navbar',
   templateUrl: './navbar.component.html',
   styleUrls: ['./navbar.component.css'],
+  standalone:false,
   encapsulation: ViewEncapsulation.None
 })
 export class NavbarComponent implements OnInit {
@@ -29,6 +30,5 @@ export class NavbarComponent implements OnInit {
 
   onLogout(): void{
     this.logService.logout();
-    alert(this.logged)
   }
 }
