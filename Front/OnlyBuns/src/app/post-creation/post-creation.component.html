@@ -1,0 +1,34 @@
+<div class="create-post-card">
+    <form [formGroup]="createPostForm" (ngSubmit)="onSubmit()">
+      <div class="form-field">
+        <label for="description">Description</label>
+        <input id="description" formControlName="description" type="text" />
+      </div>
+  
+      <div class="form-field">
+        <label for="image">Image</label>
+        <input id="image" type="file" (change)="onFileSelect($event)" />
+      </div>
+  
+      <!-- Image preview -->
+      <div *ngIf="previewImage$.value" class="image-preview-container">
+        <img class="image-preview" [src]="previewImage$.value" alt="Image Preview" width="100" height="100"/>
+        <button type="button" class="remove-image-btn" (click)="onClearImage()">X</button>
+      </div>
+  
+      <!-- Location input -->
+      <div class="form-field">
+        <label for="location">Location</label>
+        <!-- <input id="location" type="text" (input)="updateMapLocation($event)" placeholder="Search location" /> -->
+        <input id="location" (input)="updateMapLocation($event)" formControlName="location" type="text" placeholder="Search location" />
+    </div>
+  
+      <!-- OpenLayers Map -->
+      <div #mapContainer class="map-container"></div>
+  
+      <div class="button-container">
+        <button type="submit" [disabled]="!createPostForm.valid">Submit</button>
+      </div>
+    </form>
+  </div>
+  
