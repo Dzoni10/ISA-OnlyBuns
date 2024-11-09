@@ -14,6 +14,7 @@ import { Coordinate } from 'ol/coordinate';
 import { Style, Icon, Circle as CircleStyle, Fill, Stroke } from 'ol/style';
 import { PostService } from '../post-service.service';
 import { Router } from '@angular/router';
+import { LoginService } from '../login-service.service';
 
 @Component({
   selector: 'app-post-creation',
@@ -25,7 +26,7 @@ export class PostCreationComponent implements OnInit {
   selectedFile: File | null = null;
   previewImage$ = new BehaviorSubject<string | null>(null);
   addressLabel: string | null = null;
-
+  creatorId: number | undefined;
   center: [number, number] = [20.4489, 44.7866]; // Coordinates for Belgrade
   zoom = 12;
 
@@ -35,6 +36,8 @@ export class PostCreationComponent implements OnInit {
   vectorSource: VectorSource = new VectorSource(); // Ensure vector source is always initialized
 
   currentCoordinates: [number, number] = this.center; // Initialize with the default coordinates
+  
+ 
   @ViewChild('mapContainer', { static: true }) mapContainer!: ElementRef;
 
   constructor(
@@ -42,7 +45,9 @@ export class PostCreationComponent implements OnInit {
     private cdr: ChangeDetectorRef,
     private renderer: Renderer2,
     private postService: PostService,
+    private loginService: LoginService,
     private router: Router,
+
   ) {}
 
   ngOnInit(): void {
@@ -54,6 +59,29 @@ export class PostCreationComponent implements OnInit {
 
     // Log the initial coordinates
     console.log('Initial Coordinates:', this.currentCoordinates);
+
+    this.loginService.user$.subscribe({
+      next: (user) =>{
+        if(user&& user.id){
+          this.loadUserData(user.id);
+        }
+      },
+      error: (error)=>{
+        console.log("Greska prilikom dobijanja korisnika", error);
+        alert("Greska pri ucitavanju profila");
+      }
+    })
+  }
+  
+  loadUserData(userId:number): void{
+    this.loginService.getUserForProfile(userId).subscribe({
+      next: (user) => {
+        this.creatorId = user.id
+      },
+      error: (error) => {
+        console.error('Greška prilikom učitavanja profila', error);
+      }
+    });
   }
 
   ngAfterViewInit(): void {
@@ -215,10 +243,10 @@ export class PostCreationComponent implements OnInit {
     }
 
     const postData = this.createPostForm.value;
-    
+
     // Prepare the form data to send to the backend
     const formData = {
-      creatorId: 1,  // Example creatorId, replace with actual value
+      creatorId: this.creatorId,  // Example creatorId, replace with actual value
       creationTime: new Date().toISOString(),
       description: postData.description,
       location: {
@@ -231,7 +259,7 @@ export class PostCreationComponent implements OnInit {
     this.postService.createPost(formData).subscribe({
       next: (response) => {
         console.log('Post created successfully', response);
-        this.router.navigate(['/posts']);  // Navigate to posts list or any other desired route
+          // Navigate to posts list or any other desired route
       },
       error: (error) => {
         console.error('Error creating post', error);
