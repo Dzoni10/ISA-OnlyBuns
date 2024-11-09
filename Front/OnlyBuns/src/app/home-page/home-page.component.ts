@@ -3,7 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { PostService } from '../post.service';
 import { Post } from '../model/post.model';
 import { PagedResults } from '../model/paged-results.model'; 
-import { faComments, faUser, faThumbsUp, faCommentDots , faEdit, faTrash, faCheck, faTimes} from '@fortawesome/free-solid-svg-icons';
+import { faComments, faUser, faThumbsUp, faCommentDots , faEdit, faTrash, faCheck, faTimes, faIcons} from '@fortawesome/free-solid-svg-icons';
 import { RegisterUser } from '../model/register-user.model';
 import { LoginService } from '../login-service.service';
 import { Router } from '@angular/router';

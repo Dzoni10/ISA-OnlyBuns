@@ -20,7 +20,6 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { HomePageComponent } from './home-page/home-page.component';
 import { ProfileComponent } from './profile/profile.component';
 import { FormsModule } from '@angular/forms';
-import { CreatePostComponent } from './create-post/create-post.component';
 import { MatIconModule } from '@angular/material/icon';
 import { MatCardModule } from '@angular/material/card';
 import { PostCreationComponent } from './post-creation/post-creation.component';
@@ -35,7 +34,6 @@ import { PostService } from './post-service.service';
     SideNavbarComponent,
     HomePageComponent,
     ProfileComponent,
-    CreatePostComponent,
     PostCreationComponent,
     
   ],

@@ -53,14 +53,14 @@ public class PostController {
     @DeleteMapping("/{id}")
     @Operation(description = "Delete a post by ID", method = "DELETE")
     public ResponseEntity<Void> deletePost(@PathVariable Integer id) {
-        PostService.remove(id);
+        postService.remove(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
 
     @PutMapping("/{id}")
     public ResponseEntity<Post> updatePost(@PathVariable int id, @RequestBody Post post) {
-        Post updatedPost = PostService.updatePost(id, post);
+        Post updatedPost = postService.updatePost(id, post);
         if (updatedPost != null) {
             return new ResponseEntity<>(updatedPost, HttpStatus.OK);
         } else {
