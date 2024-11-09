@@ -36,6 +36,7 @@ import { PostService } from './post-service.service';
     ProfileComponent,
     PostCreationComponent,
     
+
   ],
   imports: [
     BrowserModule,

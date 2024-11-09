@@ -82,6 +82,20 @@ public class UserController {
     @Operation(description = "Create new user", method = "POST")
     @PostMapping(value="/signup" ,consumes = MediaType.APPLICATION_JSON_VALUE,produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> saveUser(@RequestBody UserDTO userDTO) {
+
+        System.out.println(userDTO.username + "  "+ userDTO.email);
+        if(userService.isUsernameExist(userDTO.username)){
+            if(userService.isEmailExist(userDTO.email)){
+                return new ResponseEntity<>("Email i korisnicko ime su vec zauzeti",HttpStatus.BAD_REQUEST);
+            }
+            return new ResponseEntity<>("Korisnicko ime je vec zauzeto",HttpStatus.CONFLICT);
+        }
+
+        if(userService.isEmailExist(userDTO.email)){
+            return new ResponseEntity<>("Email je vec zauzet",HttpStatus.UNAUTHORIZED);
+        }
+
+
         User savedUser = new User();
 
             savedUser.setName(userDTO.name);
@@ -100,8 +114,6 @@ public class UserController {
             }catch (Exception e){
                 return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
             }
-
-
             return new ResponseEntity<>(new UserDTO(savedUser),HttpStatus.CREATED);
     }
 
@@ -187,7 +199,7 @@ public class UserController {
     public ResponseEntity<?> login(@RequestBody LogInRequest logInRequest) {
         User user = userService.findByEmail(logInRequest.getEmail());
 
-        if(user==null || ( !user.getEmail().equals(logInRequest.getEmail()) && !user.getPassword().equals(logInRequest.getPassword())))
+        if(user==null || ( !user.getEmail().equals(logInRequest.getEmail()) || !user.getPassword().equals(logInRequest.getPassword())))
         {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }

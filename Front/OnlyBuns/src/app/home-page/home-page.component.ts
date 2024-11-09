@@ -14,6 +14,7 @@ import { Router } from '@angular/router';
   templateUrl: './home-page.component.html',
   styleUrls: ['./home-page.component.css'],
   standalone: false
+
 })
 
 export class HomePageComponent implements OnInit {
