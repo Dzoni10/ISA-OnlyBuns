@@ -24,17 +24,19 @@ public class Post {
     @Embedded
     private Location location;
 
-
+    @Column(name="imagePath",nullable = false)
+    private String imagePath;
 
     public Post() {
         super();
     }
-    public Post(int creatorId, String description, Location location/* LocalDateTime creationTime*/) {
+    public Post(int creatorId, String description, Location location, String imagePath/* LocalDateTime creationTime*/) {
         super();
         this.creatorId = creatorId;
         this.description = description;
         this.creationTime = LocalDateTime.now();
         this.location = location;
+        this.imagePath = imagePath;
     }
 
     public Post(PostDTO post){
@@ -42,6 +44,14 @@ public class Post {
         this.creatorId = post.creatorId;
         this.description = post.description;
         this.creationTime = post.creationTime;
+    }
+
+    public String getImagePath() {
+        return imagePath;
+    }
+
+    public void setImagePath(String imagePath) {
+        this.imagePath = imagePath;
     }
 
     public String getDescription() {

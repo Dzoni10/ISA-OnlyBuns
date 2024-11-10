@@ -1,5 +1,6 @@
 package rs.ac.uns.ftn.informatika.rest.dto;
 
+import org.springframework.web.multipart.MultipartFile;
 import rs.ac.uns.ftn.informatika.rest.domain.Post;
 
 import java.time.LocalDateTime;
@@ -10,17 +11,20 @@ public class PostDTO {
     public String description;
     public LocalDateTime creationTime;
     public LocationDTO location;
+    public String imagePath;
+    public MultipartFile imageFile;
 
-    public PostDTO(int id, int creatorId, LocalDateTime creationTime, String description, LocationDTO location) {
+    public PostDTO(int id, int creatorId, LocalDateTime creationTime, String description, LocationDTO location, String imagePath) {
         this.creationTime = creationTime;
         this.description = description;
         this.id = id;
         this.creatorId = creatorId;
         this.location = location;
+        this.imagePath = imagePath;
     }
     public PostDTO() {}
 
     public PostDTO(Post post) {
-        this(post.getId(), post.getCreatorId(),post.getCreationTime(), post.getDescription(), new LocationDTO(post.getLocation()));
+        this(post.getId(), post.getCreatorId(),post.getCreationTime(), post.getDescription(), new LocationDTO(post.getLocation()), post.getImagePath());
     }
 }

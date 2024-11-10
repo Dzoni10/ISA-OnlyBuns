@@ -28,7 +28,14 @@
         <p *ngIf="!post.isEditing" class="post-description">{{ post.description }}</p>
         <textarea *ngIf="post.isEditing" [(ngModel)]="post.description" class="edit-description" rows="4"></textarea>
 
+        <!-- <img src="https://i.redd.it/hiojgqpu0cl81.jpg" alt="Zec" class="post-image"> -->
+        <!-- Check if imagePath exists and is not an empty string -->
+        <img *ngIf="post.imagePath && post.imagePath.trim() !== ''; else defaultImage" 
+        [src]="'http://localhost:8080/' + post.imagePath" alt="Post Image" class="post-image">
+        <ng-template #defaultImage>
         <img src="https://i.redd.it/hiojgqpu0cl81.jpg" alt="Zec" class="post-image">
+        </ng-template>
+
         <div class="post-footer">
           <span class="post-creator">Creator ID: {{ post.creatorId }}</span>
           <span class="post-time">{{ post.creationTime | date: 'short' }}</span>
