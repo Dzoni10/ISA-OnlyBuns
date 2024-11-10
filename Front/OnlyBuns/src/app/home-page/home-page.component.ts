@@ -48,10 +48,19 @@ export class HomePageComponent implements OnInit {
   faCheck = faCheck;
   faTimes = faTimes;
 
+
   constructor(private postService: PostService,private commentService: CommentService, private loginService: LoginService, private router: Router) { }
+  logged =false;
+
+
+
 
   ngOnInit(): void {
     this.loadPosts(); 
+    
+    this.loginService.logged.subscribe(isLogged=>{
+      this.logged = isLogged;
+    })
 
     this.loginService.user$.subscribe({
       next: (user) =>{

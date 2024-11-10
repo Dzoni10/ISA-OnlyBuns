@@ -1,6 +1,7 @@
 package rs.ac.uns.ftn.informatika.rest.controller;
 
 import ch.qos.logback.core.boolex.EvaluationException;
+import io.github.bucket4j.Bucket;
 import io.swagger.v3.oas.annotations.Operation;
 import org.apache.catalina.connector.Response;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +12,9 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import rs.ac.uns.ftn.informatika.rest.authentification.AuthenticationResponse;
+import rs.ac.uns.ftn.informatika.rest.authentification.LoginRateLimiter;
 import rs.ac.uns.ftn.informatika.rest.dto.LogInRequest;
+import rs.ac.uns.ftn.informatika.rest.exception.UsernameAlreadyExistsException;
 import rs.ac.uns.ftn.informatika.rest.jwt.JwtUtil;
 import rs.ac.uns.ftn.informatika.rest.mapper.UserDTOMapper;
 import rs.ac.uns.ftn.informatika.rest.paged_result.PagedResults;
@@ -27,9 +30,14 @@ import java.util.List;
 
 import rs.ac.uns.ftn.informatika.rest.dto.UserDTO;
 
+import javax.servlet.http.HttpServletRequest;
+
 @RestController
 @RequestMapping("/api/users")
 public class UserController {
+
+    @Autowired
+    private LoginRateLimiter rateLimiter;
 
     @Autowired
     private EmailService emailService;
@@ -41,6 +49,8 @@ public class UserController {
     private JwtUtil jwtUtil;
     @Autowired
     private UserDTOMapper userDTOMapper;
+    @Autowired
+    private LoginRateLimiter loginRateLimiter;
 
     @Operation(description = "Get all users",method="GET")
     @GetMapping(value = "/all", produces= MediaType.APPLICATION_JSON_VALUE)
@@ -83,38 +93,44 @@ public class UserController {
     @PostMapping(value="/signup" ,consumes = MediaType.APPLICATION_JSON_VALUE,produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> saveUser(@RequestBody UserDTO userDTO) {
 
-        System.out.println(userDTO.username + "  "+ userDTO.email);
-        if(userService.isUsernameExist(userDTO.username)){
-            if(userService.isEmailExist(userDTO.email)){
-                return new ResponseEntity<>("Email i korisnicko ime su vec zauzeti",HttpStatus.BAD_REQUEST);
+
+        if (userService.isUsernameExist(userDTO.username)) {
+            if (userService.isEmailExist(userDTO.email)) {
+                return new ResponseEntity<>("Email i korisnicko ime su vec zauzeti", HttpStatus.BAD_REQUEST);
             }
-            return new ResponseEntity<>("Korisnicko ime je vec zauzeto",HttpStatus.CONFLICT);
+            return new ResponseEntity<>("Korisnicko ime je vec zauzeto", HttpStatus.CONFLICT);
         }
 
-        if(userService.isEmailExist(userDTO.email)){
-            return new ResponseEntity<>("Email je vec zauzet",HttpStatus.UNAUTHORIZED);
+        if (userService.isEmailExist(userDTO.email)) {
+            return new ResponseEntity<>("Email je vec zauzet", HttpStatus.UNAUTHORIZED);
         }
 
 
         User savedUser = new User();
 
-            savedUser.setName(userDTO.name);
-            savedUser.setSurname(userDTO.surname);
-            savedUser.setPassword(userDTO.password);
-            savedUser.setUsername(userDTO.username);
-            savedUser.setEmail(userDTO.email);
-            savedUser.setAdress(userDTO.adress);
-            savedUser.setLoginStatus(false);
-            savedUser = userService.save(savedUser);
+        savedUser.setName(userDTO.name);
+        savedUser.setSurname(userDTO.surname);
+        savedUser.setPassword(userDTO.password);
+        savedUser.setUsername(userDTO.username);
+        savedUser.setEmail(userDTO.email);
+        savedUser.setAdress(userDTO.adress);
+        savedUser.setLoginStatus(false);
+        try {
+            savedUser = userService.saveUsernameCheck(savedUser);
 
-            String activationLink = "http://localhost:8080/api/users/verify?email=" +savedUser.getEmail();
+            String activationLink = "http://localhost:8080/api/users/verify?email=" + savedUser.getEmail();
 
-            try {
-                emailService.sendVerificationEmail(userDTO,activationLink);
-            }catch (Exception e){
-                return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-            }
-            return new ResponseEntity<>(new UserDTO(savedUser),HttpStatus.CREATED);
+
+            emailService.sendVerificationEmail(userDTO, activationLink);
+            return new ResponseEntity<>(new UserDTO(savedUser), HttpStatus.CREATED);
+
+        } catch (UsernameAlreadyExistsException e) {
+            return new ResponseEntity<>("Korisničko ime je već zauzeto (Kontroler)", HttpStatus.CONFLICT);
+
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
     }
 
     @PostMapping(value="/changePassword")
@@ -196,7 +212,16 @@ public class UserController {
 
 
     @PostMapping(value="/login")
-    public ResponseEntity<?> login(@RequestBody LogInRequest logInRequest) {
+    public ResponseEntity<?> login(HttpServletRequest request, @RequestBody LogInRequest logInRequest) {
+
+        String clientIp = getClientIP(request);
+
+        Bucket bucket = loginRateLimiter.resolveBucket(clientIp);
+        if(!bucket.tryConsume(1)){
+            return new ResponseEntity<>("Prekoracili ste broj pokusaja za prijavu, pokusajte ponovo za 5 min",HttpStatus.TOO_MANY_REQUESTS);
+        }
+
+
         User user = userService.findByEmail(logInRequest.getEmail());
 
         if(user==null || ( !user.getEmail().equals(logInRequest.getEmail()) || !user.getPassword().equals(logInRequest.getPassword())))
@@ -216,5 +241,12 @@ public class UserController {
                     return new ResponseEntity<>(new UserDTO(user), HttpStatus.UNAUTHORIZED);
                 }
     }
-}
 
+    private String getClientIP(HttpServletRequest request) {
+        String xfHeader = request.getHeader("X-Forwarded-For");
+        if(xfHeader == null) {
+            return request.getRemoteAddr();
+        }
+        return xfHeader.split(",")[0];
+    }
+}
