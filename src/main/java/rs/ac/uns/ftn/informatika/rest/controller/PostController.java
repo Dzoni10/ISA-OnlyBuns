@@ -83,6 +83,7 @@ public class PostController {
     @PostMapping(value = "/create", consumes = "multipart/form-data", produces = "application/json")
     public ResponseEntity<?> savePost(@RequestParam("creatorId") int creatorId,
                                       @RequestParam("description") String description,
+                                      @RequestParam("username") String username,
                                       @RequestParam(value = "location.latitude", required = false) Double latitude,
                                       @RequestParam(value = "location.longitude", required = false) Double longitude,
                                       @RequestParam(value = "imageFile", required = false) MultipartFile imageFile) throws IOException {
@@ -95,6 +96,7 @@ public class PostController {
         // Initialize Post object
         Post savedPost = new Post();
         savedPost.setCreatorId(creatorId);
+        savedPost.setUsername(username);
         savedPost.setDescription(description);
         savedPost.setCreationTime(LocalDateTime.now());
 

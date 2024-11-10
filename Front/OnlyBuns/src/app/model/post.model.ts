@@ -5,4 +5,5 @@ export interface Post{
     creationTime : Date;
     isEditing: boolean;
     imagePath: string;
+    username: string
 }

@@ -27,6 +27,7 @@ export class PostCreationComponent implements OnInit {
   previewImage$ = new BehaviorSubject<string | null>(null);
   addressLabel: string | null = null;
   creatorId : number | undefined;
+  username : string | undefined;
   center: [number, number] = [20.4489, 44.7866]; // Coordinates for Belgrade
   zoom = 12;
 
@@ -77,6 +78,7 @@ export class PostCreationComponent implements OnInit {
     this.loginService.getUserForProfile(userId).subscribe({
       next: (user) => {
         this.creatorId = user.id
+        this.username = user.username
       },
       error: (error) => {
         console.error('Greška prilikom učitavanja profila', error);
@@ -255,6 +257,7 @@ export class PostCreationComponent implements OnInit {
   }
     formData.append("creationTime", new Date().toISOString());
     formData.append("description", postData.description);
+    formData.append("username", this.username || 'defaultUsername');
     formData.append("location.latitude", this.currentCoordinates[0].toString());
     formData.append("location.longitude", this.currentCoordinates[1].toString());
   
