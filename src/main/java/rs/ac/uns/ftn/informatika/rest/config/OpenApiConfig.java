@@ -5,8 +5,12 @@ import io.swagger.v3.oas.models.info.Contact;
 import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.info.License;
 import io.swagger.v3.oas.models.servers.Server;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import rs.ac.uns.ftn.informatika.rest.authentification.RateLimitInterceptor;
 
 import java.util.ArrayList;
 
@@ -15,7 +19,15 @@ konfiguracija omogucava generisanje metapodataka API-ju, poput vlasnika, uslova 
 moguce je konfigurisati i vise servera
  */
 @Configuration
-public class OpenApiConfig {
+public class OpenApiConfig implements WebMvcConfigurer {
+
+    @Autowired
+    private RateLimitInterceptor rateLimitInterceptor;
+
+    @Override
+    public void addInterceptors(InterceptorRegistry registry) {
+        registry.addInterceptor(rateLimitInterceptor);
+    }
 
     @Bean
     public OpenAPI openApi() {

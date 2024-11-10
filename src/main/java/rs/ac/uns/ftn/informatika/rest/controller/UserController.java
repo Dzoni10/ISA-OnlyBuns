@@ -1,6 +1,7 @@
 package rs.ac.uns.ftn.informatika.rest.controller;
 
 import ch.qos.logback.core.boolex.EvaluationException;
+import io.github.bucket4j.Bucket;
 import io.swagger.v3.oas.annotations.Operation;
 import org.apache.catalina.connector.Response;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +12,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import rs.ac.uns.ftn.informatika.rest.authentification.AuthenticationResponse;
+import rs.ac.uns.ftn.informatika.rest.authentification.LoginRateLimiter;
 import rs.ac.uns.ftn.informatika.rest.dto.LogInRequest;
 import rs.ac.uns.ftn.informatika.rest.jwt.JwtUtil;
 import rs.ac.uns.ftn.informatika.rest.mapper.UserDTOMapper;
@@ -27,9 +29,14 @@ import java.util.List;
 
 import rs.ac.uns.ftn.informatika.rest.dto.UserDTO;
 
+import javax.servlet.http.HttpServletRequest;
+
 @RestController
 @RequestMapping("/api/users")
 public class UserController {
+
+    @Autowired
+    private LoginRateLimiter rateLimiter;
 
     @Autowired
     private EmailService emailService;
@@ -41,6 +48,8 @@ public class UserController {
     private JwtUtil jwtUtil;
     @Autowired
     private UserDTOMapper userDTOMapper;
+    @Autowired
+    private LoginRateLimiter loginRateLimiter;
 
     @Operation(description = "Get all users",method="GET")
     @GetMapping(value = "/all", produces= MediaType.APPLICATION_JSON_VALUE)
@@ -196,7 +205,16 @@ public class UserController {
 
 
     @PostMapping(value="/login")
-    public ResponseEntity<?> login(@RequestBody LogInRequest logInRequest) {
+    public ResponseEntity<?> login(HttpServletRequest request, @RequestBody LogInRequest logInRequest) {
+
+        String clientIp = getClientIP(request);
+
+        Bucket bucket = loginRateLimiter.resolveBucket(clientIp);
+        if(!bucket.tryConsume(1)){
+            return new ResponseEntity<>("Prekoracili ste broj pokusaja za prijavu, pokusajte ponovo za 5 min",HttpStatus.TOO_MANY_REQUESTS);
+        }
+
+
         User user = userService.findByEmail(logInRequest.getEmail());
 
         if(user==null || ( !user.getEmail().equals(logInRequest.getEmail()) || !user.getPassword().equals(logInRequest.getPassword())))
@@ -216,5 +234,12 @@ public class UserController {
                     return new ResponseEntity<>(new UserDTO(user), HttpStatus.UNAUTHORIZED);
                 }
     }
-}
 
+    private String getClientIP(HttpServletRequest request) {
+        String xfHeader = request.getHeader("X-Forwarded-For");
+        if(xfHeader == null) {
+            return request.getRemoteAddr();
+        }
+        return xfHeader.split(",")[0];
+    }
+}

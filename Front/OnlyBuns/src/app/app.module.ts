@@ -24,6 +24,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatCardModule } from '@angular/material/card';
 import { PostCreationComponent } from './post-creation/post-creation.component';
 import { PostService } from './post-service.service';
+import {MatSnackBarModule} from '@angular/material/snack-bar';
 
 @NgModule({
   declarations: [
@@ -52,6 +53,7 @@ import { PostService } from './post-service.service';
     MatCardModule,
     FormsModule,
     MatIconModule,
+    MatSnackBarModule
   
   ],
   providers: [{

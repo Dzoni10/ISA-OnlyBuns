@@ -14,3 +14,11 @@ div {
 p {
     margin-top: 10px;
 }
+
+
+.mat-snack-bar-container {
+    display: flex;
+    align-items: center;
+  }
+  
+  
