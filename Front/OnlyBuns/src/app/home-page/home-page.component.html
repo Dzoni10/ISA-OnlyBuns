@@ -1,15 +1,15 @@
 <div class="home-container">
-
   <div class="content-area">
     <button class="create-post-button" [routerLink]="['/postcreate']" routerLinkActive="active">+ Create Post</button>
     
     <div class="posts-container">
       <div *ngFor="let post of posts" class="post-card">
+        <!-- Post actions for edit and delete -->
         <div class="post-actions-top-right" *ngIf="post.creatorId === registerUser?.id">
           <button *ngIf="!post.isEditing" (click)="editPost(post)" class="post-action-button">
             <fa-icon [icon]="faEdit"></fa-icon> Edit
           </button>
-          <div *ngIf="post.isEditing">
+          <div *ngIf="post.isEditing" class="edit-actions">
             <button (click)="confirmEdit(post)" class="post-action-button">
               <fa-icon [icon]="faCheck"></fa-icon> Confirm
             </button>
@@ -17,31 +17,59 @@
               <fa-icon [icon]="faTimes"></fa-icon> Cancel
             </button>
           </div>
-
-          <button *ngIf="!post.isEditing"  (click)="deletePost(post.id)" class="post-action-button">
+          <button *ngIf="!post.isEditing" (click)="deletePost(post.id)" class="post-action-button">
             <fa-icon [icon]="faTrash"></fa-icon> Delete
           </button>
         </div>
-
-        <h3 class="post-title">Post #{{ post.id }}</h3>
         
+
+        <!-- Post content -->
+        <h3 class="post-title">Author: {{ post.creatorId }}</h3>
         <p *ngIf="!post.isEditing" class="post-description">{{ post.description }}</p>
-        <textarea *ngIf="post.isEditing" [(ngModel)]="post.description" class="edit-description" rows="4"></textarea>
+        <textarea *ngIf="post.isEditing" [(ngModel)]="post.description" class="edit-description" rows="3"></textarea>
 
         <img src="https://i.redd.it/hiojgqpu0cl81.jpg" alt="Zec" class="post-image">
         <div class="post-footer">
-          <span class="post-creator">Creator ID: {{ post.creatorId }}</span>
-          <span class="post-time">{{ post.creationTime | date: 'short' }}</span>
+           <span class="post-time">{{ post.creationTime | date: 'short' }}</span>
         </div>
+
+        <!-- Post actions for like and comment -->
         <div class="post-actions">
           <button (click)="likePost(post.id)" class="post-action-button">
             <fa-icon [icon]="faLike"></fa-icon> Like
           </button>
-          <button (click)="commentPost(post.id)" class="post-action-button">  
+          <button (click)="openModal(post)" class="post-action-button">
             <fa-icon [icon]="faComment"></fa-icon> Comment
           </button>
         </div>
       </div>
     </div>
   </div>
+
+  <!-- Modal for viewing and adding comments -->
+  <div class="modal" *ngIf="isModalOpen">
+    <div class="modal-content">
+      <!-- Close button in the top right corner -->
+      <span class="close-modal" (click)="closeModal()">
+        <fa-icon [icon]="faTimes"></fa-icon>
+      </span>    
+      <h3>Author: {{ selectedPost?.creatorId }}</h3>
+      <p>{{ selectedPost?.description }}</p>
+      <div class="comments-section">
+        <h4>Comments ({{ comments.length }})</h4>
+        <div *ngFor="let comment of comments" class="comment">
+          <div class="comment-header">
+            <strong>{{ comment.username }}</strong>
+            <span class="comment-time">{{ getTimeAgo(comment.creationTime) }}</span>  
+          </div>
+          <p>{{ comment.text }}</p>
+        </div>
+      </div>
+      <textarea [(ngModel)]="newCommentText" placeholder="Text here..." class="new-comment"></textarea>
+      <button (click)="addComment(selectedPost?.id)" class="submit-comment-button">
+        <fa-icon [icon]="faPaperPlane"></fa-icon> Send
+      </button>
+    </div>
+  </div>
+
 </div>

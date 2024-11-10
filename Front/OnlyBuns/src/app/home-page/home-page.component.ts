@@ -1,12 +1,15 @@
 
 import { Component, OnInit } from '@angular/core';
 import { PostService } from '../post.service';
+import { CommentService } from '../comment.service';
 import { Post } from '../model/post.model';
+import { Comment } from '../model/comment.model';
 import { PagedResults } from '../model/paged-results.model'; 
-import { faComments, faUser, faThumbsUp, faCommentDots , faEdit, faTrash, faCheck, faTimes, faIcons} from '@fortawesome/free-solid-svg-icons';
+import { faComments, faUser, faThumbsUp, faCommentDots , faEdit, faTrash, faCheck, faTimes, faIcons, faPaperPlane} from '@fortawesome/free-solid-svg-icons';
 import { RegisterUser } from '../model/register-user.model';
 import { LoginService } from '../login-service.service';
 import { Router } from '@angular/router';
+import { formatDistanceToNow } from 'date-fns';
 
 
 @Component({
@@ -21,7 +24,25 @@ export class HomePageComponent implements OnInit {
   
   posts: Post[] = []; 
   registerUser: RegisterUser | undefined;
+  newComment: Comment = {
+    id: 0,
+    postId: -1,
+    text: "",
+    creationTime: new Date(),
+    username: ""
+    };
+  isModalOpen = false;
+  selectedPost: Post | undefined;
+  comments: Comment[] = []; 
+  /*comments = [
+    { username: 'User1', text: 'Great post!' },
+    { username: 'User2', text: 'Interesting read!' },
+    { username: 'User3', text: 'Thanks for sharing!' }
+  ];
+  */
+  newCommentText = '';
 
+  faPaperPlane = faPaperPlane;
   faChat = faComments;
   faProfile = faUser;
   faLike = faThumbsUp;
@@ -31,7 +52,7 @@ export class HomePageComponent implements OnInit {
   faCheck = faCheck;
   faTimes = faTimes;
 
-  constructor(private postService: PostService, private loginService: LoginService, private router: Router) { }
+  constructor(private postService: PostService,private commentService: CommentService, private loginService: LoginService, private router: Router) { }
 
   ngOnInit(): void {
     this.loadPosts(); 
@@ -48,6 +69,11 @@ export class HomePageComponent implements OnInit {
       }
     })
   }
+
+ getTimeAgo(date: Date): string {
+  return formatDistanceToNow(date) + ' ago';  
+}
+
 
   loadUserData(userId:number): void{
     this.loginService.getUserForProfile(userId).subscribe({
@@ -80,15 +106,8 @@ export class HomePageComponent implements OnInit {
     }
   }
   
-  commentPost(postId: number): void {
-    if (!this.registerUser?.id) {
-      alert("Ako želite da lajkujete objavu ili da je komentarišete morate da se ulogujete!");
-    } else {
-      alert(`Komentarisao/la post ID: ${postId} kao korisnik. ID korisnika: ${this.registerUser?.id}, USERNAME: ${this.registerUser?.username}`);
-    }
-  }
-
-
+  
+  
   editPost(post: any): void {
     post.isEditing = true;
   }
@@ -115,15 +134,68 @@ export class HomePageComponent implements OnInit {
     this.postService.deletePost(postId).subscribe(
       () => {
         this.loadPosts();
-            },
+      },
       (error) => {
         console.error('Greška pri brisanju posta', error);
       }
     );
   }
-
-
+  
+  
   createPost(){
     this.router.navigate(['createPost']);
   }
+ 
+  openModal(post: Post): void {
+
+    if (!this.registerUser?.id) {
+      alert("Ako želite da lajkujete objavu ili da je komentarišete morate da se ulogujete!");
+    } else {
+      this.selectedPost = post;
+      this.isModalOpen = true;
+      this.loadComments(post.id);
+    }
+  }
+  
+  closeModal(): void {
+    this.isModalOpen = false;
+    this.selectedPost = undefined;
+    this.newCommentText="";
+  }
+
+  
+  
+  loadComments(postId: number): void {
+    this.commentService.getCommentsByPostId(postId).subscribe(
+      (data: PagedResults<Comment>) => {
+        this.comments =  data.results;;
+      },
+      (error) => {
+        console.error("Greška pri učitavanju komentara", error);
+      }
+    );
+  }
+  
+  addComment(postId?: number): void {   
+    if(this.newCommentText.trim()){
+
+      this.newComment.text= this.newCommentText || "Unknown";
+      this.newComment.postId= postId || -999;
+      this.newComment.username = this.registerUser?.username || "Unknown";
+        this.commentService.addComment(this.newComment).subscribe(
+          () => {
+            this.loadComments(this.newComment?.postId); // Osvežava komentare
+            this.newCommentText = ''; // Čisti polje za unos
+          },
+          (error) => {
+            console.error("Greška pri dodavanju komentara", error);
+          }
+        );
+        }
+        else{
+          alert("Morate uneti text!");
+        }
+  }
+
+
 }
