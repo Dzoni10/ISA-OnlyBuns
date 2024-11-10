@@ -26,7 +26,7 @@ export class PostCreationComponent implements OnInit {
   selectedFile: File | null = null;
   previewImage$ = new BehaviorSubject<string | null>(null);
   addressLabel: string | null = null;
-  creatorId: number | undefined;
+  creatorId : number | undefined;
   center: [number, number] = [20.4489, 44.7866]; // Coordinates for Belgrade
   zoom = 12;
 
@@ -241,25 +241,33 @@ export class PostCreationComponent implements OnInit {
     if (this.createPostForm.invalid) {
       return; // Prevent form submission if invalid
     }
-
+  
     const postData = this.createPostForm.value;
-
-    // Prepare the form data to send to the backend
-    const formData = {
-      creatorId: this.creatorId,  // Example creatorId, replace with actual value
-      creationTime: new Date().toISOString(),
-      description: postData.description,
-      location: {
-        latitude: this.currentCoordinates[0],  // Set latitude
-        longitude: this.currentCoordinates[1]  // Set longitude
-      }
-    };
-
+  
+    // Prepare FormData to send to the backend as multipart/form-data
+    const formData = new FormData();
+     // Handle creatorId with a fallback for undefined
+  if (this.creatorId !== undefined && this.creatorId !== null) {
+    formData.append("creatorId", this.creatorId.toString()); // Convert to string if necessary
+  } else {
+    console.error("Creator ID is missing");
+    return; // Optionally handle this case
+  }
+    formData.append("creationTime", new Date().toISOString());
+    formData.append("description", postData.description);
+    formData.append("location.latitude", this.currentCoordinates[0].toString());
+    formData.append("location.longitude", this.currentCoordinates[1].toString());
+  
+    // Add the file only if it’s selected
+    if (this.selectedFile) {
+      formData.append("imageFile", this.selectedFile, this.selectedFile.name);
+    }
+  
     // Call createPost method from PostService
     this.postService.createPost(formData).subscribe({
       next: (response) => {
         console.log('Post created successfully', response);
-          // Navigate to posts list or any other desired route
+        // Navigate to posts list or any other desired route
       },
       error: (error) => {
         console.error('Error creating post', error);

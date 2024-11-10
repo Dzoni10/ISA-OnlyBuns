@@ -4,4 +4,5 @@ export interface Post{
     description: string;
     creationTime : Date;
     isEditing: boolean;
+    imagePath: string;
 }

@@ -12,7 +12,7 @@ export class PostService {
 
   constructor(private http: HttpClient, private tokenStorage: TokenStorage, private router: Router) { }
 
-  createPost(postData: any): Observable<any> {
-    return this.http.post<any>(environment.apiHost + "/posts/create", postData);
+  createPost(formData: FormData): Observable<any> {
+    return this.http.post<any>(environment.apiHost + "/posts/create", formData);
   }
 }

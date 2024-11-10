@@ -2,9 +2,11 @@ package rs.ac.uns.ftn.informatika.rest.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import rs.ac.uns.ftn.informatika.rest.domain.Location;
 
@@ -19,11 +21,17 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.time.LocalDateTime;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.web.multipart.MultipartFile;
 @RestController
 @RequestMapping("/api/posts")
 public class PostController {
@@ -34,6 +42,9 @@ public class PostController {
     private JwtUtil jwtUtil;
     @Autowired
     private PostDTOMapper postDTOMapper;
+
+    @Value("${upload.directory}")
+    private String uploadDir;
 
     @Operation(description = "Get all posts",method="GET")
     @GetMapping(value = "/all", produces= MediaType.APPLICATION_JSON_VALUE)
@@ -68,27 +79,58 @@ public class PostController {
         }
     }
 
-
-
-
     @Operation(description = "Create new post", method = "POST")
-    @PostMapping(value="/create" ,consumes = MediaType.APPLICATION_JSON_VALUE,produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> savePost(@RequestBody PostDTO postDTO) {
-        Post savedPost = new Post();
+    @PostMapping(value = "/create", consumes = "multipart/form-data", produces = "application/json")
+    public ResponseEntity<?> savePost(@RequestParam("creatorId") int creatorId,
+                                      @RequestParam("description") String description,
+                                      @RequestParam(value = "location.latitude", required = false) Double latitude,
+                                      @RequestParam(value = "location.longitude", required = false) Double longitude,
+                                      @RequestParam(value = "imageFile", required = false) MultipartFile imageFile) throws IOException {
 
-        savedPost.setCreatorId(postDTO.creatorId);
+        // Validate inputs
+        if (creatorId <= 0 || description == null || description.isEmpty()) {
+            return new ResponseEntity<>("Creator ID and description are required", HttpStatus.BAD_REQUEST);
+        }
+
+        // Initialize Post object
+        Post savedPost = new Post();
+        savedPost.setCreatorId(creatorId);
+        savedPost.setDescription(description);
         savedPost.setCreationTime(LocalDateTime.now());
-        savedPost.setDescription(postDTO.description);
-        if (postDTO.location != null) {
-            Location location = new Location(postDTO.location.latitude, postDTO.location.longitude);
+
+        // Set location if present
+        if (latitude != null && longitude != null) {
+            Location location = new Location(latitude, longitude);
             savedPost.setLocation(location);
         }
-        //savedPost.setPostname(postDTO.postname);
-        //savedPost.setEmail(postDTO.email);
-        //savedPost.setAdress(postDTO.adress);
-        //savedPost.setLoginStatus(false);
+
+        // Handle image upload
+        if (imageFile != null && !imageFile.isEmpty()) {
+            //String uploadDir = System.getProperty("user.dir") + "/uploads/images/";
+
+            // Create a unique file name
+            String imageName = System.currentTimeMillis() + "_" + StringUtils.cleanPath(imageFile.getOriginalFilename());
+            Path imagePath = Paths.get(uploadDir, imageName);
+
+            // Ensure the upload directory exists
+            Files.createDirectories(imagePath.getParent());
+
+            // Save the file to the defined path
+            Files.copy(imageFile.getInputStream(), imagePath, StandardCopyOption.REPLACE_EXISTING);
+
+            // Save the image path for the database
+            String imagePathForDatabase = "uploads/images/" + imageName;
+            savedPost.setImagePath(imagePathForDatabase);
+        }
+
+        // Save the post to the database
         savedPost = postService.save(savedPost);
 
-        return new ResponseEntity<>(new PostDTO(savedPost),HttpStatus.CREATED);
+        // Return the saved post as a DTO
+        return new ResponseEntity<>(new PostDTO(savedPost), HttpStatus.CREATED);
     }
+
+
+
+
 }
