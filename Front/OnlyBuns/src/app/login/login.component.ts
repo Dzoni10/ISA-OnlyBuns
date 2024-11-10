@@ -39,7 +39,7 @@ login(): void{
     this.loginService.login(login).subscribe({
       next: ()=>{
         alert("Uspesno logovanje");
-        this.router.navigate(['/']);
+        this.router.navigate(['home']);
       },
       error:(err)=>
       {
