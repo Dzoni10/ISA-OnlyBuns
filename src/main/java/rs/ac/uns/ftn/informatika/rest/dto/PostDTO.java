@@ -12,19 +12,21 @@ public class PostDTO {
     public LocalDateTime creationTime;
     public LocationDTO location;
     public String imagePath;
+    public String username;
     public MultipartFile imageFile;
 
-    public PostDTO(int id, int creatorId, LocalDateTime creationTime, String description, LocationDTO location, String imagePath) {
+    public PostDTO(int id, int creatorId, LocalDateTime creationTime, String description, LocationDTO location, String imagePath, String username) {
         this.creationTime = creationTime;
         this.description = description;
         this.id = id;
         this.creatorId = creatorId;
         this.location = location;
         this.imagePath = imagePath;
+        this.username = username;
     }
     public PostDTO() {}
 
     public PostDTO(Post post) {
-        this(post.getId(), post.getCreatorId(),post.getCreationTime(), post.getDescription(), new LocationDTO(post.getLocation()), post.getImagePath());
+        this(post.getId(), post.getCreatorId(),post.getCreationTime(), post.getDescription(), new LocationDTO(post.getLocation()), post.getImagePath(), post.getUsername());
     }
 }

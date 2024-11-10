@@ -24,7 +24,7 @@
         
 
         <!-- Post content -->
-        <h3 class="post-title">Author: {{ post.creatorId }}</h3>
+        <h3 class="post-title">Author: <b>{{ post.username }}</b></h3>
         <p *ngIf="!post.isEditing" class="post-description">{{ post.description }}</p>
         <textarea *ngIf="post.isEditing" [(ngModel)]="post.description" class="edit-description" rows="3"></textarea>
 
@@ -60,8 +60,15 @@
       <span class="close-modal" (click)="closeModal()">
         <fa-icon [icon]="faTimes"></fa-icon>
       </span>    
-      <h3>Author: {{ selectedPost?.creatorId }}</h3>
+      <h3>Author: <b>{{ selectedPost?.username }}</b></h3>
       <p>{{ selectedPost?.description }}</p>
+      <div *ngIf="selectedPost?.imagePath" class="post-image-container">
+        <img *ngIf="selectedPost?.imagePath && selectedPost?.imagePath?.trim() !== ''; else defaultImage" 
+        [src]="'http://localhost:8080/' + selectedPost?.imagePath" alt="Post Image" class="post-image2">
+        <ng-template #defaultImage>
+        <img src="https://i.redd.it/hiojgqpu0cl81.jpg" alt="Zec" class="post-image2">
+        </ng-template>
+      </div>
       <div class="comments-section">
         <h4>Comments ({{ comments.length }})</h4>
         <div *ngFor="let comment of comments" class="comment">
@@ -72,10 +79,12 @@
           <p>{{ comment.text }}</p>
         </div>
       </div>
+       <div class="comment-input-container">
       <textarea [(ngModel)]="newCommentText" placeholder="Text here..." class="new-comment"></textarea>
       <button (click)="addComment(selectedPost?.id)" class="submit-comment-button">
         <fa-icon [icon]="faPaperPlane"></fa-icon> Send
       </button>
+    </div>
     </div>
   </div>
 

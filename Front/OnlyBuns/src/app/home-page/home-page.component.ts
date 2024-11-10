@@ -22,6 +22,7 @@ import { formatDistanceToNow } from 'date-fns';
 
 export class HomePageComponent implements OnInit {
   
+  beforeEditDescription = "";
   posts: Post[] = []; 
   registerUser: RegisterUser | undefined;
   newComment: Comment = {
@@ -34,12 +35,7 @@ export class HomePageComponent implements OnInit {
   isModalOpen = false;
   selectedPost: Post | undefined;
   comments: Comment[] = []; 
-  /*comments = [
-    { username: 'User1', text: 'Great post!' },
-    { username: 'User2', text: 'Interesting read!' },
-    { username: 'User3', text: 'Thanks for sharing!' }
-  ];
-  */
+ 
   newCommentText = '';
 
   faPaperPlane = faPaperPlane;
@@ -110,6 +106,7 @@ export class HomePageComponent implements OnInit {
   
   editPost(post: any): void {
     post.isEditing = true;
+    this.beforeEditDescription= post.description;
   }
 
   confirmEdit(post: any): void {
@@ -127,6 +124,7 @@ export class HomePageComponent implements OnInit {
 
   cancelEdit(post: any): void {
     post.isEditing = false;
+    post.description=this.beforeEditDescription;
   }
 
   deletePost(postId: number): void {

@@ -26,17 +26,20 @@ public class Post {
 
     @Column(name="imagePath",nullable = false)
     private String imagePath;
+    @Column(name="username",nullable = false)
+    private String username;
 
     public Post() {
         super();
     }
-    public Post(int creatorId, String description, Location location, String imagePath/* LocalDateTime creationTime*/) {
+    public Post(int creatorId, String description, Location location, String imagePath,String username) {
         super();
         this.creatorId = creatorId;
         this.description = description;
         this.creationTime = LocalDateTime.now();
         this.location = location;
         this.imagePath = imagePath;
+        this.username=username;
     }
 
     public Post(PostDTO post){
@@ -44,8 +47,16 @@ public class Post {
         this.creatorId = post.creatorId;
         this.description = post.description;
         this.creationTime = post.creationTime;
+        this.username = post.username;
     }
 
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
     public String getImagePath() {
         return imagePath;
     }
