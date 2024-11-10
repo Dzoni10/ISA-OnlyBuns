@@ -1,7 +1,7 @@
 <div class="home-container">
 
   <div class="content-area">
-    <button class="create-post-button" [routerLink]="['/postcreate']" routerLinkActive="active">+ Create Post</button>
+    <button class="create-post-button" [routerLink]="['/postcreate']" *ngIf="logged" routerLinkActive="active">+ Create Post</button>
     
     <div class="posts-container">
       <div *ngFor="let post of posts" class="post-card">

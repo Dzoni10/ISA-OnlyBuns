@@ -31,10 +31,16 @@ export class HomePageComponent implements OnInit {
   faCheck = faCheck;
   faTimes = faTimes;
 
+  logged =false;
+
   constructor(private postService: PostService, private loginService: LoginService, private router: Router) { }
 
   ngOnInit(): void {
     this.loadPosts(); 
+    
+    this.loginService.logged.subscribe(isLogged=>{
+      this.logged = isLogged;
+    })
 
     this.loginService.user$.subscribe({
       next: (user) =>{

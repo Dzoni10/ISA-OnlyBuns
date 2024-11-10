@@ -33,7 +33,7 @@
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));  /* Manja širina kartica */
   gap: 15px;  /* Manji razmak između kartica */
   width: 100%;
-  margin-top: 20px;
+  margin-top: 80px;
 }
 
 .post-card {
