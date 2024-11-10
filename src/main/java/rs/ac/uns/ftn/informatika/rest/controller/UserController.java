@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import rs.ac.uns.ftn.informatika.rest.authentification.AuthenticationResponse;
 import rs.ac.uns.ftn.informatika.rest.authentification.LoginRateLimiter;
 import rs.ac.uns.ftn.informatika.rest.dto.LogInRequest;
+import rs.ac.uns.ftn.informatika.rest.exception.UsernameAlreadyExistsException;
 import rs.ac.uns.ftn.informatika.rest.jwt.JwtUtil;
 import rs.ac.uns.ftn.informatika.rest.mapper.UserDTOMapper;
 import rs.ac.uns.ftn.informatika.rest.paged_result.PagedResults;
@@ -92,38 +93,44 @@ public class UserController {
     @PostMapping(value="/signup" ,consumes = MediaType.APPLICATION_JSON_VALUE,produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> saveUser(@RequestBody UserDTO userDTO) {
 
-        System.out.println(userDTO.username + "  "+ userDTO.email);
-        if(userService.isUsernameExist(userDTO.username)){
-            if(userService.isEmailExist(userDTO.email)){
-                return new ResponseEntity<>("Email i korisnicko ime su vec zauzeti",HttpStatus.BAD_REQUEST);
+
+        if (userService.isUsernameExist(userDTO.username)) {
+            if (userService.isEmailExist(userDTO.email)) {
+                return new ResponseEntity<>("Email i korisnicko ime su vec zauzeti", HttpStatus.BAD_REQUEST);
             }
-            return new ResponseEntity<>("Korisnicko ime je vec zauzeto",HttpStatus.CONFLICT);
+            return new ResponseEntity<>("Korisnicko ime je vec zauzeto", HttpStatus.CONFLICT);
         }
 
-        if(userService.isEmailExist(userDTO.email)){
-            return new ResponseEntity<>("Email je vec zauzet",HttpStatus.UNAUTHORIZED);
+        if (userService.isEmailExist(userDTO.email)) {
+            return new ResponseEntity<>("Email je vec zauzet", HttpStatus.UNAUTHORIZED);
         }
 
 
         User savedUser = new User();
 
-            savedUser.setName(userDTO.name);
-            savedUser.setSurname(userDTO.surname);
-            savedUser.setPassword(userDTO.password);
-            savedUser.setUsername(userDTO.username);
-            savedUser.setEmail(userDTO.email);
-            savedUser.setAdress(userDTO.adress);
-            savedUser.setLoginStatus(false);
-            savedUser = userService.save(savedUser);
+        savedUser.setName(userDTO.name);
+        savedUser.setSurname(userDTO.surname);
+        savedUser.setPassword(userDTO.password);
+        savedUser.setUsername(userDTO.username);
+        savedUser.setEmail(userDTO.email);
+        savedUser.setAdress(userDTO.adress);
+        savedUser.setLoginStatus(false);
+        try {
+            savedUser = userService.saveUsernameCheck(savedUser);
 
-            String activationLink = "http://localhost:8080/api/users/verify?email=" +savedUser.getEmail();
+            String activationLink = "http://localhost:8080/api/users/verify?email=" + savedUser.getEmail();
 
-            try {
-                emailService.sendVerificationEmail(userDTO,activationLink);
-            }catch (Exception e){
-                return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-            }
-            return new ResponseEntity<>(new UserDTO(savedUser),HttpStatus.CREATED);
+
+            emailService.sendVerificationEmail(userDTO, activationLink);
+            return new ResponseEntity<>(new UserDTO(savedUser), HttpStatus.CREATED);
+
+        } catch (UsernameAlreadyExistsException e) {
+            return new ResponseEntity<>("Korisničko ime je već zauzeto (Kontroler)", HttpStatus.CONFLICT);
+
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
     }
 
     @PostMapping(value="/changePassword")

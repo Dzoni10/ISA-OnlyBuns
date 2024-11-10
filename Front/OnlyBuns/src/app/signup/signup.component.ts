@@ -48,6 +48,7 @@ export class SignupComponent implements OnInit {
           this.router.navigate(['/login']);
         },
         error: (err) => {
+          console.log("Greska",err)
           switch(err.status){
             case 401:
               console.error("Došlo je do greške mejl vec postoji", err);

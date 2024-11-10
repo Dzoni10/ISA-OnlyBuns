@@ -9,7 +9,9 @@ import rs.ac.uns.ftn.informatika.rest.dto.UserDTO;
 import org.springframework.data.domain.Page;
 import com.google.common.hash.BloomFilter;
 import com.google.common.hash.Funnels;
+import rs.ac.uns.ftn.informatika.rest.exception.UsernameAlreadyExistsException;
 
+import javax.transaction.Transactional;
 import java.nio.charset.StandardCharsets;
 import java.util.Collection;
 import java.util.List;
@@ -67,6 +69,16 @@ public class UserService{
 
     public User findUserById(int id) {
         return userRepositoryInterface.findUserById(id);
+    }
+
+    @Transactional
+    public synchronized User saveUsernameCheck(User user){
+
+        if (userRepositoryInterface.findUserByUsername(user.getUsername())!=null) {
+            throw new UsernameAlreadyExistsException("Korisničko ime je već zauzeto (service error)");
+        }
+
+        return userRepositoryInterface.save(user);
     }
 
     public User save(User user){
