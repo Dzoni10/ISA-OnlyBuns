@@ -10,6 +10,8 @@ import { RegisterUser } from '../model/register-user.model';
 import { LoginService } from '../login-service.service';
 import { Router } from '@angular/router';
 import { formatDistanceToNow } from 'date-fns';
+import { LikeService } from '../like.service';
+import { Like } from '../model/like.model';
 
 
 @Component({
@@ -49,7 +51,7 @@ export class HomePageComponent implements OnInit {
   faTimes = faTimes;
 
 
-  constructor(private postService: PostService,private commentService: CommentService, private loginService: LoginService, private router: Router) { }
+  constructor(private postService: PostService,private commentService: CommentService, private loginService: LoginService, private router: Router, private likeService: LikeService ) { }
   logged =false;
 
 
@@ -73,6 +75,8 @@ export class HomePageComponent implements OnInit {
         alert("Greska pri ucitavanju profila");
       }
     })
+
+    
   }
 
  getTimeAgo(date: Date): string {
@@ -96,6 +100,9 @@ export class HomePageComponent implements OnInit {
     this.postService.getAllPosts().subscribe(
       (data: PagedResults<Post>) => {
         this.posts = data.results; // Uzimamo postove iz rezultata
+        this.posts.forEach(post => {
+          this.loadLikes(post);
+        });
       },
       (error) => {
         console.error('Greška pri učitavanju postova', error); // Obrada greške
@@ -107,7 +114,25 @@ export class HomePageComponent implements OnInit {
     if (!this.registerUser?.id) {
       alert("Ako želite da lajkujete objavu ili da je komentarišete morate da se ulogujete!");
     } else {
-      alert(`Lajkovao/la post ID: ${postId} kao korisnik. ID korisnika: ${this.registerUser?.id}, USERNAME: ${this.registerUser?.username}`);
+      //alert(`Lajkovao/la post ID: ${postId} kao korisnik. ID korisnika: ${this.registerUser?.id}, USERNAME: ${this.registerUser?.username}`);
+      
+      const newLike : Like = {
+        id: 0,
+        postId: postId,
+        username: this.registerUser.username
+      }
+      this.likeService.addLike(newLike)
+
+      this.likeService.addLike(newLike).subscribe(
+        response => {
+          if(this.registerUser)
+          alert(`Successfully liked post ID: ${postId} as user ${this.registerUser.username}`);
+          // Optionally, handle the response, such as updating the like count or UI
+        },
+        error => {
+          alert("An error occurred while liking the post. Please try again.");
+        }
+      );
     }
   }
   
@@ -203,6 +228,54 @@ export class HomePageComponent implements OnInit {
           alert("Morate uneti text!");
         }
   }
-
+  
+  loadLikes(post: any): void {
+    this.likeService.getLikesByPostId(post.id).subscribe((pagedResults: PagedResults<Like>) => {
+      post.likes = pagedResults.results;
+      post.likeCount = pagedResults.results.length;
+      post.userHasLiked = post.likes.some((like:Like)=> like.username === this.registerUser?.username);
+    });
+  }
+  
+  toggleLike(post: Post): void {
+    if (!this.registerUser) {
+      alert("Please log in to like posts.");
+      return;
+    }
+  
+    if (post.userHasLiked) {
+      // Unlike the post
+      this.likeService.removeLike(post.id, this.registerUser.username).subscribe(
+        () => {
+          post.likeCount--;
+          post.userHasLiked = false;
+        },
+        error => {
+          console.error("Error while unliking the post", error);
+        }
+      );
+    } else {
+      // Like the post
+      const newLike: Like = {
+        id: 0,
+        postId: post.id,
+        username: this.registerUser.username
+      };
+  
+      this.likeService.addLike(newLike).subscribe(
+        () => {
+          post.likeCount++;
+          post.userHasLiked = true;
+        },
+        error => {
+          if (error.status === 409) {
+            alert("You have already liked this post.");
+            post.userHasLiked = true;
+          }
+          console.error("Error while liking the post", error);
+        }
+      );
+    }
+  }
 
 }
