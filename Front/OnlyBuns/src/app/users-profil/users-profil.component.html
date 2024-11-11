@@ -1,0 +1,28 @@
+<div class="users-table-container">
+    <h2 class="table-title">Users Profile</h2>
+    <table class="users-table">
+      <thead>
+        <tr>
+          <th (click)="sortBy('name')"  class="sortable-column">Name</th>
+          <th (click)="sortBy('surname')"  class="sortable-column">Surname</th>
+          <th (click)="sortBy('username')" class="sortable-column">Username</th>
+          <th (click)="sortBy('email')"  class="sortable-column">Email</th>
+          <th (click)="sortBy('loginStatus')"  class="sortable-column">Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let user of users">
+          <td>{{ user.name }}</td>
+          <td>{{ user.surname }}</td>
+          <td>{{ user.username }}</td>
+          <td>{{ user.email }}</td>
+          <td>
+            <span [ngClass]="{ 'active-status': user.loginStatus, 'inactive-status': !user.loginStatus }">
+              {{ user.loginStatus ? 'Active' : 'Inactive' }}
+            </span>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  

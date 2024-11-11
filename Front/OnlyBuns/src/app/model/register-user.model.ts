@@ -6,4 +6,5 @@ export interface RegisterUser{
     password: string;
     email: string;
     adress: string;
+    loginStatus: boolean;
 }

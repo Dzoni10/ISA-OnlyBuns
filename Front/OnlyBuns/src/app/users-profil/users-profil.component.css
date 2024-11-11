@@ -1,0 +1,77 @@
+.users-table-container {
+    margin: 30px auto;
+    padding: 20px;
+    background: #f4f6f9;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    max-width: 90%;
+    overflow-x: auto;
+  }
+  
+  .table-title {
+    font-size: 24px;
+    font-weight: 600;
+    margin-bottom: 20px;
+    color: #333;
+    text-align: center;
+  }
+  
+  .users-table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #fff;
+  }
+  
+  .users-table th,
+  .users-table td {
+    padding: 15px 20px;
+    text-align: left;
+    font-size: 16px;
+    color: #555;
+  }
+  
+  .users-table th {
+    background-color: #4a9ddf;
+    color: white;
+    font-weight: 500;
+  }
+  
+  .users-table tr {
+    border-bottom: 1px solid #e2e2e2;
+  }
+  
+  .users-table tr:hover {
+    background-color: #f0f0f0;
+  }
+  
+  .users-table .active-status {
+    color: #28a745;
+    font-weight: bold;
+  }
+  
+  .users-table .inactive-status {
+    color: #dc3545;
+    font-weight: bold;
+  }
+  
+
+
+
+
+
+
+  .users-table th {
+    background-color: #4a9ddf;
+    color: white;
+    font-weight: 500;
+    cursor: pointer; /* Dodaje kursor kao ruka pri prelasku preko naziva kolone */
+    transition: background-color 0.3s ease;
+  }
+  
+  .users-table th:hover {
+    background-color: #3578c7; /* Promeni boju pri prelasku mišem preko kolone */
+  }
+  
+  .users-table th.sortable-column {
+    text-align: left;
+  }

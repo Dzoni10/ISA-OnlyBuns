@@ -25,6 +25,7 @@ import { MatCardModule } from '@angular/material/card';
 import { PostCreationComponent } from './post-creation/post-creation.component';
 import { PostService } from './post-service.service';
 import {MatSnackBarModule} from '@angular/material/snack-bar';
+import { UsersProfilComponent } from './users-profil/users-profil.component';
 
 @NgModule({
   declarations: [
@@ -36,6 +37,7 @@ import {MatSnackBarModule} from '@angular/material/snack-bar';
     HomePageComponent,
     ProfileComponent,
     PostCreationComponent,
+    UsersProfilComponent,
     
 
   ],

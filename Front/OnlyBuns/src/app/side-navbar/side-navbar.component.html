@@ -1,24 +1,42 @@
 <div class="sidebar">
-    <ul>
-      <li [routerLink]="['home']"routerLinkActive="active">
-        <fa-icon [icon]="faHome"></fa-icon>
-        <span>HomePage </span>
-      </li>
-      <li routerLinkActive="active">
-        <fa-icon [icon]="faTrending"></fa-icon>
-        <span>Trending </span>
-      </li>
-      <li *ngIf="logged" routerLinkActive="active">
-        <fa-icon [icon]="faMap"></fa-icon>
-        <span>Posts Near Map </span>
-      </li>
-      <li *ngIf="logged" routerLinkActive="active">
-        <fa-icon [icon]="faChat"></fa-icon>
-        <span>Chat</span>
-      </li>
-      <li [routerLink]="['profile']" *ngIf="logged" routerLinkActive="active">
-        <fa-icon [icon]="faProfile"></fa-icon>
-        <span>Profile Page </span>
-      </li>
-    </ul>
-  </div>
+  <ul>
+    <li [routerLink]="['home']" routerLinkActive="active">
+      <fa-icon [icon]="faHome"></fa-icon>
+      <span>HomePage</span>
+    </li>
+    <li routerLinkActive="active">
+      <fa-icon [icon]="faTrending"></fa-icon>
+      <span>Trending</span>
+    </li>
+    <li *ngIf="logged" routerLinkActive="active">
+      <fa-icon [icon]="faMap"></fa-icon>
+      <span>Posts Near Map</span>
+    </li>
+    <li *ngIf="logged" routerLinkActive="active">
+      <fa-icon [icon]="faChat"></fa-icon>
+      <span>Chat</span>
+    </li>
+    <li *ngIf="logged" [routerLink]="['profile']" routerLinkActive="active">
+      <fa-icon [icon]="faProfile"></fa-icon>
+      <span>Profile Page</span>
+    </li>
+    
+    <!-- Admin items without dropdown -->
+    <li *ngIf="isAdmin" routerLinkActive="active">
+      <fa-icon [icon]="faList"></fa-icon>
+      <span>List of Posts</span>
+    </li>
+    <li *ngIf="isAdmin" routerLinkActive="active">
+      <fa-icon [icon]="faTrending"></fa-icon>
+      <span>Network Trends</span>
+    </li>
+    <li *ngIf="isAdmin" routerLinkActive="active">
+      <fa-icon [icon]="faChartBar"></fa-icon>
+      <span>App Analytics</span>
+    </li>
+    <li *ngIf="isAdmin" [routerLink]="['usersprofile']" routerLinkActive="active">
+      <fa-icon [icon]="faUserFriends"></fa-icon>
+      <span>Users Profiles</span>
+    </li>
+  </ul>
+</div>
