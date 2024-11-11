@@ -36,13 +36,18 @@
         </ng-template>
 
         <div class="post-footer">
-           <span class="post-time">{{ post.creationTime | date: 'short' }}</span>
+          <span class="post-time">{{ post.creationTime | date: 'short' }}</span>
+          <span *ngIf="post.likeCount >= 0"> • {{ post.likeCount }} {{ post.likeCount === 1 ? 'like' : 'likes' }}</span>
         </div>
-
+        
         <!-- Post actions for like and comment -->
         <div class="post-actions">
-          <button (click)="likePost(post.id)" class="post-action-button">
-            <fa-icon [icon]="faLike"></fa-icon> Like
+          <button 
+            (click)="toggleLike(post)" 
+            class="post-action-button" 
+            [ngClass]="{ 'liked': post.userHasLiked }">
+            <fa-icon [icon]="faLike"></fa-icon> 
+            {{ post.userHasLiked ? 'Liked' : 'Like' }}
           </button>
           <button (click)="openModal(post)" class="post-action-button">
             <fa-icon [icon]="faComment"></fa-icon> Comment
