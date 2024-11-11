@@ -17,7 +17,7 @@ import { PagedResults } from './model/paged-results.model';
 })
 export class LoginService {
   user$=new BehaviorSubject<User>({email:"",id:0});
-  logged = new BehaviorSubject<boolean>(false);  // Globalna promenljiva za praćenje logovanja
+  logged = new BehaviorSubject<boolean>(this.isLoggedIn());
 
   constructor(private http: HttpClient, private tokenStorage: TokenStorage, private router: Router) { }
 
@@ -31,15 +31,21 @@ export class LoginService {
           this.tokenStorage.saveAccessToken(authenticationResponse.accessToken);
           this.setUser();
           this.logged.next(true);
+          localStorage.setItem('isLoggedIn','true');
         })
       );
   }
 
+  private isLoggedIn(): boolean {
+    return localStorage.getItem('isLoggedIn') === 'true'; 
+  }
+
   logout(): void {
-    this.router.navigate(['home']).then(_ => {
+    this.router.navigate(['login']).then(_ => {
       this.tokenStorage.clear();
       this.user$.next({email: "", id: 0 });
       this.logged.next(false);
+      localStorage.removeItem('isLoggedIn');
       }
     );
   }
