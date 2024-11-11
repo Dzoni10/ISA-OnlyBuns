@@ -7,4 +7,6 @@ export interface RegisterUser{
     email: string;
     adress: string;
     loginStatus: boolean;
+    isAdmin: boolean;
+    postNumber: number;
 }

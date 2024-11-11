@@ -1,16 +1,17 @@
-insert into "app_user" (name,surname,username,password,email,adress,login_status) values ('Pera','Peric','pera123','123','pera@gmail','Ulica122000',FALSE);
-insert into "app_user" (name,surname,username,password,email,adress,login_status) values ('Mika','Mikic','mika123','123','mika@gmail','Ulica122000',TRUE);
-insert into "app_user" (name,surname,username,password,email,adress,login_status) values ('Laza','Lazic','laza123','123','laza@gmail','Ulica122000',TRUE);
-insert into "app_user" (name,surname,username,password,email,adress,login_status) values ('Djura','Djuric','djura123','123','djura@gmail','Ulica122000',TRUE);
-insert into "app_user" (name,surname,username,password,email,adress,login_status) values ('Aca','Acic','aca123','123','aca@gmail','Ulica122000',FALSE);
-insert into "app_user" (name,surname,username,password,email,adress,login_status) values ('Mila','Milic','mila123','123','mila@gmail','Ulica122000',TRUE);
-insert into "app_user" (name,surname,username,password,email,adress,login_status) values ('Ljuba','Ljubic','ljuba123','123','ljuba@gmail','Ulica122000',TRUE);
+insert into "app_user" (name,surname,username,password,email,adress,login_status,is_admin) values ('Administrator','Administratorovic','admin','admin','admin@gmail','Ulica122000',TRUE,TRUE);
+insert into "app_user" (name,surname,username,password,email,adress,login_status,is_admin) values ('Pera','Peric','pera123','123','pera@gmail','Ulica122000',FALSE,FALSE);
+insert into "app_user" (name,surname,username,password,email,adress,login_status,is_admin) values ('Mika','Mikic','mika123','123','mika@gmail','Ulica122000',TRUE,FALSE);
+insert into "app_user" (name,surname,username,password,email,adress,login_status,is_admin) values ('Laza','Lazic','laza123','123','laza@gmail','Ulica122000',TRUE,FALSE);
+insert into "app_user" (name,surname,username,password,email,adress,login_status,is_admin) values ('Djura','Djuric','djura123','123','djura@gmail','Ulica122000',TRUE,FALSE);
+insert into "app_user" (name,surname,username,password,email,adress,login_status,is_admin) values ('Aca','Acic','aca123','123','aca@gmail','Ulica122000',FALSE,FALSE);
+insert into "app_user" (name,surname,username,password,email,adress,login_status,is_admin) values ('Mila','Milic','mila123','123','mila@gmail','Ulica122000',TRUE,FALSE);
+insert into "app_user" (name,surname,username,password,email,adress,login_status,is_admin) values ('Ljuba','Ljubic','ljuba123','123','ljuba@gmail','Ulica122000',TRUE,FALSE);
 
 INSERT INTO "app_post" (creator_id, description, creation_time, latitude, longitude, image_path, username)
-VALUES (4, 'Obican mali zec, spreman za veceru.', '2024-11-10 09:00:00', 0, 0, '','djura123' );
+VALUES (4, 'Obican mali zec, spreman za veceru.', '2024-11-10 09:00:00', 0, 0, '','laza123' );
 
 INSERT INTO "app_post" (creator_id, description, creation_time, latitude, longitude, image_path, username)
-VALUES (3, 'Milivojev zec, jedini preziveli.', '2024-11-10 11:30:00',0,0, '','laza123');
+VALUES (3, 'Milivojev zec, jedini preziveli.', '2024-11-10 11:30:00',0,0, '','mika`123');
 
 INSERT INTO "app_comment" (post_id, username, creation_time, text)
 VALUES

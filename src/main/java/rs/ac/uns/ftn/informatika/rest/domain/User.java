@@ -33,11 +33,14 @@ public class User {
     @Column(name="loginStatus",nullable = false)
     private boolean loginStatus;
 
+    @Column(name="isAdmin",nullable = false)
+    private boolean isAdmin;
+
     public User(){
         super();
     }
 
-    public User(String name, String surname, String username, String password,String email, String adress, boolean loginStatus) {
+    public User(String name, String surname, String username, String password,String email, String adress, boolean loginStatus,boolean isAdmin) {
         super();
         this.name = name;
         this.surname = surname;
@@ -46,6 +49,7 @@ public class User {
         this.email = email;
         this.adress = adress;
         this.loginStatus = loginStatus;
+        this.isAdmin = isAdmin;
     }
 
     public User(UserDTO user){
@@ -57,6 +61,7 @@ public class User {
         this.adress = user.adress;
         this.email = user.email;
         this.loginStatus=user.loginStatus;
+        this.isAdmin=user.isAdmin;
     }
 
 
@@ -76,5 +81,7 @@ public class User {
     public void setAdress(String adress) {this.adress = adress;}
     public boolean getLoginStatus() {return loginStatus;}
     public void setLoginStatus(boolean loginStatus) {this.loginStatus = loginStatus;}
+    public boolean getIsAdmin() {return isAdmin;}
+    public void setIsAdmin(boolean isAdmin) {this.isAdmin = isAdmin;}
 
 }

@@ -1,28 +1,107 @@
 <div class="users-table-container">
+  <div class="table-header">
     <h2 class="table-title">Users Profile</h2>
-    <table class="users-table">
-      <thead>
-        <tr>
-          <th (click)="sortBy('name')"  class="sortable-column">Name</th>
-          <th (click)="sortBy('surname')"  class="sortable-column">Surname</th>
-          <th (click)="sortBy('username')" class="sortable-column">Username</th>
-          <th (click)="sortBy('email')"  class="sortable-column">Email</th>
-          <th (click)="sortBy('loginStatus')"  class="sortable-column">Status</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let user of users">
-          <td>{{ user.name }}</td>
-          <td>{{ user.surname }}</td>
-          <td>{{ user.username }}</td>
-          <td>{{ user.email }}</td>
-          <td>
-            <span [ngClass]="{ 'active-status': user.loginStatus, 'inactive-status': !user.loginStatus }">
-              {{ user.loginStatus ? 'Active' : 'Inactive' }}
-            </span>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+    <div class="search-buttons">
+      <button class="search-btn" (click)="openSearchModal()">🔍 Search</button>
+      <button *ngIf="isSearchCriteriaFilled()" class="reset-btn" (click)="resetSearchCriteria()">↺ Reset</button>
+    </div>
   </div>
+  <table class="users-table">
+    <thead>
+      <tr>
+        <th (click)="sortBy('name')" class="sortable-column">Name</th>
+        <th (click)="sortBy('surname')" class="sortable-column">Surname</th>
+        <th (click)="sortBy('username')" class="sortable-column">Username</th>
+        <th (click)="sortBy('email')" class="sortable-column">Email</th>
+        <th (click)="sortBy('postNumber')" class="sortable-column">Post number</th>
+        <th (click)="sortBy('postNumber')" class="sortable-column">Following</th>
+        <th (click)="sortBy('isAdmin')" class="sortable-column">Admin</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let user of getPagedUsers()">
+        <td>{{ user.name }}</td>
+        <td>{{ user.surname }}</td>
+        <td>{{ user.username }}</td>
+        <td>{{ user.email }}</td>
+        <td>{{ user.postNumber  || 'No posts' }}</td>
+        <td>0</td>                                             
+        <td>
+          <span *ngIf="user.isAdmin" class="admin-label">Admin</span>
+          <button *ngIf="!user.isAdmin" (click)="makeAdmin(user)" class="add-admin-btn">Add Admin</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+  <!-- Paginacija ispod tabele -->
+  <div class="pagination">
+    <button (click)="goToFirstPage()" [disabled]="currentPage === 1" class="pagination-btn">
+      <i class="fa fa-fast-backward"></i>
+    </button>
+    <button (click)="goToPreviousPage()" [disabled]="currentPage === 1" class="pagination-btn">
+      <i class="fa fa-arrow-left"></i>
+    </button>
+    <span class="page-info">Page {{ currentPage }}</span>
+    <button (click)="goToNextPage()" [disabled]="currentPage * usersPerPage >= users.length" class="pagination-btn">
+      <i class="fa fa-arrow-right"></i>
+    </button>
+    <button (click)="goToLastPage()" [disabled]="currentPage * usersPerPage >= users.length" class="pagination-btn">
+      <i class="fa fa-fast-forward"></i>
+    </button>
+  </div>
+
+ <!-- Modal for search criteria -->
+<div class="search-modal" *ngIf="isSearchModalOpen">
+  <div class="modal-content">
+    <!-- Close icon in the top-right corner -->
+    <button class="close-btn" (click)="closeSearchModal()">✖</button>
+
+    <h3>Search Users</h3>
+
+    <label>
+      Name:
+      <input type="text" [(ngModel)]="searchCriteria.name" list="nameOptions" />
+      <datalist id="nameOptions">
+        <option *ngFor="let user of users" [value]="user.name"></option>
+      </datalist>
+    </label>
+    
+    <label>
+      Surname:
+      <input type="text" [(ngModel)]="searchCriteria.surname" list="surnameOptions" />
+      <datalist id="surnameOptions">
+        <option *ngFor="let user of users" [value]="user.surname"></option>
+      </datalist>
+    </label>
+    
+    <label>
+      Email:
+      <input type="text" [(ngModel)]="searchCriteria.email" list="emailOptions" />
+      <datalist id="emailOptions">
+        <option *ngFor="let user of users" [value]="user.email"></option>
+      </datalist>
+    </label>
   
+
+    <div class="modal-row">
+      <label for="minPosts">Min Posts:</label>
+      <input id="minPosts" type="number" [(ngModel)]="searchCriteria.minPosts" />
+    </div>
+
+    <div class="modal-row">
+      <label for="maxPosts">Max Posts:</label>
+      <input id="maxPosts" type="number" [(ngModel)]="searchCriteria.maxPosts" />
+    </div>
+
+    <div class="modal-buttons">
+      <button (click)="searchUsers()">
+        🔍 Search
+      </button>
+      <button (click)="closeSearchModal()">
+        ✖ Cancel
+      </button>
+    </div>
+  </div>
+</div>

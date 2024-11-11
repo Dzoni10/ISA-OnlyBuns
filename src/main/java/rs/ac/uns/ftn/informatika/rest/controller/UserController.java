@@ -115,6 +115,7 @@ public class UserController {
         savedUser.setEmail(userDTO.email);
         savedUser.setAdress(userDTO.adress);
         savedUser.setLoginStatus(false);
+        savedUser.setIsAdmin(false);
         try {
             savedUser = userService.saveUsernameCheck(savedUser);
 
@@ -145,6 +146,7 @@ public class UserController {
             user.setEmail(userDTO.email);
             user.setAdress(userDTO.adress);
             user.setLoginStatus(userDTO.loginStatus);
+            user.setIsAdmin(userDTO.isAdmin);
 
             userService.save(user);
 
@@ -181,6 +183,7 @@ public class UserController {
         user.setAdress(userDTO.adress);
         user.setEmail(userDTO.email);
         user.setLoginStatus(userDTO.loginStatus);
+        user.setIsAdmin(userDTO.isAdmin);
 
         user = userService.save(user);
         return new ResponseEntity<>(new UserDTO(user),HttpStatus.OK);

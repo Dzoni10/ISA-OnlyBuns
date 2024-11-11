@@ -10,15 +10,17 @@ public class UserDTO {
     public String email;
     public String adress;
     public boolean loginStatus;
+    public boolean isAdmin;
+
 
     public UserDTO() {}
 
     public UserDTO(User user)
     {
-        this(user.getId(),user.getName(),user.getSurname(),user.getUsername(),user.getPassword(),user.getEmail(),user.getAdress(),user.getLoginStatus());
+        this(user.getId(),user.getName(),user.getSurname(),user.getUsername(),user.getPassword(),user.getEmail(),user.getAdress(),user.getLoginStatus(),user.getIsAdmin());
     }
 
-    public UserDTO(int id, String name, String surname, String username, String password,String email,String adress,boolean loginStatus) {
+    public UserDTO(int id, String name, String surname, String username, String password,String email,String adress,boolean loginStatus, boolean isAdmin) {
         this.id = id;
         this.name = name;
         this.surname = surname;
@@ -27,5 +29,6 @@ public class UserDTO {
         this.email = email;
         this.adress = adress;
         this.loginStatus = loginStatus;
+        this.isAdmin = isAdmin;
     }
 }

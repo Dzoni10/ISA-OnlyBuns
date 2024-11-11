@@ -1,77 +1,273 @@
 .users-table-container {
-    margin: 30px auto;
-    padding: 20px;
-    background: #f4f6f9;
-    border-radius: 8px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    max-width: 90%;
-    overflow-x: auto;
-  }
-  
-  .table-title {
-    font-size: 24px;
-    font-weight: 600;
-    margin-bottom: 20px;
-    color: #333;
-    text-align: center;
-  }
-  
-  .users-table {
-    width: 100%;
-    border-collapse: collapse;
-    background-color: #fff;
-  }
-  
-  .users-table th,
-  .users-table td {
-    padding: 15px 20px;
-    text-align: left;
-    font-size: 16px;
-    color: #555;
-  }
-  
-  .users-table th {
-    background-color: #4a9ddf;
-    color: white;
-    font-weight: 500;
-  }
-  
-  .users-table tr {
-    border-bottom: 1px solid #e2e2e2;
-  }
-  
-  .users-table tr:hover {
-    background-color: #f0f0f0;
-  }
-  
-  .users-table .active-status {
-    color: #28a745;
-    font-weight: bold;
-  }
-  
-  .users-table .inactive-status {
-    color: #dc3545;
-    font-weight: bold;
-  }
-  
+  margin: 30px auto;
+  margin-top: 70px;
+  padding: 20px;
+  background: linear-gradient(135deg, #e3e9f0, #f8fafc);
+  border-radius: 10px;
+  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.15);
+  max-width: 90%;
+  overflow-x: auto;
+}
+
+.table-title {
+  font-size: 28px;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 15px;
+}
+.table-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.reset-btn {
+  background-color: #f0ad4e;
+  color: #fff;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  margin-left: 10px;
+}
+
+.reset-btn:hover {
+  background-color: #ec971f;
+}
+.users-table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: #fff;
+}
+
+.users-table th,
+.users-table td {
+  padding: 15px 20px;
+  text-align: left;
+  font-size: 16px;
+  color: #555;
+  transition: background-color 0.2s ease;
+}
+
+.users-table th {
+  background-color: #0077b6;
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.users-table th:hover {
+  background-color: #005f8e;
+}
+
+.users-table tr {
+  border-bottom: 1px solid #e2e2e2;
+}
+
+.users-table tr:hover {
+  background-color: #f0f4f8;
+}
+
+.users-table .sortable-column {
+  text-align: left;
+}
+
+.users-table .admin-label {
+  color: #28a745;
+  font-weight: bold;
+}
+
+.add-admin-btn {
+  background-color: #0077b6;
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.add-admin-btn:hover {
+  background-color: #005f8e;
+}
+
+.add-admin-btn:focus {
+  outline: none;
+}
+
+.add-admin-btn:active {
+  background-color: #004e73;
+}
+.search-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.search-btn {
+  background-color: #0077b6;
+  color: #fff;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  margin-bottom: 10px;
+}
+
+.search-btn:hover {
+  background-color: #005f8e;
+}
+
+.modal-content {
+  background-color: #2e3b4e;
+  color: #f1f1f1;
+  padding: 25px;
+  width: 480px;
+  max-width: 90%;
+  border-radius: 10px;
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.5);
+  position: relative;
+}
+
+.modal-content h3 {
+  margin-top: 0;
+  font-size: 24px;
+  font-weight: bold;
+  color: #f8fafc;
+}
+
+.close-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: transparent;
+  border: none;
+  color: #f1f1f1;
+  font-size: 22px;
+  cursor: pointer;
+}
+
+.close-btn:hover {
+  color: #ff5f5f;
+}
+
+label {
+  display: block;
+  font-size: 16px;
+  color: #c9d1d9;
+  margin-bottom: 6px;
+}
+
+input[type="text"],
+input[type="number"] {
+  width: 100%;
+  padding: 8px;
+  border-radius: 4px;
+  border: 1px solid #444c56;
+  background-color: #f1f1f1;
+  color: #333;
+  font-size: 16px;
+  margin-bottom: 15px;
+}
+
+input[type="text"]::placeholder {
+  color: #555;
+}
+
+input[type="text"]:focus,
+input[type="number"]:focus {
+  border-color: #0077b6;
+  outline: none;
+  box-shadow: 0 0 5px rgba(0, 119, 182, 0.5);
+}
+
+.datalist-option {
+  font-size: 16px;
+  color: #333;
+}
+
+.modal-buttons {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 25px;
+}
+
+.modal-buttons button {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s;
+}
+
+.modal-buttons button:first-child {
+  background-color: #0077b6;
+  color: #fff;
+}
+
+.modal-buttons button:first-child:hover {
+  background-color: #005f8e;
+}
+
+.modal-buttons button:last-child {
+  background-color: #dc3545;
+  color: #fff;
+}
+
+.modal-buttons button:last-child:hover {
+  background-color: #c82333;
+}
 
 
 
+/* Paginacija - ispod tabele */
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+  gap: 10px;
+}
 
+.pagination-btn {
+  background-color: #0077b6;
+  color: white;
+  border: none;
+  padding: 10px;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  font-size: 16px;
+}
 
+.pagination-btn:hover {
+  background-color: #005f8e;
+}
 
-  .users-table th {
-    background-color: #4a9ddf;
-    color: white;
-    font-weight: 500;
-    cursor: pointer; /* Dodaje kursor kao ruka pri prelasku preko naziva kolone */
-    transition: background-color 0.3s ease;
-  }
-  
-  .users-table th:hover {
-    background-color: #3578c7; /* Promeni boju pri prelasku mišem preko kolone */
-  }
-  
-  .users-table th.sortable-column {
-    text-align: left;
-  }
+.pagination-btn:disabled {
+  background-color: #c0c0c0;
+  cursor: not-allowed;
+}
+
+.page-info {
+  font-size: 16px;
+  color: #555;
+}
+
+.pagination-btn i {
+  font-size: 20px;
+}
+
+/* Icona specifična za dugme "First" */
+.pagination-btn:first-child i {
+  font-size: 18px;
+}

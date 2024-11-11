@@ -137,7 +137,6 @@ export class HomePageComponent implements OnInit {
   }
 
   deletePost(postId: number): void {
-    alert(postId);
     this.postService.deletePost(postId).subscribe(
       () => {
         this.loadPosts();

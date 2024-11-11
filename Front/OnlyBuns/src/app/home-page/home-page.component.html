@@ -1,8 +1,7 @@
 <div class="home-container">
   <div class="content-area">
-    <button class="create-post-button" [routerLink]="['/postcreate']" *ngIf="logged" routerLinkActive="active">+ Create Post</button>
-    
-    <div class="posts-container">
+    <button class="create-post-button" [routerLink]="['/postcreate']" *ngIf="logged"  routerLinkActive="active">+ Create Post</button>
+    <div class="posts-container" [ngStyle]="{ 'margin-top': logged ? '20px' : '80px' }">
       <div *ngFor="let post of posts" class="post-card">
         <!-- Post actions for edit and delete -->
         <div class="post-actions-top-right" *ngIf="post.creatorId === registerUser?.id">
@@ -24,7 +23,7 @@
         
 
         <!-- Post content -->
-        <h3 class="post-title">Author: <b>{{ post.username }}</b></h3>
+        <h3 class="post-title"><b>{{ post.username }}</b></h3>
         <p *ngIf="!post.isEditing" class="post-description">{{ post.description }}</p>
         <textarea *ngIf="post.isEditing" [(ngModel)]="post.description" class="edit-description" rows="3"></textarea>
 
