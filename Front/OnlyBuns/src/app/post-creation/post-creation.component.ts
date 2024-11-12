@@ -19,7 +19,9 @@ import { LoginService } from '../login-service.service';
 @Component({
   selector: 'app-post-creation',
   templateUrl: './post-creation.component.html',
-  styleUrls: ['./post-creation.component.css']
+  styleUrls: ['./post-creation.component.css'],
+  standalone: false
+
 })
 export class PostCreationComponent implements OnInit {
   createPostForm!: FormGroup;
@@ -270,7 +272,8 @@ export class PostCreationComponent implements OnInit {
     this.postService.createPost(formData).subscribe({
       next: (response) => {
         console.log('Post created successfully', response);
-        // Navigate to posts list or any other desired route
+        alert('Post created successfully'); 
+        this.router.navigate(['/home']);
       },
       error: (error) => {
         console.error('Error creating post', error);

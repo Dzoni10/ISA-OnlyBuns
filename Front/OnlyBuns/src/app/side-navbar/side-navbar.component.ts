@@ -23,7 +23,7 @@ export class SideNavbarComponent implements OnInit {
 
   logged = false;
 
-  registerUser: RegisterUser={id: 999, name: "aaa", surname:"bbb", username:"ccc", password:"ddd", email:"eee", adress:"fff", loginStatus:false, isAdmin: false, postNumber:0} ;
+  registerUser: RegisterUser={id: 999, name: "aaa", surname:"bbb", username:"ccc", password:"ddd", email:"eee", adress:"fff", loginStatus:false, isAdmin: false, postNumber:0, commentNumber:0} ;
 
   ngOnInit(): void {
     this.logService.logged.subscribe(isLogged => {

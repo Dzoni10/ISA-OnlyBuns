@@ -1,5 +1,5 @@
 <div class="create-post-card">
-    <form [formGroup]="createPostForm" (ngSubmit)="onSubmit()">
+    <form [formGroup]="createPostForm" (ngSubmit)="onSubmit()"  >
       <div class="form-field">
         <label for="description">Description</label>
         <input id="description" formControlName="description" type="text" />

@@ -5,13 +5,13 @@ import { CommentService } from '../comment.service';
 import { Post } from '../model/post.model';
 import { Comment } from '../model/comment.model';
 import { PagedResults } from '../model/paged-results.model'; 
-import { faComments, faUser, faThumbsUp, faCommentDots , faEdit, faTrash, faCheck, faTimes, faIcons, faPaperPlane} from '@fortawesome/free-solid-svg-icons';
 import { RegisterUser } from '../model/register-user.model';
 import { LoginService } from '../login-service.service';
 import { Router } from '@angular/router';
 import { formatDistanceToNow } from 'date-fns';
 import { LikeService } from '../like.service';
 import { Like } from '../model/like.model';
+import { faComments, faUser, faThumbsUp,faUserCircle, faCommentDots , faEdit, faTrash, faCheck, faTimes, faIcons, faPaperPlane} from '@fortawesome/free-solid-svg-icons';
 
 
 @Component({
@@ -23,6 +23,16 @@ import { Like } from '../model/like.model';
 })
 
 export class HomePageComponent implements OnInit {
+    faProfileCircle = faUserCircle;
+    faPaperPlane = faPaperPlane;
+    faChat = faComments;
+    faProfile = faUser;
+    faLike = faThumbsUp;
+    faComment = faCommentDots;
+    faEdit = faEdit;  
+    faTrash = faTrash; 
+    faCheck = faCheck;
+    faTimes = faTimes;
   
   beforeEditDescription = "";
   posts: Post[] = []; 
@@ -39,16 +49,6 @@ export class HomePageComponent implements OnInit {
   comments: Comment[] = []; 
  
   newCommentText = '';
-
-  faPaperPlane = faPaperPlane;
-  faChat = faComments;
-  faProfile = faUser;
-  faLike = faThumbsUp;
-  faComment = faCommentDots;
-  faEdit = faEdit;  
-  faTrash = faTrash; 
-  faCheck = faCheck;
-  faTimes = faTimes;
 
 
   constructor(private postService: PostService,private commentService: CommentService, private loginService: LoginService, private router: Router, private likeService: LikeService ) { }
@@ -162,14 +162,18 @@ export class HomePageComponent implements OnInit {
   }
 
   deletePost(postId: number): void {
-    this.postService.deletePost(postId).subscribe(
-      () => {
-        this.loadPosts();
-      },
-      (error) => {
-        console.error('Greška pri brisanju posta', error);
-      }
-    );
+    const confirmed = window.confirm('Are you sure you want to delete this post?');
+    
+    if (confirmed) {
+      this.postService.deletePost(postId).subscribe(
+        () => {
+          this.loadPosts();
+        },
+        (error) => {
+          console.error('Error deleting post', error);
+        }
+      );
+    }
   }
   
   

@@ -23,8 +23,10 @@
         
 
         <!-- Post content -->
-        <h3 class="post-title"><b>{{ post.username }}</b></h3>
-        <p *ngIf="!post.isEditing" class="post-description">{{ post.description }}</p>
+        <h3 class="post-title">
+          <fa-icon [icon]="faProfileCircle" class="profile-icon"></fa-icon>
+          <b>{{ post.username }}</b>
+        </h3>        <p *ngIf="!post.isEditing" class="post-description">{{ post.description }}</p>
         <textarea *ngIf="post.isEditing" [(ngModel)]="post.description" class="edit-description" rows="3"></textarea>
 
         <!-- <img src="https://i.redd.it/hiojgqpu0cl81.jpg" alt="Zec" class="post-image"> -->
@@ -36,22 +38,22 @@
         </ng-template>
 
         <div class="post-footer">
-          <span class="post-time">{{ post.creationTime | date: 'short' }}</span>
           <span *ngIf="post.likeCount >= 0"> • {{ post.likeCount }} {{ post.likeCount === 1 ? 'like' : 'likes' }}</span>
         </div>
         
         <!-- Post actions for like and comment -->
         <div class="post-actions">
           <button 
-            (click)="toggleLike(post)" 
-            class="post-action-button" 
-            [ngClass]="{ 'liked': post.userHasLiked }">
-            <fa-icon [icon]="faLike"></fa-icon> 
-            {{ post.userHasLiked ? 'Liked' : 'Like' }}
-          </button>
-          <button (click)="openModal(post)" class="post-action-button">
-            <fa-icon [icon]="faComment"></fa-icon> Comment
-          </button>
+          (click)="toggleLike(post)" 
+          class="post-action-button" 
+          [ngClass]="{ 'liked': post.userHasLiked }">
+          <fa-icon [icon]="faLike"></fa-icon> 
+          {{ post.userHasLiked ? 'Liked' : 'Like' }}
+        </button>
+        <button (click)="openModal(post)" class="post-action-button">
+          <fa-icon [icon]="faComment"></fa-icon> Comment
+        </button>
+        <span class="post-time">{{ post.creationTime | date: 'short' }}</span>
         </div>
       </div>
     </div>
@@ -77,8 +79,11 @@
         <h4>Comments ({{ comments.length }})</h4>
         <div *ngFor="let comment of comments" class="comment">
           <div class="comment-header">
-            <strong>{{ comment.username }}</strong>
-            <span class="comment-time">{{ getTimeAgo(comment.creationTime) }}</span>  
+            <div class="comment-author">
+              <fa-icon [icon]="faProfileCircle" class="profile-icon2"></fa-icon>
+              <strong>{{ comment.username }}</strong>
+            </div>
+            <span class="comment-time">{{ getTimeAgo(comment.creationTime) }}</span>
           </div>
           <p>{{ comment.text }}</p>
         </div>

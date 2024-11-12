@@ -26,4 +26,9 @@ export class CommentService {
   addComment(comment: any): Observable<any> {
     return this.http.post<any>(environment.apiHost + "comments/create", comment);
   }
+
+  getAllComments(): Observable<PagedResults<Comment>>{
+    return this.http.get<PagedResults<Comment>>(environment.apiHost +'/comments/all');
+  }
+
 }

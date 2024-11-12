@@ -36,6 +36,9 @@
     background-color: #1976d2;
     color: white;
     font-weight: 600;
+    z-index: 100;
+    position: fixed;   /*AKO NE ZELITE DA NAVBAR BUDE FIKSIRAN VEC KAD SE SKROLUJE DA NESTANE OVO IZBRISITE*/
+
   }
 
   .toolbar img {
