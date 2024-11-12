@@ -11,7 +11,7 @@ INSERT INTO "app_post" (creator_id, description, creation_time, latitude, longit
 VALUES (4, 'Obican mali zec, spreman za veceru.', '2024-11-10 09:00:00', 0, 0, '','laza123' );
 
 INSERT INTO "app_post" (creator_id, description, creation_time, latitude, longitude, image_path, username)
-VALUES (3, 'Milivojev zec, jedini preziveli.', '2024-11-10 11:30:00',0,0, '','mika`123');
+VALUES (3, 'Milivojev zec, jedini preziveli.', '2024-11-10 11:30:00',0,0, '','mika123');
 
 INSERT INTO "app_comment" (post_id, username, creation_time, text)
 VALUES

@@ -20,16 +20,11 @@
       <fa-icon [icon]="faProfile"></fa-icon>
       <span>Profile Page</span>
     </li>
-    
-    <li *ngIf="registerUser.isAdmin && logged" routerLinkActive="active">
-      <fa-icon [icon]="faList"></fa-icon>
-      <span>List of Posts</span>
-    </li>
     <li *ngIf="registerUser.isAdmin && logged"  routerLinkActive="active">
       <fa-icon [icon]="faTrending"></fa-icon>
       <span>Network Trends</span>
     </li>
-    <li *ngIf="registerUser.isAdmin && logged" routerLinkActive="active">
+    <li *ngIf="registerUser.isAdmin && logged"  [routerLink]="['app-analytics']" routerLinkActive="active">
       <fa-icon [icon]="faChartBar"></fa-icon>
       <span>App Analytics</span>
     </li>

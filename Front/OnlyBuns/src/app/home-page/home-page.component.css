@@ -128,9 +128,17 @@
 /* Rest of the components */
 .post-actions {
   display: flex;
-  gap: 15px;
-  margin-top: -25px;
+  gap: 13px;
+  margin-top: 5px;
 }
+
+.profile-icon {
+  font-size: 30px;      /* Veličina ikonice */
+  color: #6c757d;       /* Boja ikonice */
+  margin-right: 8px;    /* Razmak između ikonice i korisničkog imena */
+  vertical-align: middle;
+}
+
 .edit-actions {
   display: flex;
   gap: 10px;  /* Razmak između dugmadi */
@@ -151,6 +159,9 @@
 
 .post-action-button:hover {
   color: #064a98;
+}
+.edit-description {
+  margin-bottom: 5px;
 }
 
 .post-action-button fa-icon {
@@ -194,11 +205,11 @@
 
 .post-time {
   font-style: italic;
-  margin-left: 65%;
   font-size: 11px;
+  margin-top: 3px;
 }
 .post-footer{
-  margin-top: 15px;
+  margin-top: 7px;
 }
 
 
@@ -229,12 +240,22 @@
   background-color: #4b4b4b;
 }
 
-/* Razdvajanje autora i vremena od sadržaja */
 .comment-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 10px;
+}
+
+.comment-author {
+  display: flex;
+  align-items: center;
+}
+
+.profile-icon2 {
+  margin-right: 8px;
+  color: #6c757d;
+  font-size: 20px; /* Veličina ikone */
 }
 
 .comment-header strong {
@@ -246,6 +267,7 @@
   font-size: 12px;
   color: #aaa;
 }
+
 
 /* Razmak između komentara */
 .comment p {

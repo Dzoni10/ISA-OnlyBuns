@@ -9,4 +9,5 @@ export interface RegisterUser{
     loginStatus: boolean;
     isAdmin: boolean;
     postNumber: number;
+    commentNumber: number;
 }

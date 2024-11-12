@@ -26,6 +26,10 @@ import { PostCreationComponent } from './post-creation/post-creation.component';
 import { PostService } from './post-service.service';
 import {MatSnackBarModule} from '@angular/material/snack-bar';
 import { UsersProfilComponent } from './users-profil/users-profil.component';
+import { AppAnalyticsComponent } from './app-analytics/app-analytics.component';
+import { NgChartsModule  } from 'ng2-charts';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';  // Uvoz MatProgressSpinnerModule
+
 
 @NgModule({
   declarations: [
@@ -38,6 +42,7 @@ import { UsersProfilComponent } from './users-profil/users-profil.component';
     ProfileComponent,
     PostCreationComponent,
     UsersProfilComponent,
+    AppAnalyticsComponent
     
 
   ],
@@ -55,7 +60,9 @@ import { UsersProfilComponent } from './users-profil/users-profil.component';
     MatCardModule,
     FormsModule,
     MatIconModule,
-    MatSnackBarModule
+    MatSnackBarModule,
+    NgChartsModule ,
+    MatProgressSpinnerModule,  
   
   ],
   providers: [{
