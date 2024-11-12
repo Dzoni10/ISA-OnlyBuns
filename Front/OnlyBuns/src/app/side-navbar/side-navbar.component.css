@@ -2,13 +2,15 @@
   width: 250px;
   background: linear-gradient(to bottom right, #5a3d99, #4a9ddf);
   color: white;
-  height: 580px;
+  height: 580px; /* Obezbeđuje da sidebar zauzme celu visinu prozora */
   padding-top: 60px;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   border-radius: 0 20px 20px 0;
   box-shadow: 4px 0 12px rgba(0, 0, 0, 0.1);
+  position: fixed; /* Sidebar postaje fiksiran */
+  left: 0; /* Sidebar je zalepljen za levu stranu ekrana */
 }
 
 ul {
