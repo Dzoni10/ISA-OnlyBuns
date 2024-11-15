@@ -1,11 +1,13 @@
-insert into "app_user" (name,surname,username,password,email,adress,login_status,is_admin) values ('Administrator','Administratorovic','admin','admin','admin@gmail','Ulica122000',TRUE,TRUE);
-insert into "app_user" (name,surname,username,password,email,adress,login_status,is_admin) values ('Pera','Peric','pera123','123','pera@gmail','Ulica122000',FALSE,FALSE);
-insert into "app_user" (name,surname,username,password,email,adress,login_status,is_admin) values ('Mika','Mikic','mika123','123','mika@gmail','Ulica122000',TRUE,FALSE);
-insert into "app_user" (name,surname,username,password,email,adress,login_status,is_admin) values ('Laza','Lazic','laza123','123','laza@gmail','Ulica122000',TRUE,FALSE);
-insert into "app_user" (name,surname,username,password,email,adress,login_status,is_admin) values ('Djura','Djuric','djura123','123','djura@gmail','Ulica122000',TRUE,FALSE);
-insert into "app_user" (name,surname,username,password,email,adress,login_status,is_admin) values ('Aca','Acic','aca123','123','aca@gmail','Ulica122000',FALSE,FALSE);
-insert into "app_user" (name,surname,username,password,email,adress,login_status,is_admin) values ('Mila','Milic','mila123','123','mila@gmail','Ulica122000',TRUE,FALSE);
-insert into "app_user" (name,surname,username,password,email,adress,login_status,is_admin) values ('Ljuba','Ljubic','ljuba123','123','ljuba@gmail','Ulica122000',TRUE,FALSE);
+INSERT INTO "app_user" (name, surname, username, password, email, adress, login_status, is_admin, last_activity)
+VALUES
+    ('Administrator', 'Administratorovic', 'admin', 'admin', 'admin@gmail', 'Ulica122000', TRUE, TRUE, '2024-11-01T10:00:00'),
+    ('Pera', 'Peric', 'pera123', '123', 'pera@gmail', 'Ulica122000', FALSE, FALSE, '2024-11-14T10:00:00'),
+    ('Mika', 'Mikic', 'mika123', '123', 'mika@gmail', 'Ulica122000', TRUE, FALSE, '2024-10-31T10:00:00'),
+    ('Laza', 'Lazic', 'laza123', '123', 'djordjer88@gmail.com', 'Ulica122000', TRUE, FALSE, '2024-11-02T10:00:00'),
+    ('Djura', 'Djuric', 'djura123', '123', 'djura@gmail', 'Ulica122000', TRUE, FALSE, '2024-11-05T10:00:00'),
+    ('Aca', 'Acic', 'aca123', '123', 'aca@gmail', 'Ulica122000', FALSE, FALSE, '2024-11-15T10:00:00'),
+    ('Mila', 'Milic', 'mila123', '123', 'mila@gmail', 'Ulica122000', TRUE, FALSE, '2024-11-02T10:00:00'),
+    ('Ljuba', 'Ljubic', 'ljuba123', '123', 'ljuba@gmail', 'Ulica122000', TRUE, FALSE, '2024-10-25T10:00:00');
 
 INSERT INTO "app_post" (creator_id, description, creation_time, latitude, longitude, image_path, username)
 VALUES (4, 'Obican mali zec, spreman za veceru.', '2024-11-10 09:00:00', 0, 0, '','laza123' );
