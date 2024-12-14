@@ -14,6 +14,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { NavbarComponent } from './navbar/navbar.component';
 import { LoginComponent } from './login/login.component';
 import { SignupComponent } from './signup/signup.component';
+import { UserProfileComponent } from './user-profile/user-profile.component';
 import { HttpClientModule } from '@angular/common/http';
 import { SideNavbarComponent } from './side-navbar/side-navbar.component';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
@@ -40,6 +41,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';  
     SideNavbarComponent,
     HomePageComponent,
     ProfileComponent,
+    UserProfileComponent,
     PostCreationComponent,
     UsersProfilComponent,
     AppAnalyticsComponent

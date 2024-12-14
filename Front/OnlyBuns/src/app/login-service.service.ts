@@ -76,7 +76,9 @@ export class LoginService {
   getUserForProfile(id: number): Observable<RegisterUser>{
     return this.http.get<RegisterUser>(environment.apiHost + '/users/' + id);
   }
-
+    getUserByUsername(username: string): Observable<RegisterUser[]> {
+      return this.http.get<RegisterUser[]>(`${environment.apiHost}/users/findUsername?username=${username}`);
+    }
   checkIfUserExists(): void {
     const accessToken = this.tokenStorage.getAccessToken();
     if (accessToken == null) {
