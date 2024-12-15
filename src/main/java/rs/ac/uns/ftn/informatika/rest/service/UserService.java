@@ -2,6 +2,8 @@ package rs.ac.uns.ftn.informatika.rest.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.Lock;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Service;
 import rs.ac.uns.ftn.informatika.rest.Interface.RepositoryInterfaces.UserRepositoryInterface;
 import rs.ac.uns.ftn.informatika.rest.domain.User;
@@ -11,10 +13,15 @@ import com.google.common.hash.BloomFilter;
 import com.google.common.hash.Funnels;
 import rs.ac.uns.ftn.informatika.rest.exception.UsernameAlreadyExistsException;
 
-import javax.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 import java.nio.charset.StandardCharsets;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
+
+import org.springframework.transaction.annotation.Propagation;
+
+import javax.persistence.LockModeType;
 
 @Service
 public class UserService{
@@ -38,10 +45,31 @@ public class UserService{
         }
 
     }
-
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    @Lock(LockModeType.PESSIMISTIC_WRITE)
+//    public boolean isUsernameExist(String username) {
+//        return usernameBloomFilter.mightContain(username);
+//    }
     public boolean isUsernameExist(String username) {
-        return usernameBloomFilter.mightContain(username);
+//        if (usernameBloomFilter.mightContain(username)) {
+        System.out.println("Acquiring lock for username: " + username);
+            Optional<User> existingUser = userRepositoryInterface.findByUsernameWithLock(username);
+        System.out.println("Lock acquired for username: " + username);
+            return existingUser.isPresent();
+        //}
+       // return false;
     }
+
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    public void updateUserEmail(String username, String newEmail) {
+        Optional<User> userOptional = userRepositoryInterface.findByUsernameWithLock(username);
+        if (userOptional.isPresent()) {
+            User user = userOptional.get();
+            user.setEmail(newEmail);
+            userRepositoryInterface.save(user);
+        }
+    }
+
 
     public boolean isEmailExist(String email){
         return usernameBloomFilter.mightContain(email);
@@ -57,6 +85,7 @@ public class UserService{
     public Page<User> findAll(Pageable page) {
         return userRepositoryInterface.findAll(page);
     }
+
 
     public List<User> findByUsername(String username)
     {
