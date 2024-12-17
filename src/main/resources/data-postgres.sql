@@ -22,3 +22,8 @@ VALUES
     (1, 'pera123', '2024-11-10 12:15:00', 'Zec je kao raketa, ali bi mogao da se opusti i uživa u prirodi.'),
     (1, 'zika123', '2024-11-10 12:15:00', 'Zec je pravi majstor za preživljavanje, brzo beži kad nešto čuje.'),
     (1, 'mika123', '2024-11-10 12:15:00', 'Zec je brz i mudar, samo što ponekad može da postane previše oprezan!');
+INSERT INTO "following" (username, following, creation_time)
+VALUES
+    ('mika123', 'laza123', '2024-11-10 11:45:00'),
+    ('mika123', 'pera123', '2024-11-10 11:45:00'),
+    ('laza123', 'pera123', '2024-11-10 12:15:00');

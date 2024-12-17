@@ -284,3 +284,6 @@
 .post-action-button.liked {
   color: purple;
 }
+.post-title {
+  cursor: pointer;
+}
