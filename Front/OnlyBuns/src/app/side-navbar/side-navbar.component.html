@@ -8,7 +8,7 @@
       <fa-icon [icon]="faTrending"></fa-icon>
       <span>Trending</span>
     </li>
-    <li  *ngIf="!registerUser.isAdmin && logged" routerLinkActive="active">
+    <li  *ngIf="!registerUser.isAdmin && logged" [routerLink]="['postOnMap']" routerLinkActive="active">
       <fa-icon [icon]="faMap"></fa-icon>
       <span>Posts Near Map</span>
     </li>

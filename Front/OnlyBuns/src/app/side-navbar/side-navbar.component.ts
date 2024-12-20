@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { faHome, faChartLine, faMapMarkerAlt, faComments, faUser, faList, faChartBar, faUserFriends } from '@fortawesome/free-solid-svg-icons';
+import { faHome, faChartLine, faMapMarkerAlt, faComments, faUser, faList, faChartBar, faUserFriends,faMap } from '@fortawesome/free-solid-svg-icons';
 import { LoginService } from '../login-service.service';
 import { RegisterUser } from '../model/register-user.model';
 
@@ -18,6 +18,7 @@ export class SideNavbarComponent implements OnInit {
   faList = faList;
   faChartBar = faChartBar;
   faUserFriends = faUserFriends;
+  faMapp = faMap;
 
   constructor(private logService: LoginService) { }
 
