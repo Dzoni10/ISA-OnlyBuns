@@ -113,4 +113,11 @@ public class UserService{
     public void remove(int id) {
         userRepositoryInterface.deleteById(id);
     }
+
+    public void deleteInactiveUsers() {
+        List<User> inactiveUsers = userRepositoryInterface.findByLoginStatusFalse();
+        for (User user : inactiveUsers) {
+            userRepositoryInterface.delete(user);
+        }
+    }
 }
