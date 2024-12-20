@@ -47,17 +47,12 @@ public class UserService{
     }
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     @Lock(LockModeType.PESSIMISTIC_WRITE)
-//    public boolean isUsernameExist(String username) {
-//        return usernameBloomFilter.mightContain(username);
-//    }
+
     public boolean isUsernameExist(String username) {
-//        if (usernameBloomFilter.mightContain(username)) {
         System.out.println("Acquiring lock for username: " + username);
             Optional<User> existingUser = userRepositoryInterface.findByUsernameWithLock(username);
         System.out.println("Lock acquired for username: " + username);
             return existingUser.isPresent();
-        //}
-       // return false;
     }
 
     @Transactional(propagation = Propagation.REQUIRES_NEW)

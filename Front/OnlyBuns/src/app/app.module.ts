@@ -29,7 +29,8 @@ import {MatSnackBarModule} from '@angular/material/snack-bar';
 import { UsersProfilComponent } from './users-profil/users-profil.component';
 import { AppAnalyticsComponent } from './app-analytics/app-analytics.component';
 import { NgChartsModule  } from 'ng2-charts';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';  // Uvoz MatProgressSpinnerModule
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MapPostComponent } from './map-post/map-post.component';  // Uvoz MatProgressSpinnerModule
 
 
 @NgModule({
@@ -44,7 +45,8 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';  
     UserProfileComponent,
     PostCreationComponent,
     UsersProfilComponent,
-    AppAnalyticsComponent
+    AppAnalyticsComponent,
+    MapPostComponent
     
 
   ],

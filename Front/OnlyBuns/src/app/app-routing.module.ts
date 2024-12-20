@@ -9,6 +9,7 @@ import { UserProfileComponent } from './user-profile/user-profile.component';
 import { UsersProfilComponent } from './users-profil/users-profil.component';
 import { AppAnalyticsComponent } from './app-analytics/app-analytics.component';
 import { AuthGuard } from './auth.guard';
+import { MapPostComponent } from './map-post/map-post.component';
 
 
 const routes: Routes = [
@@ -20,7 +21,8 @@ const routes: Routes = [
   {path: 'profile', component: ProfileComponent, canActivate: [AuthGuard]},
   {path: 'usersprofile', component: UsersProfilComponent, canActivate: [AuthGuard]},
   {path: 'postcreate', component: PostCreationComponent, canActivate: [AuthGuard]},
-  { path: 'user-profile/:username', component: UserProfileComponent, canActivate: [AuthGuard]}
+  { path: 'user-profile/:username', component: UserProfileComponent, canActivate: [AuthGuard]},
+  {path: 'postOnMap', component:MapPostComponent, canActivate:[AuthGuard]}
 ];
 
 @NgModule({

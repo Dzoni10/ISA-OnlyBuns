@@ -31,7 +31,7 @@ import { Router } from '@angular/router';
     isFollowersModalOpen: boolean = false;  
     isFollowingModalOpen: boolean = false;  
     isFollowing: boolean = false; 
-    constructor(private route: ActivatedRoute, private userService: LoginService, private router: Router,    private followingService: FollowingService    ) {}
+    constructor(private route: ActivatedRoute, private userService: LoginService, private router: Router,private followingService: FollowingService) {}
 
 
     ngOnInit(): void {
@@ -66,9 +66,6 @@ import { Router } from '@angular/router';
           })
 
         }
-
-
-
 
         onFollowClick(): void {
             if (this.isFollowing) {
@@ -112,8 +109,6 @@ import { Router } from '@angular/router';
                   });
           }
         }
-
-
 
 
           loadFollowData(username: string): void {

@@ -1,0 +1,14 @@
+.map-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh; /* Visina viewporta */
+  }
+  
+  .map {
+    width: 800px; /* Širina mape */
+    height: 600px; /* Visina mape */
+    border: 1px solid #ccc; /* Dodavanje okvira za mapu */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Lagani efekat senke */
+    margin-top: 50px;
+  }
