@@ -27,6 +27,9 @@ public interface PostRepositoryInterface extends JpaRepository<Post, Integer> {
             "SELECT l.postId FROM Like l GROUP BY l.postId ORDER BY COUNT(l.id) DESC)")
     List<Post> getPopularPostsEver(Pageable pageable);
 
+    @Query("SELECT COUNT(p) FROM Post p WHERE p.creationTime >= :oneMonthAgo")
+    int getPostsInLastMonth(@Param("oneMonthAgo") LocalDateTime oneMonthAgo);
+
     @Query("SELECT COUNT(l.id) FROM Like l WHERE l.postId = :postId")
     int countLikesByPostId(int postId);
 

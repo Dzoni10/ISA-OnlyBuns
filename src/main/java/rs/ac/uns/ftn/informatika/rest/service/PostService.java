@@ -62,7 +62,7 @@ public class PostService {
 
     @Cacheable("popularPostsLast7DaysCache")
     public List<Post> getPopularPostsIn7days() {
-        System.out.println("Kes kolica 7 dana");
+        System.out.println("7 dana");
         LocalDateTime sevenDaysAgo = LocalDateTime.now().minusDays(7);
         Pageable pageable = PageRequest.of(0, 5);
         return postRepositoryInterface.getPopularPostsIn7Days(sevenDaysAgo,pageable);
@@ -70,7 +70,7 @@ public class PostService {
 
     @Cacheable("popularPostsAllTimeCache")
     public List<Post> getPopularPostsEver() {
-        System.out.println("Kes kolica ikada");
+        System.out.println("ikada");
         Pageable pageable = PageRequest.of(0, 10);
         return postRepositoryInterface.getPopularPostsEver(pageable);
     }
@@ -82,6 +82,11 @@ public class PostService {
     @CacheEvict(value = {"popularPostsAllTimeCache", "popularPostsLast7DaysCache"}, allEntries = true)
     public void evictCaches(){
         LOG.info("Posts removed from cache!");
+    }
+
+    public int getPostsInLastMonth(){
+        LocalDateTime monthAgo = LocalDateTime.now().minusMonths(1);
+        return postRepositoryInterface.getPostsInLastMonth(monthAgo);
     }
 
 }

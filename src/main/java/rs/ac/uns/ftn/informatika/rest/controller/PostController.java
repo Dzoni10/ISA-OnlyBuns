@@ -171,5 +171,11 @@ public class PostController {
         return ResponseEntity.ok("Cache cleared successfully");
     }
 
+    @GetMapping("/popular/count-last-month")
+    public ResponseEntity<Integer> getPopularPostsLastMonth() {
+        int postCount = postService.getPostsInLastMonth();
+        return ResponseEntity.ok(postCount);
+    }
+
 
 }

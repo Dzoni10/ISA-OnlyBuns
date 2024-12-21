@@ -20,7 +20,10 @@ export class LikeService {
 
   constructor(private http: HttpClient, private router: Router) { }
 
- 
+  getAllLikes(): Observable<PagedResults<Like>>{
+    return this.http.get<PagedResults<Like>>(environment.apiHost + 'likes/all');
+  }
+
   getLikesByPostId(postId: number): Observable<PagedResults<Like>>{
     return this.http.get<PagedResults<Like>>(`${environment.apiHost}likes/post/${postId}`);
   }

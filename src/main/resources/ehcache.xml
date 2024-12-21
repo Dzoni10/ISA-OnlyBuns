@@ -13,7 +13,7 @@
 
     <cache alias="popularPostsLast7DaysCache">
         <expiry>
-            <ttl unit="seconds">30</ttl> <!-- pola milke -->
+            <ttl unit="seconds">30</ttl> <!-- pola minuta -->
         </expiry>
         <heap unit="entries">100</heap>
     </cache>

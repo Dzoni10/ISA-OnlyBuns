@@ -37,4 +37,8 @@ export class PostService {
     return this.http.get<PagedResults<Post>>(environment.apiHost + 'posts/popular/all-time');
   }
 
+  getCountPostLastMonth(): Observable<number>{
+    return this.http.get<number>(environment.apiHost + 'posts/popular/count-last-month');
+  }
+
 }

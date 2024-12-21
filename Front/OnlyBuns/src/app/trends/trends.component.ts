@@ -17,10 +17,12 @@ import { ThemeService } from 'ng2-charts';
 export class TrendsComponent implements OnInit {
 
   posts:Post[]=[];
-  likes:Like[]=[];
+  allLikes:Like[]=[];
   registerUser: RegisterUser | undefined;
   popularPosts7Days: Post[]=[];
   mostPopularPosts: Post[]=[];
+  lastMonth: number=0;
+  topLikers: { username: string; likeCount: number }[] = [];
 
   constructor(private postService: PostService,private likeService:LikeService, private loginService:LoginService){}
 
@@ -38,8 +40,10 @@ export class TrendsComponent implements OnInit {
       }
     });
     this.loadPosts();
+    this.getMonthPostCount();
     this.loadMostPopularPostsEver();
     this.loadPopularPosts7Days();
+    this.loadAllLikes();
   }
 
   loadUserData(userId:number): void{
@@ -75,12 +79,38 @@ export class TrendsComponent implements OnInit {
             });
       }
 
+      loadAllLikes(): void{
+       this.likeService.getAllLikes().subscribe({
+       next: (res)=>{
+        this.allLikes = res.results;
+        this.calculateTopLikers();
+       },error(err) {
+         alert("Nije moguce ucitati top 10 lajkera")
+       },
+       });
+      }
+
+      calculateTopLikers(): void {
+        const likeCounts: { [username: string]: number } = {};
+      
+        // Broji lajkove po korisnicima
+        this.allLikes.forEach((lk) => {
+          likeCounts[lk.username] = (likeCounts[lk.username] || 0) + 1;
+        });
+      
+        // Sortiraj i uzmi top 10
+        this.topLikers = Object.entries(likeCounts)
+          .map(([username, likeCount]) => ({ username, likeCount }))
+          .sort((a, b) => b.likeCount - a.likeCount)
+          .slice(0, 10);
+      }
+
 
       loadPopularPosts7Days(): void{
           this.postService.getPopularPostsIn7Days().subscribe({
             next:(result)=>{
-              this.mostPopularPosts = result.results;
-              this.mostPopularPosts.forEach(mpp=>{
+              this.popularPosts7Days = result.results;
+              this.popularPosts7Days.forEach(mpp=>{
                 this.loadLikes(mpp);
               })
             }, error(err) {
@@ -100,6 +130,15 @@ export class TrendsComponent implements OnInit {
             alert("Nije moguce dobaviti najpopularnije postove ikada");
           },
         });
+      }
 
+      getMonthPostCount(): void{
+        this.postService.getCountPostLastMonth().subscribe({
+          next: (response)=>{
+            this.lastMonth = response;
+          },error(err) {
+            alert("Nije moguce dobiti broj postova u prethodnih mesec dana");
+          },
+        });
       }
 }
