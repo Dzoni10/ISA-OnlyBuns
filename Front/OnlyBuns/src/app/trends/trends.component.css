@@ -1,0 +1,21 @@
+.posts-container {
+    padding: 20px;
+    font-family: Arial, sans-serif;
+  }
+  
+  .summary {
+    margin-top: 50px;
+    margin-bottom: 20px;
+    text-align: center;
+  }
+  
+  .popular-posts {
+    margin-top: 20px;
+  }
+  
+  .popular-posts div {
+    margin-bottom: 10px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+  }

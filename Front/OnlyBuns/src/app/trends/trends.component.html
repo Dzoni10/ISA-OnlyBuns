@@ -1,0 +1,15 @@
+<div class="posts-container">
+    <div class="summary">
+      <h1>Total Posts</h1>
+      <p>{{ posts.length }}</p>
+    </div>
+  
+    <div class="popular-posts">
+      <h2>Top 5 Popular Posts</h2>
+      <div *ngFor="let post of mostPopularPosts">
+        <h3>{{ post.description }}</h3>
+        <p>{{ post.location.latitude }}</p>
+        <small>Likes: {{ post.likeCount }}</small>
+      </div>
+    </div>
+  </div>
