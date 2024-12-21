@@ -4,7 +4,7 @@
       <fa-icon [icon]="faHome"></fa-icon>
       <span>HomePage</span>
     </li>
-    <li  *ngIf="!registerUser.isAdmin && logged"  routerLinkActive="active">
+    <li  *ngIf="!registerUser.isAdmin && logged" [routerLink]="['trends']"  routerLinkActive="active">
       <fa-icon [icon]="faTrending"></fa-icon>
       <span>Trending</span>
     </li>

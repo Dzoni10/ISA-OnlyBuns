@@ -30,6 +30,7 @@ import java.time.LocalDateTime;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.web.multipart.MultipartFile;
 @RestController
@@ -133,6 +134,48 @@ public class PostController {
     }
 
 
+
+    @GetMapping("/popular/all-time")
+    public ResponseEntity<PagedResults<PostDTO>> getPopularPostsAllTime() {
+        List<Post> popularPosts = postService.getPopularPostsEver();
+        List<PostDTO> postDTOs = popularPosts.stream()
+                .map(PostDTO::new)
+                .collect(Collectors.toList());
+        PagedResults<PostDTO> pagedResults = new PagedResults<>();
+        pagedResults.setResults(postDTOs);
+        pagedResults.setTotalCount(popularPosts.size());
+        return new ResponseEntity<>(pagedResults,HttpStatus.OK);
+    }
+
+    @GetMapping("/popular/last-7-days")
+    public ResponseEntity<PagedResults<PostDTO>> getPopularPostsLast7Days() {
+        List<Post> popularPosts = postService.getPopularPostsIn7days();
+        List<PostDTO> postDTOs = popularPosts.stream()
+                .map(PostDTO::new)
+                .collect(Collectors.toList());
+        PagedResults<PostDTO> pagedResults = new PagedResults<>();
+        pagedResults.setResults(postDTOs);
+        pagedResults.setTotalCount(popularPosts.size());
+        return new ResponseEntity<>(pagedResults,HttpStatus.OK);
+    }
+
+    @GetMapping("/{postId}/likes")
+    public ResponseEntity<Integer> getLikeCount(@PathVariable int postId) {
+        int likeCount = postService.getLikeCountForPost(postId);
+        return ResponseEntity.ok(likeCount);
+    }
+
+    @GetMapping(value = "/evictCache")
+    public ResponseEntity<String> removeFromCache() {
+        postService.evictCaches();
+        return ResponseEntity.ok("Cache cleared successfully");
+    }
+
+    @GetMapping("/popular/count-last-month")
+    public ResponseEntity<Integer> getPopularPostsLastMonth() {
+        int postCount = postService.getPostsInLastMonth();
+        return ResponseEntity.ok(postCount);
+    }
 
 
 }

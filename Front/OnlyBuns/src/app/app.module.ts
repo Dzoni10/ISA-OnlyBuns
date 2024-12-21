@@ -30,7 +30,8 @@ import { UsersProfilComponent } from './users-profil/users-profil.component';
 import { AppAnalyticsComponent } from './app-analytics/app-analytics.component';
 import { NgChartsModule  } from 'ng2-charts';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { MapPostComponent } from './map-post/map-post.component';  // Uvoz MatProgressSpinnerModule
+import { MapPostComponent } from './map-post/map-post.component';
+import { TrendsComponent } from './trends/trends.component';  // Uvoz MatProgressSpinnerModule
 
 
 @NgModule({
@@ -46,7 +47,8 @@ import { MapPostComponent } from './map-post/map-post.component';  // Uvoz MatPr
     PostCreationComponent,
     UsersProfilComponent,
     AppAnalyticsComponent,
-    MapPostComponent
+    MapPostComponent,
+    TrendsComponent
     
 
   ],

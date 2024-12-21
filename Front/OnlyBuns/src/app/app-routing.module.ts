@@ -10,19 +10,21 @@ import { UsersProfilComponent } from './users-profil/users-profil.component';
 import { AppAnalyticsComponent } from './app-analytics/app-analytics.component';
 import { AuthGuard } from './auth.guard';
 import { MapPostComponent } from './map-post/map-post.component';
+import { TrendsComponent } from './trends/trends.component';
 
 
 const routes: Routes = [
 
   {path: 'login', component: LoginComponent},
   {path: 'signup', component: SignupComponent},
-  { path: 'home', component: HomePageComponent },
+  {path: 'home', component: HomePageComponent },
   {path: 'app-analytics', component: AppAnalyticsComponent, canActivate: [AuthGuard]},
   {path: 'profile', component: ProfileComponent, canActivate: [AuthGuard]},
   {path: 'usersprofile', component: UsersProfilComponent, canActivate: [AuthGuard]},
   {path: 'postcreate', component: PostCreationComponent, canActivate: [AuthGuard]},
-  { path: 'user-profile/:username', component: UserProfileComponent, canActivate: [AuthGuard]},
-  {path: 'postOnMap', component:MapPostComponent, canActivate:[AuthGuard]}
+  {path: 'user-profile/:username', component: UserProfileComponent, canActivate: [AuthGuard]},
+  {path: 'postOnMap', component:MapPostComponent, canActivate:[AuthGuard]},
+  {path: 'trends', component:TrendsComponent, canActivate:[AuthGuard]}
 ];
 
 @NgModule({
