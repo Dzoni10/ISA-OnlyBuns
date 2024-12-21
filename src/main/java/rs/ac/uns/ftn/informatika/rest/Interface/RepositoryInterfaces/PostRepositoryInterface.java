@@ -12,6 +12,5 @@ public interface PostRepositoryInterface extends JpaRepository<Post, Integer> {
     public Page<Post> findAll(Pageable pageable);
     Post findPostById(int id);
     public List<Post> findAllByCreatorId(int creatorId);
-    //public User findUserByEmail(String email);
 
 }
