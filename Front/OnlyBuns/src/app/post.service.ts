@@ -28,5 +28,17 @@ export class PostService {
   updatePost(postId: number, updatedPost: Post): Observable<Post> {
     return this.http.put<Post>(`${environment.apiHost}posts/${postId}`, updatedPost);
   }
+
+  getPopularPostsIn7Days(): Observable<PagedResults<Post>>{
+    return this.http.get<PagedResults<Post>>(environment.apiHost +'/posts/popular/last-7-days');
+  }
   
+  getMosPopularPostsEver(): Observable<PagedResults<Post>>{
+    return this.http.get<PagedResults<Post>>(environment.apiHost + 'posts/popular/all-time');
+  }
+
+  getCountPostLastMonth(): Observable<number>{
+    return this.http.get<number>(environment.apiHost + 'posts/popular/count-last-month');
+  }
+
 }

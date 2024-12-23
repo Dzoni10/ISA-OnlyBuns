@@ -23,10 +23,11 @@
         
 
         <!-- Post content -->
-        <h3 class="post-title">
+        <h3 class="post-title"  (click)="showUsername(post.username)" >
           <fa-icon [icon]="faProfileCircle" class="profile-icon"></fa-icon>
           <b>{{ post.username }}</b>
-        </h3>        <p *ngIf="!post.isEditing" class="post-description">{{ post.description }}</p>
+        </h3>    
+            <p *ngIf="!post.isEditing" class="post-description">{{ post.description }}</p>
         <textarea *ngIf="post.isEditing" [(ngModel)]="post.description" class="edit-description" rows="3"></textarea>
 
         <!-- <img src="https://i.redd.it/hiojgqpu0cl81.jpg" alt="Zec" class="post-image"> -->

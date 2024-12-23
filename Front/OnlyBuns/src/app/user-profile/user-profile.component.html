@@ -1,0 +1,90 @@
+<div class="profile-container">
+    <!-- Profilni deo -->
+    <div class="profile-header">
+      <!-- Ikona kao profilna slika -->
+      <div class="profile-picture">
+        <fa-icon [icon]="faProfileCircle" class="profile-icon_big"></fa-icon>
+      </div>
+  
+      <!-- Informacije pored slike -->
+      <div class="profile-info">
+        <div class="profile-username">
+          <h2>{{ user?.username }}</h2>
+          <button class="follow-btn" (click)="onFollowClick()">
+            {{ isFollowing ? 'Unfollow' : 'Follow' }}
+          </button>   
+      </div>
+  
+        <div class="profile-stats">
+          <span><b>0</b> Posts</span>
+          <p (click)="openFollowersModal()"  style="cursor: pointer;"><strong >{{ followers.length }}</strong> Followers</p>
+          <p (click)="openFollowingModal()"  style="cursor: pointer;"><strong >{{ followingUsers.length }}</strong> Following</p>
+        
+        </div>
+      </div>
+    </div>
+  
+    <!-- Lične informacije korisnika (jedno pored drugog) -->
+    <div class="profile-details">
+      <span>{{ user?.name }}</span>
+      <span>{{ user?.surname }}</span>
+      <span>{{ user?.email }}</span>
+    </div>
+  
+    <!-- Sekcija za objave korisnika -->
+    <div class="user-posts-header">
+      <h3>{{ user?.username }}'s posts</h3>
+    </div>
+  
+    <!-- Objave korisnika -->
+    <div class="user-posts">
+      <div *ngFor="let post of userPosts" class="post-item">
+        <p>{{ post.content }}</p>
+      </div>
+    </div>
+  </div>
+  
+
+
+
+<!-- Modal za Followers -->
+<div *ngIf="isFollowersModalOpen" class="modal-overlay" (click)="closeFollowersModal()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h3>Followers</h3>
+        <button class="close-btn" (click)="closeFollowersModal()">
+            <fa-icon [icon]="faTimes"></fa-icon>
+        </button>
+      </div>
+      <ul>
+        <li *ngIf="followers.length === 0">
+            {{ user?.username }} does not have any followers.
+        </li>
+        <li style="cursor: pointer;" *ngFor="let follower of followers" (click)="showUsername(follower.username)">
+          <fa-icon [icon]="faProfileCircle" class="profile-icon"></fa-icon>
+          {{ follower.username }}
+        </li>
+      </ul>
+    </div>
+  </div>
+  
+  <!-- Modal za Following -->
+  <div *ngIf="isFollowingModalOpen" class="modal-overlay" (click)="closeFollowingModal()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h3>Following</h3>
+        <button class="close-btn" (click)="closeFollowingModal()">
+            <fa-icon [icon]="faTimes"></fa-icon>
+        </button>
+      </div>
+      <ul>
+        <li *ngIf="followingUsers.length === 0">
+            {{ user?.username }} does not follow anyone.
+          </li>
+        <li style="cursor: pointer;" *ngFor="let following of followingUsers"  (click)="showUsername(following.following)">
+          <fa-icon [icon]="faProfileCircle" class="profile-icon"></fa-icon>
+          {{ following.following }}
+        </li>
+      </ul>
+    </div>
+  </div>

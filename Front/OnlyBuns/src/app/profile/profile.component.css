@@ -30,7 +30,42 @@
     margin-left: 200px;
   }
   
-  .post-card {
-    margin-bottom: 1rem;
+  .dat{
+    text-align: center;
+    vertical-align: middle;
+  }
+
+  .tit{
+    margin-left: 20px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  }
+
+  .posts-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));  
+    gap: 15px;  
+    width: 100%;
   }
   
+  .post-card {
+    background-color: #e9e7f7;
+    border-radius: 12px;
+    padding: 15px 18px;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    position: relative;
+    margin-bottom: 1rem;
+   /* margin-top: 40px;*/
+  }
+  
+  .post-card:hover {
+    transform: translateY(-8px);  
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+  }
+
+  .titPost{
+    margin-top: 50px;
+  }

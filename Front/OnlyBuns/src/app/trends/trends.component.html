@@ -1,0 +1,33 @@
+<div class="posts-container">
+    <div class="summary">
+      <h1>Total Posts</h1>
+      <p>{{ posts.length }}</p>
+      <h1>Total posts in last month</h1>
+      <p>{{lastMonth}}</p>
+    </div>
+  
+    <div class="popular-posts-7days">
+      <h2>Top 5 Popular Posts in last 7 days</h2>
+      <div *ngFor="let post of popularPosts7Days">
+        <h3>{{ post.description }}</h3>
+        <p>{{ post.username }}</p>
+        <small>Likes: {{ post.likeCount }}</small>
+      </div>
+    </div>
+
+    <div class="popular-posts">
+      <h2>The most popular posts ever</h2>
+      <div *ngFor="let post of mostPopularPosts">
+        <h3>{{ post.description }}</h3>
+        <p>{{ post.username }}</p>
+        <small>Likes: {{ post.likeCount }}</small>
+      </div>
+    </div>
+
+    <div class="popular-accounts">
+      <h2>People who liked the most</h2>
+      <div *ngFor="let liker of topLikers">
+        <h3>{{ liker.username }} - {{ liker.likeCount }} Likes</h3>
+      </div>
+    </div>
+  </div>

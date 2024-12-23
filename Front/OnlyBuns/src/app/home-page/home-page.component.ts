@@ -79,6 +79,10 @@ export class HomePageComponent implements OnInit {
     
   }
 
+  showUsername(username: string): void {
+    this.router.navigate(['user-profile', username]);
+  }
+
  getTimeAgo(date: Date): string {
   return formatDistanceToNow(date) + ' ago';  
 }
