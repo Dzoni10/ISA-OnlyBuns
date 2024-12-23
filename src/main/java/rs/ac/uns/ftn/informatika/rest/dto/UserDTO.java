@@ -1,6 +1,8 @@
 package rs.ac.uns.ftn.informatika.rest.dto;
 import rs.ac.uns.ftn.informatika.rest.domain.User;
 
+import java.time.LocalDateTime;
+
 public class UserDTO {
     public int id;
     public String name;
@@ -11,16 +13,17 @@ public class UserDTO {
     public String adress;
     public boolean loginStatus;
     public boolean isAdmin;
+    public LocalDateTime lastActivity;
 
 
     public UserDTO() {}
 
     public UserDTO(User user)
     {
-        this(user.getId(),user.getName(),user.getSurname(),user.getUsername(),user.getPassword(),user.getEmail(),user.getAdress(),user.getLoginStatus(),user.getIsAdmin());
+        this(user.getId(),user.getName(),user.getSurname(),user.getUsername(),user.getPassword(),user.getEmail(),user.getAdress(),user.getLoginStatus(),user.getIsAdmin(), user.getLastActivity());
     }
 
-    public UserDTO(int id, String name, String surname, String username, String password,String email,String adress,boolean loginStatus, boolean isAdmin) {
+    public UserDTO(int id, String name, String surname, String username, String password,String email,String adress,boolean loginStatus, boolean isAdmin, LocalDateTime lastActivity) {
         this.id = id;
         this.name = name;
         this.surname = surname;
@@ -30,5 +33,6 @@ public class UserDTO {
         this.adress = adress;
         this.loginStatus = loginStatus;
         this.isAdmin = isAdmin;
+        this.lastActivity = lastActivity;
     }
 }
