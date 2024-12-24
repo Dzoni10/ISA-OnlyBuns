@@ -66,6 +66,18 @@ public class UserController {
         pagedResults.setTotalCount(users.size());
         return new ResponseEntity<>(pagedResults, HttpStatus.OK);
     }
+    @Operation(description = "Get all users for pagination",method="GET")
+    @GetMapping(value = "/users", produces= MediaType.APPLICATION_JSON_VALUE)
+    public  ResponseEntity<PagedResults<UserDTO>> getUsersForPagination(@RequestParam(defaultValue = "1") int pageNumber) {
+        List<User> users = userService.getUsersForPagination(pageNumber);
+        List<UserDTO> usersDTO = new ArrayList<>();
+        for (User user : users) {
+            usersDTO.add(new UserDTO(user));
+        }
+        PagedResults<UserDTO> pagedResults = new PagedResults<>();
+        pagedResults.setResults(usersDTO);
+        pagedResults.setTotalCount(users.size());
+        return new ResponseEntity<>(pagedResults, HttpStatus.OK);    }
 
     @GetMapping
     public ResponseEntity<List<UserDTO>> getUsersPage(Pageable page){
@@ -78,6 +90,26 @@ public class UserController {
         }
         return new ResponseEntity<>(usersDTO, HttpStatus.OK);
     }
+    @Operation(description = "Get users by search criteria", method = "GET")
+    @GetMapping(value = "/search", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<PagedResults<UserDTO>> getUsersByCriteria(
+            @RequestParam(required = false) String name,
+            @RequestParam(required = false) String surname,
+            @RequestParam(required = false) String email,
+            @RequestParam(required = false) Integer minPosts,
+            @RequestParam(required = false) Integer maxPosts
+    ) {
+        List<User> users = userService.findUsersByCriteria(name, surname, email, minPosts, maxPosts);
+        List<UserDTO> usersDTO = new ArrayList<>();
+        for (User user : users) {
+            usersDTO.add(new UserDTO(user));
+        }
+        PagedResults<UserDTO> pagedResults = new PagedResults<>();
+        pagedResults.setResults(usersDTO);
+        pagedResults.setTotalCount(users.size());
+        return new ResponseEntity<>(pagedResults, HttpStatus.OK);
+    }
+
     @Operation(description = "Get special user by id", method = "GET")
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<UserDTO> getUser(@PathVariable Integer id) {
@@ -212,7 +244,6 @@ public class UserController {
         }
         return new ResponseEntity<>(usersDTO, HttpStatus.OK);
     }
-
 
     @PostMapping(value="/login")
     public ResponseEntity<?> login(HttpServletRequest request, @RequestBody LogInRequest logInRequest) {

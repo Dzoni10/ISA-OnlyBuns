@@ -36,6 +36,8 @@ public class User {
 
     @Column(name="isAdmin",nullable = false)
     private boolean isAdmin;
+    @Column(name="postCount",nullable = false)
+    private int postCount;
 
     @Column(name="lastActivity",nullable = false)
     private LocalDateTime lastActivity;
@@ -44,7 +46,7 @@ public class User {
         super();
     }
 
-    public User(String name, String surname, String username, String password,String email, String adress, boolean loginStatus,boolean isAdmin) {
+    public User(String name, String surname, String username, String password,String email, String adress, boolean loginStatus,boolean isAdmin, int postcount) {
         super();
         this.name = name;
         this.surname = surname;
@@ -54,10 +56,11 @@ public class User {
         this.adress = adress;
         this.loginStatus = loginStatus;
         this.isAdmin = isAdmin;
+        this.postCount = postcount;
         this.lastActivity = LocalDateTime.now();
     }
 
-    public User(String name, String surname, String username, String password,String email, String adress, boolean loginStatus,boolean isAdmin, LocalDateTime lastActivity) {
+    public User(String name, String surname, String username, String password,String email, String adress, boolean loginStatus,boolean isAdmin,int postCount, LocalDateTime lastActivity) {
         super();
         this.name = name;
         this.surname = surname;
@@ -67,9 +70,10 @@ public class User {
         this.adress = adress;
         this.loginStatus = loginStatus;
         this.isAdmin = isAdmin;
+        this.postCount = postCount;
         this.lastActivity = lastActivity;
     }
-    public User(int id,String name, String surname, String username, String password,String email, String adress, boolean loginStatus,boolean isAdmin, LocalDateTime lastActivity) {
+    public User(int id,String name, String surname, String username, String password,String email, String adress, boolean loginStatus,boolean isAdmin,int postCount, LocalDateTime lastActivity) {
         super();
         this.id = id;
         this.name = name;
@@ -80,6 +84,7 @@ public class User {
         this.adress = adress;
         this.loginStatus = loginStatus;
         this.isAdmin = isAdmin;
+        this.postCount = postCount;
         this.lastActivity = lastActivity;
     }
 
@@ -93,6 +98,7 @@ public class User {
         this.email = user.email;
         this.loginStatus=user.loginStatus;
         this.isAdmin=user.isAdmin;
+        this.postCount=user.postCount;
         this.lastActivity=LocalDateTime.now();
     }
 
@@ -115,6 +121,8 @@ public class User {
     public void setLoginStatus(boolean loginStatus) {this.loginStatus = loginStatus;}
     public boolean getIsAdmin() {return isAdmin;}
     public void setIsAdmin(boolean isAdmin) {this.isAdmin = isAdmin;}
+    public int getPostCount() {return postCount;}
+    public void setPostCount(int postCount) {this.postCount = postCount;}
     public LocalDateTime getLastActivity() {return lastActivity;}
     public void setLastActivity(LocalDateTime lastActivity) {this.lastActivity = lastActivity;}
 

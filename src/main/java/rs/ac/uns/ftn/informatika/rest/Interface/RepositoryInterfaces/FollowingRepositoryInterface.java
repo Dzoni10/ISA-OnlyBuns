@@ -31,4 +31,7 @@ public interface FollowingRepositoryInterface extends JpaRepository<Following, I
 
     @Query("SELECT f FROM Following f WHERE f.username = :username AND f.creationTime > :lastActivity")
     List<Following> getAllByUserLastActivity(@Param("username") String username, @Param("lastActivity") LocalDateTime lastActivity);
+    // Prebroj pratioce za ciljanu osobu
+    long countByFollowing(String following);
+
 }

@@ -8,6 +8,6 @@ export interface RegisterUser{
     adress: string;
     loginStatus: boolean;
     isAdmin: boolean;
-    postNumber: number;
+    postCount: number;
     commentNumber: number;
 }
