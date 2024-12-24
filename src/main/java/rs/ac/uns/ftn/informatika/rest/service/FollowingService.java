@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import rs.ac.uns.ftn.informatika.rest.domain.Following;
 import rs.ac.uns.ftn.informatika.rest.Interface.RepositoryInterfaces.FollowingRepositoryInterface;
+import rs.ac.uns.ftn.informatika.rest.domain.User;
 
 import java.util.List;
 
@@ -21,6 +22,14 @@ public class FollowingService {
     // Vrati listu svih koji prate prosledjenog korisnika
     public List<Following> getAllFollowersByUsername(String following) {
         return followingRepository.findAllByFollowing(following);
+    }
+
+    public List<Following> getAllByUserLastActivity(User user){
+        return followingRepository.getAllByUserLastActivity(user.getUsername(), user.getLastActivity());
+    }
+
+    public Integer getAllByUserLastActivityCount(User user){
+        return followingRepository.getAllByUserLastActivity(user.getUsername(), user.getLastActivity()).size();
     }
 
     // Dodaj novo praćenje
