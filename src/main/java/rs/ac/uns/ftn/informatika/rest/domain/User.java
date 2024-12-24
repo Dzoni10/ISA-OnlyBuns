@@ -3,6 +3,7 @@ package rs.ac.uns.ftn.informatika.rest.domain;
 import rs.ac.uns.ftn.informatika.rest.dto.UserDTO;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name="app_user")
@@ -38,6 +39,9 @@ public class User {
     @Column(name="postCount",nullable = false)
     private int postCount;
 
+    @Column(name="lastActivity",nullable = false)
+    private LocalDateTime lastActivity;
+
     public User(){
         super();
     }
@@ -53,6 +57,35 @@ public class User {
         this.loginStatus = loginStatus;
         this.isAdmin = isAdmin;
         this.postCount = postcount;
+        this.lastActivity = LocalDateTime.now();
+    }
+
+    public User(String name, String surname, String username, String password,String email, String adress, boolean loginStatus,boolean isAdmin,int postCount, LocalDateTime lastActivity) {
+        super();
+        this.name = name;
+        this.surname = surname;
+        this.username = username;
+        this.password = password;
+        this.email = email;
+        this.adress = adress;
+        this.loginStatus = loginStatus;
+        this.isAdmin = isAdmin;
+        this.postCount = postCount;
+        this.lastActivity = lastActivity;
+    }
+    public User(int id,String name, String surname, String username, String password,String email, String adress, boolean loginStatus,boolean isAdmin,int postCount, LocalDateTime lastActivity) {
+        super();
+        this.id = id;
+        this.name = name;
+        this.surname = surname;
+        this.username = username;
+        this.password = password;
+        this.email = email;
+        this.adress = adress;
+        this.loginStatus = loginStatus;
+        this.isAdmin = isAdmin;
+        this.postCount = postCount;
+        this.lastActivity = lastActivity;
     }
 
     public User(UserDTO user){
@@ -66,6 +99,7 @@ public class User {
         this.loginStatus=user.loginStatus;
         this.isAdmin=user.isAdmin;
         this.postCount=user.postCount;
+        this.lastActivity=LocalDateTime.now();
     }
 
 
@@ -89,5 +123,7 @@ public class User {
     public void setIsAdmin(boolean isAdmin) {this.isAdmin = isAdmin;}
     public int getPostCount() {return postCount;}
     public void setPostCount(int postCount) {this.postCount = postCount;}
+    public LocalDateTime getLastActivity() {return lastActivity;}
+    public void setLastActivity(LocalDateTime lastActivity) {this.lastActivity = lastActivity;}
 
 }

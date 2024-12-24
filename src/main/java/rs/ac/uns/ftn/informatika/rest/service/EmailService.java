@@ -9,6 +9,7 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import rs.ac.uns.ftn.informatika.rest.domain.User;
 import rs.ac.uns.ftn.informatika.rest.dto.UserDTO;
 
 import javax.mail.MessagingException;
@@ -43,5 +44,22 @@ public class EmailService {
         helper.setText(htmlMsg, true);
 
         javaMailSender.send(mail);
+    }
+
+    public void sendInactivityEmail(User user) throws MailException, InterruptedException, MessagingException {
+        MimeMessage mail = javaMailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(mail, true);
+        helper.setTo(user.getEmail());
+        helper.setFrom(env.getProperty("spring.mail.username"));
+        helper.setSubject("Come back to Onlybuns");
+        String htmlMsg = "<p>Pozdrav " + user.getUsername() + ",</p>"
+                + "<p>Nisi se ulogovao na onlybuns vec 7 dana. Cekamo te!</p>";
+
+        helper.setText(htmlMsg, true);
+
+        javaMailSender.send(mail);
+
+        // Simulate sending an email
+        System.out.println("Email sent to: " + user.getEmail());
     }
 }
