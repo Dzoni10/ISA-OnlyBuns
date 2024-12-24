@@ -35,12 +35,14 @@ public class User {
 
     @Column(name="isAdmin",nullable = false)
     private boolean isAdmin;
+    @Column(name="postCount",nullable = false)
+    private int postCount;
 
     public User(){
         super();
     }
 
-    public User(String name, String surname, String username, String password,String email, String adress, boolean loginStatus,boolean isAdmin) {
+    public User(String name, String surname, String username, String password,String email, String adress, boolean loginStatus,boolean isAdmin, int postcount) {
         super();
         this.name = name;
         this.surname = surname;
@@ -50,6 +52,7 @@ public class User {
         this.adress = adress;
         this.loginStatus = loginStatus;
         this.isAdmin = isAdmin;
+        this.postCount = postcount;
     }
 
     public User(UserDTO user){
@@ -62,6 +65,7 @@ public class User {
         this.email = user.email;
         this.loginStatus=user.loginStatus;
         this.isAdmin=user.isAdmin;
+        this.postCount=user.postCount;
     }
 
 
@@ -83,5 +87,7 @@ public class User {
     public void setLoginStatus(boolean loginStatus) {this.loginStatus = loginStatus;}
     public boolean getIsAdmin() {return isAdmin;}
     public void setIsAdmin(boolean isAdmin) {this.isAdmin = isAdmin;}
+    public int getPostCount() {return postCount;}
+    public void setPostCount(int postCount) {this.postCount = postCount;}
 
 }

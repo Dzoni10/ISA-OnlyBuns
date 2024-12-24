@@ -1,11 +1,11 @@
-insert into "app_user" (name,surname,username,password,email,adress,login_status,is_admin) values ('Administrator','Administratorovic','admin','admin','admin@gmail','Bulevar Mihajla Pupina 165, Novi Beograd',TRUE,TRUE);
-insert into "app_user" (name,surname,username,password,email,adress,login_status,is_admin) values ('Pera','Peric','pera123','123','pera@gmail','Kralja Petra I 23, Novi Sad',FALSE,FALSE);
-insert into "app_user" (name,surname,username,password,email,adress,login_status,is_admin) values ('Mika','Mikic','mika123','123','mika@gmail','Njegoševa 14, Niš',TRUE,FALSE);
-insert into "app_user" (name,surname,username,password,email,adress,login_status,is_admin) values ('Laza','Lazic','laza123','123','laza@gmail','Cara Dušana 89, Kragujevac',TRUE,FALSE);
-insert into "app_user" (name,surname,username,password,email,adress,login_status,is_admin) values ('Djura','Djuric','djura123','123','djura@gmail','Zmaj Jovina 4, Subotica',TRUE,FALSE);
-insert into "app_user" (name,surname,username,password,email,adress,login_status,is_admin) values ('Aca','Acic','aca123','123','aca@gmail','Svetozara Miletića 28, Zrenjanin',FALSE,FALSE);
-insert into "app_user" (name,surname,username,password,email,adress,login_status,is_admin) values ('Mila','Milic','mila123','123','mila@gmail','Karađorđeva 103, Pančevo',TRUE,FALSE);
-insert into "app_user" (name,surname,username,password,email,adress,login_status,is_admin) values ('Ljuba','Ljubic','ljuba123','123','ljuba@gmail','Sinđelićeva 55, Čačak',TRUE,FALSE);
+insert into "app_user" (name,surname,username,password,email,adress,login_status,is_admin,post_count) values ('Administrator','Administratorovic','admin','admin','admin@gmail','Bulevar Mihajla Pupina 165, Novi Beograd',TRUE,TRUE,0);
+insert into "app_user" (name,surname,username,password,email,adress,login_status,is_admin,post_count) values ('Pera','Peric','pera123','123','pera@gmail','Kralja Petra I 23, Novi Sad',FALSE,FALSE,0);
+insert into "app_user" (name,surname,username,password,email,adress,login_status,is_admin,post_count) values ('Mika','Mikic','mika123','123','mika@gmail','Njegoševa 14, Niš',TRUE,FALSE,1);
+insert into "app_user" (name,surname,username,password,email,adress,login_status,is_admin,post_count) values ('Laza','Lazic','laza123','123','laza@gmail','Cara Dušana 89, Kragujevac',TRUE,FALSE,1);
+insert into "app_user" (name,surname,username,password,email,adress,login_status,is_admin,post_count) values ('Djura','Djuric','djura123','123','djura@gmail','Zmaj Jovina 4, Subotica',TRUE,FALSE,0);
+insert into "app_user" (name,surname,username,password,email,adress,login_status,is_admin,post_count) values ('Aca','Acic','aca123','123','aca@gmail','Svetozara Miletića 28, Zrenjanin',FALSE,FALSE,0);
+insert into "app_user" (name,surname,username,password,email,adress,login_status,is_admin,post_count) values ('Mila','Milic','mila123','123','mila@gmail','Karađorđeva 103, Pančevo',TRUE,FALSE,0);
+insert into "app_user" (name,surname,username,password,email,adress,login_status,is_admin,post_count) values ('Ljuba','Ljubic','ljuba123','123','ljuba@gmail','Sinđelićeva 55, Čačak',TRUE,FALSE,0);
 
 INSERT INTO "app_post" (creator_id, description, creation_time, latitude, longitude, image_path, username)
 VALUES (4, 'Obican mali zec, spreman za veceru.', '2024-11-10 09:00:00', 44.824013, 20.459031, '','laza123' );

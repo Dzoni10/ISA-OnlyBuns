@@ -15,7 +15,8 @@ public interface PostRepositoryInterface extends JpaRepository<Post, Integer> {
     public Page<Post> findAll(Pageable pageable);
     Post findPostById(int id);
     public List<Post> findAllByCreatorId(int creatorId);
-
+    @Query("SELECT p FROM Post p")
+    List<Post> findAllPostsWithoutImages();
     @Query("SELECT p FROM Post p WHERE p.id IN (" +
             "SELECT l.postId FROM Like l WHERE l.id IN (" +
             "SELECT l2.id FROM Like l2 WHERE l2.postId = l.postId AND " +

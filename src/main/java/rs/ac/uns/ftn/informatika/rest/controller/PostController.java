@@ -33,12 +33,15 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.web.multipart.MultipartFile;
+import rs.ac.uns.ftn.informatika.rest.service.UserService;
+
 @RestController
 @RequestMapping("/api/posts")
 public class PostController {
     @Autowired
     private PostService postService;
-
+    @Autowired
+    private UserService userService;
     @Autowired
     private JwtUtil jwtUtil;
     @Autowired
@@ -50,7 +53,7 @@ public class PostController {
     @Operation(description = "Get all posts",method="GET")
     @GetMapping(value = "/all", produces= MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<PagedResults<PostDTO>> getAllPosts() {
-        List<Post> posts = postService.findAll();
+        List<Post> posts = postService.findAllPostsWithoutImages();
 
         List<PostDTO> postsDTO = new ArrayList<>();
         for (Post post : posts) {
@@ -65,7 +68,10 @@ public class PostController {
     @DeleteMapping("/{id}")
     @Operation(description = "Delete a post by ID", method = "DELETE")
     public ResponseEntity<Void> deletePost(@PathVariable Integer id) {
+        Post post = postService.findPostById(id);
+        userService.updateUserPostCount(post.getUsername(),-1);
         postService.remove(id);
+
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
@@ -128,7 +134,7 @@ public class PostController {
 
         // Save the post to the database
         savedPost = postService.save(savedPost);
-
+        userService.updateUserPostCount(savedPost.getUsername(),1);
         // Return the saved post as a DTO
         return new ResponseEntity<>(new PostDTO(savedPost), HttpStatus.CREATED);
     }

@@ -1,6 +1,7 @@
 package rs.ac.uns.ftn.informatika.rest.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Lock;
 import org.springframework.data.jpa.repository.Query;
@@ -64,12 +65,23 @@ public class UserService{
             userRepositoryInterface.save(user);
         }
     }
-
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    public void updateUserPostCount(String username, int number) {
+        Optional<User> userOptional = userRepositoryInterface.findByUsernameWithLock(username);
+        if (userOptional.isPresent()) {
+            User user = userOptional.get();
+            user.setPostCount(user.getPostCount()+ number);
+            userRepositoryInterface.save(user);
+        }
+    }
 
     public boolean isEmailExist(String email){
         return usernameBloomFilter.mightContain(email);
     }
 
+    public List<User> findUsersByCriteria(String name, String surname, String email, Integer minPosts, Integer maxPosts) {
+        return userRepositoryInterface.findUsersByCriteria(name,surname,email,minPosts,maxPosts);
+    }
     public List<User> findAll() {
         return userRepositoryInterface.findAll();
     }
@@ -109,6 +121,11 @@ public class UserService{
         return userRepositoryInterface.save(user);
     }
 
+    public List<User> getUsersForPagination(int pageNumber) {
+        int pageSize = 5;
+        Pageable pageable = PageRequest.of(pageNumber - 1, pageSize); // Spring koristi 0-indeksirane stranice
+        return userRepositoryInterface.getUsersForPagination(pageable);
+    }
 
     public void remove(int id) {
         userRepositoryInterface.deleteById(id);

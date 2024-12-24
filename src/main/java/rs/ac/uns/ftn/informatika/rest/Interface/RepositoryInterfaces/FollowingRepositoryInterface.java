@@ -25,5 +25,6 @@ public interface FollowingRepositoryInterface extends JpaRepository<Following, I
 
     // Vraca "following" zapis na osnovu username-a i korisnika kojeg prati
     Following findFollowingByUsernameAndFollowing(String username, String following);
-
+    // Prebroj pratioce za ciljanu osobu
+    long countByFollowing(String following);
 }
