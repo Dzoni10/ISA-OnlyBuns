@@ -72,13 +72,38 @@ export class LoginService {
   getUsers(): Observable<PagedResults<RegisterUser>>{
     return this.http.get<PagedResults<RegisterUser>>(environment.apiHost +'/users/all');
   }
-
+  getUsersPagination(page: number): Observable<PagedResults<RegisterUser>>{
+    return this.http.get<PagedResults<RegisterUser>>(environment.apiHost +`/users/users?pageNumber=${page}`);
+  }
   getUserForProfile(id: number): Observable<RegisterUser>{
     return this.http.get<RegisterUser>(environment.apiHost + '/users/' + id);
   }
     getUserByUsername(username: string): Observable<RegisterUser[]> {
       return this.http.get<RegisterUser[]>(`${environment.apiHost}/users/findUsername?username=${username}`);
     }
+    searchUsers(
+      name?: string,
+      surname?: string,
+      email?: string,
+      minPosts?: number,
+      maxPosts?: number
+    ): Observable<PagedResults<RegisterUser>> {
+      // Početni URL za pretragu
+      let query = `${environment.apiHost}/users/search?`;
+    
+      // Dodavanje query parametara
+      if (name) query += `name=${encodeURIComponent(name)}&`;
+      if (surname) query += `surname=${encodeURIComponent(surname)}&`;
+      if (email) query += `email=${encodeURIComponent(email)}&`;
+      if (minPosts !== undefined) query += `minPosts=${minPosts}&`;
+      if (maxPosts !== undefined) query += `maxPosts=${maxPosts}&`;
+    
+      // Uklanjanje viška "&" sa kraja
+      query = query.slice(0, -1);
+    
+      return this.http.get<PagedResults<RegisterUser>>(query);
+    }
+    
   checkIfUserExists(): void {
     const accessToken = this.tokenStorage.getAccessToken();
     if (accessToken == null) {

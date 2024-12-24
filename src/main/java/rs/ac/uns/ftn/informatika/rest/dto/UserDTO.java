@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 
 public class UserDTO {
     public int id;
+    public int postCount;
     public String name;
     public String surname;
     public String username;
@@ -20,10 +21,10 @@ public class UserDTO {
 
     public UserDTO(User user)
     {
-        this(user.getId(),user.getName(),user.getSurname(),user.getUsername(),user.getPassword(),user.getEmail(),user.getAdress(),user.getLoginStatus(),user.getIsAdmin(), user.getLastActivity());
+        this(user.getId(),user.getName(),user.getSurname(),user.getUsername(),user.getPassword(),user.getEmail(),user.getAdress(),user.getLoginStatus(),user.getIsAdmin(),user.getPostCount(), user.getLastActivity());
     }
 
-    public UserDTO(int id, String name, String surname, String username, String password,String email,String adress,boolean loginStatus, boolean isAdmin, LocalDateTime lastActivity) {
+    public UserDTO(int id, String name, String surname, String username, String password,String email,String adress,boolean loginStatus, boolean isAdmin,int postCount, LocalDateTime lastActivity) {
         this.id = id;
         this.name = name;
         this.surname = surname;
@@ -33,6 +34,7 @@ public class UserDTO {
         this.adress = adress;
         this.loginStatus = loginStatus;
         this.isAdmin = isAdmin;
+        this.postCount = postCount;
         this.lastActivity = lastActivity;
     }
 }

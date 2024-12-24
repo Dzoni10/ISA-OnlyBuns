@@ -113,28 +113,12 @@ export class AppAnalyticsComponent implements OnInit {
     this.loginService.getUsers().subscribe(
       (data) => {
         this.users = data.results.filter(user => user.loginStatus === true);
-        this.updateUserPostCounts();
+        this.updateUserCommentCounts();
       },
       (error) => {
         console.error('Error loading users', error);
       }
     );
-  }
-
-  updateUserPostCounts(): void {
-    this.users.forEach(user => {
-      if (user.postNumber === undefined) {
-        user.postNumber = 0;
-      }
-    });
-    
-    this.posts.forEach(post => {
-      const user = this.users.find(user => user.username === post.username);
-      if (user) {
-        user.postNumber += 1;
-      }
-    });
-    this.updateUserCommentCounts();
   }
 
   updateUserCommentCounts(): void {
@@ -154,9 +138,9 @@ export class AppAnalyticsComponent implements OnInit {
   }
 
   updateRadialChartData(): void {
-    const posted = this.users.filter(user => user.postNumber > 0).length;
-    const commentedOnly = this.users.filter(user => user.commentNumber > 0 && user.postNumber === 0).length;
-    const didNothing = this.users.filter(user => user.postNumber === 0 && user.commentNumber === 0).length;
+    const posted = this.users.filter(user => user.postCount > 0).length;
+    const commentedOnly = this.users.filter(user => user.commentNumber > 0 && user.postCount === 0).length;
+    const didNothing = this.users.filter(user => user.postCount === 0 && user.commentNumber === 0).length;
 
     const totalUsers = this.users.length;
     this.radialChartData = [
