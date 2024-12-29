@@ -8,6 +8,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
+import rs.ac.uns.ftn.informatika.rest.config.RabbitMQProducer;
 import rs.ac.uns.ftn.informatika.rest.domain.Location;
 
 import rs.ac.uns.ftn.informatika.rest.domain.Post;
@@ -46,6 +47,8 @@ public class PostController {
     private JwtUtil jwtUtil;
     @Autowired
     private PostDTOMapper postDTOMapper;
+    @Autowired
+    private RabbitMQProducer producer;
 
     @Value("${upload.directory}")
     private String uploadDir;
@@ -183,5 +186,14 @@ public class PostController {
         return ResponseEntity.ok(postCount);
     }
 
+    @PostMapping("/{postId}/advertise")
+    public ResponseEntity<String> markPostForAds(@PathVariable int postId) {
+        // Ovdje možeš dodati logiku za označavanje posta
+        Post post = postService.findPostById(postId);
+        //String message = "Post " + postId + " označen za reklame";
+        String message = "Kreator: " + post.getUsername() + " Opis: " + post.getDescription() + " Datum objave: " + post.getCreationTime();
+        producer.sendMessage(message);
+        return ResponseEntity.ok("Post označen i poruka poslata agencijama.");
+    }
 
 }
