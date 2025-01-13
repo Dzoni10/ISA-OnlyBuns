@@ -1,0 +1,8 @@
+.map-container {
+    width: 80%; /* Procenat širine stranice */
+    height: 500px; /* Visina mape */
+    margin: 0 auto; /* Postavlja mapu na sredinu stranice */
+    margin-top: 90px;
+    border: 1px solid #ccc; /* Opcionalno: ivica za vizuelnu pomoć */
+  }
+  
