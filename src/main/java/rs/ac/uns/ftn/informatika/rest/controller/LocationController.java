@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import rs.ac.uns.ftn.informatika.rest.RabbitMQ.RabbitMQPublisher;
 import rs.ac.uns.ftn.informatika.rest.domain.Location;
+import rs.ac.uns.ftn.informatika.rest.domain.RecommendedLocation;
 
 @RestController
 @RequestMapping("/api")
@@ -20,7 +21,7 @@ public class LocationController {
     private RabbitMQPublisher rabbitMQPublisher;
 
     @PostMapping("/locations")
-    public ResponseEntity<?> addLocation(@RequestBody Location location) {
+    public ResponseEntity<?> addLocation(@RequestBody RecommendedLocation location) {
         // Ovde bi trebali da radite sa podacima, npr. da ih sačuvate u bazi.
         // Vratite 200 status ako je sve u redu
         logger.info("Primljena lokacija: " + location);

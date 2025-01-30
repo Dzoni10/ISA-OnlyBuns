@@ -28,11 +28,13 @@ export class LocationService {
     this.stompClient.onConnect = () => {
       console.log('Povezano na WebSocket');
       this.stompClient.subscribe('/topic/locations', (message) => {
-        const location: {latitude:number; longitude:number} = JSON.parse(message.body);
+        console.log('Primljena poruka:', message.body);
+        //const location: {latitude:number; longitude:number,name:string} = JSON.parse(message.body);
+        const location = JSON.parse(message.body);
         console.log('Primljena lokacija: ', location);
         // Ažurirajte mapu sa koordinatama ovde
        // this.updateMap(location);
-       this.mapComponent.addMarker(location.longitude,location.latitude);
+       this.mapComponent.addMarker(location.longitude,location.latitude,location.name ? location.name: "No name");
       });
     };
 

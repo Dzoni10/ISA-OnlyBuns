@@ -7,7 +7,7 @@ import VectorSource from 'ol/source/Vector';
 import VectorLayer from 'ol/layer/Vector';
 import Feature from 'ol/Feature';
 import Point from 'ol/geom/Point';
-import { Icon, Style } from 'ol/style';
+import { Icon, Style,Text,Fill,Stroke } from 'ol/style';
 import { fromLonLat } from 'ol/proj';
 import { LocationService } from '../location.service';
 
@@ -53,10 +53,36 @@ export class RecommendedLocationsComponent implements OnInit {
   }
 
   // Funkcija za dodavanje markera na osnovu koordinata
-  addMarker(longitude: number, latitude: number): void {
+  addMarker(longitude: number, latitude: number,name: string): void {
     const feature = new Feature({
       geometry: new Point(fromLonLat([longitude, latitude])),
+      name:name
     });
+
+    console.log(name);
+    //const label = name;
+
+    feature.setStyle(
+      new Style({
+        image: new Icon({
+          src: 'https://cdn-icons-png.flaticon.com/512/684/684908.png', // Ikonica za post
+          scale: 0.07,
+        }),
+        text: new Text({
+          text: name, // Tekst koji će biti prikazan
+          font: '12px Arial',
+          fill: new Fill({
+            color: '#000', // Boja teksta
+          }),
+          stroke: new Stroke({
+            color: '#fff', // Obrub teksta za kontrast
+            width: 2,
+          }),
+          offsetY: -35, // Pomeri tekst iznad markera
+        }),
+      })
+    );
+
     this.vectorSource.addFeature(feature);
   }
 

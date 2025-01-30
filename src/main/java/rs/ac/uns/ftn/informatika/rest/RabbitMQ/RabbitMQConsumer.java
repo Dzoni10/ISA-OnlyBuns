@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Component;
 import rs.ac.uns.ftn.informatika.rest.domain.Location;
+import rs.ac.uns.ftn.informatika.rest.domain.RecommendedLocation;
 
 @Component
 public class RabbitMQConsumer {
@@ -23,7 +24,7 @@ public class RabbitMQConsumer {
     public void receive(String message){
 
         try{
-            Location location = objectMapper.readValue(message,Location.class);
+            RecommendedLocation location = objectMapper.readValue(message,RecommendedLocation.class);
             log.info("Consumer>" + message);
             // Slanje poruke na frontend putem WebSocket-a
             messagingTemplate.convertAndSend("/topic/locations", location);
