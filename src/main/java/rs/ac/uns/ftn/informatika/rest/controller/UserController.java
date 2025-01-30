@@ -268,6 +268,8 @@ public class UserController {
                 if(user.getLoginStatus()) {
                     String token = jwtUtil.generateToken(user.getEmail(),user.getId());
                     AuthenticationResponse response = new AuthenticationResponse(token);
+
+                    userService.incrementActiveUsers();
                     return new ResponseEntity<>(response, HttpStatus.ACCEPTED);
                 }
                 else
@@ -282,5 +284,17 @@ public class UserController {
             return request.getRemoteAddr();
         }
         return xfHeader.split(",")[0];
+    }
+
+    @PostMapping(value="/logout")
+    public ResponseEntity<?> logout(HttpServletRequest request) {
+        String userEmail = jwtUtil.extractEmailFromRequest(request);
+        // Smanjujemo broj aktivnih korisnika
+        if (userEmail != null) {
+            userService.decrementActiveUsers();
+            return new ResponseEntity<>("Logout successful", HttpStatus.OK);
+        }
+
+        return new ResponseEntity<>("Invalid token", HttpStatus.UNAUTHORIZED);
     }
 }
