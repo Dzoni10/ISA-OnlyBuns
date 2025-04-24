@@ -12,7 +12,7 @@
       <fa-icon [icon]="faMap"></fa-icon>
       <span>Posts Near Map</span>
     </li>
-    <li *ngIf="!registerUser.isAdmin && logged"   routerLinkActive="active">
+    <li *ngIf="!registerUser.isAdmin && logged" [routerLink]="['chats']"  routerLinkActive="active">
       <fa-icon [icon]="faChat"></fa-icon>
       <span>Chat</span>
     </li>

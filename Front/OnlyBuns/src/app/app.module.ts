@@ -31,7 +31,10 @@ import { AppAnalyticsComponent } from './app-analytics/app-analytics.component';
 import { NgChartsModule  } from 'ng2-charts';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MapPostComponent } from './map-post/map-post.component';
-import { TrendsComponent } from './trends/trends.component';  // Uvoz MatProgressSpinnerModule
+import { TrendsComponent } from './trends/trends.component';
+import { ChatsComponent } from './chats/chats.component';
+import { ChatOpenComponent } from './chat-open/chat-open.component';  // Uvoz MatProgressSpinnerModule
+import { MatTooltipModule } from '@angular/material/tooltip'; // Importuj MatTooltipModule
 
 
 @NgModule({
@@ -48,7 +51,9 @@ import { TrendsComponent } from './trends/trends.component';  // Uvoz MatProgres
     UsersProfilComponent,
     AppAnalyticsComponent,
     MapPostComponent,
-    TrendsComponent
+    TrendsComponent,
+    ChatsComponent,
+    ChatOpenComponent
     
 
   ],
@@ -69,7 +74,7 @@ import { TrendsComponent } from './trends/trends.component';  // Uvoz MatProgres
     MatSnackBarModule,
     NgChartsModule ,
     MatProgressSpinnerModule,  
-  
+    MatTooltipModule
   ],
   providers: [{
     provide: JWT_OPTIONS,

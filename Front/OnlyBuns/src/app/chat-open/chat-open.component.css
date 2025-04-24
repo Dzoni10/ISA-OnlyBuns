@@ -1,0 +1,349 @@
+.chat-container {
+    display: flex;
+    flex-direction: column;
+    height: 83vh; /* Smanjeno sa 100vh */
+    width: 100%;
+    margin-top: 67px;
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+  }
+  
+  /* Naslov četa i padajući meni */
+  .chat-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+    background: #f7f7f7;
+  }
+  
+  .chat-title {
+    flex-grow: 1;
+    text-align: center;
+    font-size: 20px;
+    font-weight: bold;
+  }
+  
+  .dropdown-menu {
+    position: absolute;
+    top: 150px; /* Pomera više dole */
+    right: 0; /* Pomera levo */
+    margin-right: 35px;
+    background: white;
+    border-radius: 5px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    padding: 10px;
+    min-width: 180px;
+    z-index: 100;
+    max-height: 400px; /* ograničava visinu */
+    overflow-y: auto; /* dodaje skrol samo po y osi */
+}
+/* Scrollable participants section */
+.participants-section {
+    max-height: 250px; /* ili koliko želiš */
+    overflow-y: auto;
+    padding: 10px;
+    border-bottom: 1px solid #eee;
+}
+
+/* Stilizovanje scrollbar-a */
+.participants-section::-webkit-scrollbar {
+    width: 8px;
+}
+
+.participants-section::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 4px;
+}
+
+.participants-section::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 4px;
+}
+
+.participants-section::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+/* Fixed bottom section */
+.fixed-bottom-section {
+    padding: 10px;
+    background: white;
+    border-top: 1px solid #eee;
+    border-radius: 0 0 5px 5px;
+}
+.dropdown-item {
+    display: flex;
+    align-items: center;
+    padding: 8px 10px;
+    justify-content: space-between; /* Raspored u 3 kolone */
+    gap: 10px;
+}
+
+.column {
+    display: flex;
+    align-items: center;
+}
+
+.profile-column {
+    flex: 1; /* Prva kolona */
+}
+
+.username-column {
+    flex: 2; /* Druga kolona (šira od prve) */
+}
+
+.action-column {
+    flex: 1; /* Treća kolona */
+    justify-content: flex-end; /* Poravnjavanje akcija na desno */
+}
+
+/* Stil za ikonicu za brisanje */
+.delete-icon {
+    color: red;
+    cursor: pointer;
+}
+
+.delete-icon:hover {
+    color: darkred;
+}
+
+/* Stil za admin ikonu */
+.admin-icon {
+    color: gold;
+}
+
+/* Dugme Add user */
+.add-user-btn {
+    width: 90%;
+    padding: 8px;
+    background: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 10px;
+    text-align: center;
+}
+
+.add-user-btn:hover {
+    background: #0056b3;
+}
+  /* 🔹 Smanjen kontejner za poruke */
+  .chat-messages {
+    flex-grow: 1;
+    overflow-y: auto;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    max-height: 65vh; /* Dodato da ograniči visinu */
+    position: relative;
+  }
+  
+  /* Stilizovanje poruka */
+  .chat-message {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 10px;
+    max-width: 75%;
+  }
+  
+  /* 🔹 Veće FA ikonice i plava boja */
+  .profile-icon {
+    font-size: 30px !important; /* Povećano sa podrazumevanih */
+    color: #007bff; /* Plava boja */
+  }
+  
+  .my-message {
+    flex-direction: row-reverse;
+    align-self: flex-end;
+    text-align: right;
+  }
+  
+  .message-content {
+    background: rgb(240, 252, 222);
+    padding: 10px;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  }
+  
+  .my-message .message-content {
+    background: #dcf8c6;
+  }
+  
+  .username {
+    font-weight: bold;
+    font-size: 14px;
+  }
+  
+  .text {
+    margin: 5px 0;
+    font-size: 16px;
+  }
+  
+  .timestamp {
+    font-size: 12px;
+    color: gray;
+  }
+  
+  /* Unos poruke */
+  .chat-input {
+    display: flex;
+    padding: 10px;
+    background: white;
+    border-top: 1px solid #ddd;
+  }
+  
+  .chat-input input {
+    flex-grow: 1;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ddd;
+    border-radius: 20px;
+    outline: none;
+  }
+  
+  .chat-input button {
+    margin-left: 10px;
+    background: #007bff;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 50%;
+    cursor: pointer;
+  }
+  
+  .chat-input button i {
+    font-size: 20px;
+  }
+  .scroll-down-button {
+    position: sticky;
+    bottom: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 10;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    flex-shrink: 0;         /* Ne dozvoli da se smanjuje u fleks kontejneru */
+    width: 40px !important; /* Forsiraj širinu */
+    height: 40px !important; /* Forsiraj visinu */
+    aspect-ratio: 1 / 1;    /* Garantuje da ostane kvadratno */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .scroll-down-button:hover {
+    background-color: #0056b3;
+  }
+  
+  
+  .delete-icon {
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.delete-icon:hover, .admin-icon:hover {
+    transform: scale(1.1);
+}
+
+.add-user-form {
+    padding: 10px;
+    border-top: 1px solid #eee;
+    margin-top: 10px;
+}
+
+.add-user-input {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    font-size: 14px;
+}
+
+.add-user-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.confirm-btn, .cancel-btn {
+    flex: 1;
+    padding: 8px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.2s;
+}
+
+.confirm-btn {
+    background: #007bff;
+    color: white;
+}
+
+.confirm-btn:hover {
+    background: #0056b3;
+}
+
+.cancel-btn {
+    background: #e9ecef;
+    color: #495057;
+}
+
+.cancel-btn:hover {
+    background: #dde2e6;
+}
+
+.clickable {
+    cursor: pointer;
+    color: rgb(4, 4, 135);
+  }
+  .clickable:hover {
+    color: rgb(1, 1, 64);
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .chat-message.new-message {
+    animation: fadeIn 0.8s ease;
+  }
+/* Stil za celu snackbar */
+.snackbar-error {
+  background-color: #9b8381; /* Pozadina snackbar-a */
+  color: rgb(255, 255, 252); /* Tekst poruke u beloj boji */
+}
+
+/* Stil za akciju Close */
+.snackbar-error .mat-snack-bar-action {
+  color: #e1f318 !important; /* Žuta boja za akciju Close */
+}
+
+/* Specifičan selektor za dugme unutar snackbara, sa većim prioritetom */
+.snackbar-error .mat-button {
+  color: #e1f318 !important; /* Žuta boja za akciju Close */
+  font-weight: bold !important; /* Opcionično: bold za akciju */
+}
+::ng-deep .snackbar-error {
+  background-color: #9b8381; /* Pozadina snackbar-a */
+  color: rgb(255, 255, 252); /* Tekst poruke u beloj boji */
+}
+
+/* Stil za akciju Close sa jasnijim targetiranjem */
+::ng-deep .snackbar-error .mat-button.mat-accent {
+  color: #e1f318 !important; /* Žuta boja za akciju Close */
+}
+
+/* Specifičan selektor za akciju Close */
+::ng-deep .snackbar-error .mat-snack-bar-action {
+  color: #e1f318 !important; /* Žuta boja za akciju */
+}

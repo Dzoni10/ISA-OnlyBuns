@@ -58,8 +58,8 @@ public class RestExampleApplicationTests {
 	public void testNotifyInactiveUsers() throws Exception {
 		// Arrange: Add mock data for inactive users
 		List<User> users = Arrays.asList(
-				new User(1, "Mika", "Mikic", "mika123", "123", "mika@gmail", "Ulica122000", true, false, LocalDateTime.now().minusDays(15)),
-				new User(2, "Mila", "Milic", "mila123", "123", "mila@gmail", "Ulica122000", true, false, LocalDateTime.now().minusDays(8))
+				new User( "Mika", "Mikic", "mika123", "123", "mika@gmail", "Ulica122000", true, false,1, LocalDateTime.now().minusDays(15)),
+				new User( "Mila", "Milic", "mila123", "123", "mila@gmail", "Ulica122000", true, false,2, LocalDateTime.now().minusDays(8))
 		);
 
 		Mockito.when(userService.findAll()).thenReturn(users);

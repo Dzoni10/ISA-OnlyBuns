@@ -1,0 +1,81 @@
+<div class="chat-container">
+    <!-- Naslov chata i padajući meni za učesnike -->
+    <div class="chat-header">
+      <h2 class="chat-title">{{ selectedChat?.name }}</h2>
+      <div class="participants-dropdown" (click)="toggleParticipants()">
+        <span>Participants  </span>
+        <i *ngIf="!showParticipants"    style="cursor: pointer;" class="fas fa-chevron-down"> </i>
+        <i *ngIf="showParticipants" style="cursor: pointer;" class="fas fa-chevron-up"></i>
+    </div>
+    <div class="dropdown-menu" *ngIf="showParticipants">
+        <!-- Scrollable participants section -->
+        <div class="participants-section">
+          <div *ngFor="let participant of selectedChat?.participants" class="dropdown-item">
+                <div class="column profile-column">
+                    <i class="fas fa-user-circle profile-icon"></i>
+                </div>
+                <div class="column username-column">
+                    <span (click)="openUsersProfile(participant.username)" class="clickable">{{ participant.username }}</span>
+                  </div>
+                  
+                <div class="column action-column">
+                    <i *ngIf="selectedChat?.adminUsername !== participant.username && selectedChat?.adminUsername === registerUser?.username" 
+                       class="fas fa-trash delete-icon" 
+                       (click)="removeParticipant(participant.username)"></i>
+                    <i *ngIf="selectedChat?.adminUsername === participant.username" 
+                       class="admin-icon" matTooltip="Admin"  matTooltipPosition="above" matTooltipShowDelay="200">⭐</i>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Fixed bottom section -->
+        <div class="fixed-bottom-section">
+            <div *ngIf="!showAddUser && selectedChat?.adminUsername === registerUser?.username" 
+                 class="add-user-btn" 
+                 (click)="toggleAddUser()">
+                 Add user
+            </div>
+            
+            <div *ngIf="showAddUser" class="add-user-form">
+                <input type="text" 
+                       [(ngModel)]="newParticipant" 
+                       placeholder="Enter username"
+                       class="add-user-input"
+                       (keydown.enter)="confirmAddParticipant()">
+                <div class="add-user-actions">
+                    <button class="confirm-btn" (click)="confirmAddParticipant()"  >Add</button>
+                    <button class="cancel-btn" (click)="toggleAddUser()">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+  
+
+    <!-- Poruke -->
+    <div class="chat-messages" #participantsSection (scroll)="onScroll()">
+      <div *ngFor="let message of filteredMessages"
+        [class.my-message]="message.username === registerUser?.username"
+           [class.new-message]="message.id === newMessageId"
+           class="chat-message">
+        <i class="fas fa-user-circle profile-icon"></i>
+        <div class="message-content">
+          <span class="username">{{ message.username }}</span>
+          <p class="text">{{ message.text }}</p>
+          <span class="timestamp">{{ getTimeAgo(message.creationTime) }}</span>
+        </div>
+      </div>
+           <button *ngIf="scrollDownButton" class="scroll-down-button" (click)="scrollToBottom()">
+             <i class="fa-solid fa-angles-down"></i>
+           </button>
+    </div>
+  
+    <!-- Unos poruke -->
+    <div class="chat-input">
+      <input type="text" [(ngModel)]="newMessage" placeholder="Text here"  (keyup.enter)="sendMessage()"/>
+      <button (click)="sendMessage()">
+        <i class="fas fa-paper-plane"></i>
+      </button>
+    </div>
+  </div>
+  

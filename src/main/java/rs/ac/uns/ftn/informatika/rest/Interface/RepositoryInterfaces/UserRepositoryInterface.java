@@ -26,6 +26,8 @@ public interface UserRepositoryInterface extends JpaRepository<User, Integer> {
         public List<User> findAllByUsername(String username);
         public User findUserByEmail(String email);
         public User findUserByUsername(String username);
+        @Query("SELECT u.username FROM User u")
+        List<String> findAllUsernames();
 
         @Query("SELECT u FROM User u WHERE u.username = :username")
         @Lock(LockModeType.PESSIMISTIC_WRITE)
@@ -46,5 +48,9 @@ public interface UserRepositoryInterface extends JpaRepository<User, Integer> {
                 "(u.postCount BETWEEN :minPosts AND :maxPosts OR :minPosts IS NULL OR :maxPosts IS NULL) AND " +
                 "u.loginStatus = true")
         List<User> findUsersByCriteria(String name, String surname, String email, Integer minPosts, Integer maxPosts);
+
+
+        @Query("SELECT u.username FROM User u WHERE u.loginStatus = true")
+        List<String> findAllLoggedInUsernames();
 
 }
