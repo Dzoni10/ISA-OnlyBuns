@@ -78,7 +78,12 @@ public class UserService{
     public boolean isEmailExist(String email){
         return usernameBloomFilter.mightContain(email);
     }
-
+    public List<String> getAllUsernames() {
+        return userRepositoryInterface.findAllUsernames();
+    }
+    public List<String> getAllLoggedInUsernames() {
+        return userRepositoryInterface.findAllLoggedInUsernames();
+    }
     public List<User> findUsersByCriteria(String name, String surname, String email, Integer minPosts, Integer maxPosts) {
         return userRepositoryInterface.findUsersByCriteria(name,surname,email,minPosts,maxPosts);
     }

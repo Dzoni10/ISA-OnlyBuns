@@ -37,6 +37,10 @@
 
 .post-card {
   background-color: #e9e7f7;
+  background-image: url('https://img.freepik.com/free-photo/elevated-view-fresh-carrots-orange-backdrop_23-2147927312.jpg'); /* Postavljamo sliku kao pozadinu */
+  background-size: cover; /* Slika se rasteže da pokrije celu karticu */
+  background-position: right; /* Pozicioniramo sliku u centru */
+  background-repeat: no-repeat; /* Sprečavamo ponavljanje slike */
   border-radius: 12px;
   padding: 15px 18px;
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);

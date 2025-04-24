@@ -11,11 +11,15 @@ import { AppAnalyticsComponent } from './app-analytics/app-analytics.component';
 import { AuthGuard } from './auth.guard';
 import { MapPostComponent } from './map-post/map-post.component';
 import { TrendsComponent } from './trends/trends.component';
+import { ChatsComponent } from './chats/chats.component';
+import { ChatOpenComponent } from './chat-open/chat-open.component';
 
 
 const routes: Routes = [
 
   {path: 'login', component: LoginComponent},
+  {path: 'chats', component: ChatsComponent , canActivate:[AuthGuard]},
+  {path: 'chat/:chatId', component: ChatOpenComponent , canActivate:[AuthGuard]},
   {path: 'signup', component: SignupComponent},
   {path: 'home', component: HomePageComponent },
   {path: 'app-analytics', component: AppAnalyticsComponent, canActivate: [AuthGuard]},
