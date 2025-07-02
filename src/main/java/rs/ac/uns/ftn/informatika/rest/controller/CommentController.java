@@ -1,5 +1,9 @@
 package rs.ac.uns.ftn.informatika.rest.controller;
 
+import io.github.bucket4j.Bandwidth;
+import io.github.bucket4j.Bucket;
+import io.github.bucket4j.Bucket4j;
+import io.github.bucket4j.Refill;
 import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -13,9 +17,11 @@ import rs.ac.uns.ftn.informatika.rest.mapper.CommentDTOMapper;
 import rs.ac.uns.ftn.informatika.rest.paged_result.PagedResults;
 import rs.ac.uns.ftn.informatika.rest.service.CommentService;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
 
 @RestController
 @RequestMapping("/api/comments")
@@ -23,6 +29,9 @@ public class CommentController {
 
     @Autowired
     private CommentService commentService;
+
+    // Store rate limiters per user
+    private final ConcurrentHashMap<String, Bucket> userBuckets = new ConcurrentHashMap<>();
 
     @Autowired
     private CommentDTOMapper commentDTOMapper;
@@ -72,15 +81,22 @@ public class CommentController {
     @Operation(description = "Create new comment", method = "POST")
     @PostMapping(value = "/create", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<CommentDTO> createComment(@RequestBody CommentDTO commentDTO) {
-        Comment newComment = new Comment();
-        newComment.setPostId(commentDTO.postId);
-        newComment.setUsername(commentDTO.username);
-        newComment.setText(commentDTO.text);
-        newComment.setCreationTime(LocalDateTime.now());
+        Bucket bucket = userBuckets.computeIfAbsent(commentDTO.username, this::newBucket);
 
-        newComment = commentService.save(newComment);
+        if (bucket.tryConsume(1)) {
+            Comment newComment = new Comment();
+            newComment.setPostId(commentDTO.postId);
+            newComment.setUsername(commentDTO.username);
+            newComment.setText(commentDTO.text);
+            newComment.setCreationTime(LocalDateTime.now());
 
-        return new ResponseEntity<>(new CommentDTO(newComment), HttpStatus.CREATED);
+            newComment = commentService.save(newComment);
+
+            return new ResponseEntity<>(new CommentDTO(newComment), HttpStatus.CREATED);
+        }else {
+            // Return a "Too Many Requests" error if the limit is exceeded
+            return new ResponseEntity<>(HttpStatus.TOO_MANY_REQUESTS);
+        }
     }
 
     @Operation(description = "Delete comment by ID", method = "DELETE")
@@ -88,5 +104,12 @@ public class CommentController {
     public ResponseEntity<Void> deleteComment(@PathVariable Integer id) {
         commentService.remove(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    // Create a new rate limiter bucket for each user
+    private Bucket newBucket(String username) {
+        return Bucket4j.builder()
+                .addLimit(Bandwidth.classic(60, Refill.greedy(60, Duration.ofHours(1))))
+                .build();
     }
 }

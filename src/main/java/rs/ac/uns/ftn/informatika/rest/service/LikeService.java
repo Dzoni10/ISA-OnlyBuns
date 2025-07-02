@@ -7,6 +7,7 @@ import org.springframework.data.domain.Pageable;
 import rs.ac.uns.ftn.informatika.rest.Interface.RepositoryInterfaces.LikeRepositoryInterface;
 import rs.ac.uns.ftn.informatika.rest.domain.Like;
 
+import javax.transaction.Transactional;
 import java.util.List;
 
 @Service
@@ -35,6 +36,7 @@ public class LikeService {
         return likeRepositoryInterface.findLikeById(id);
     }
 
+    @Transactional
     public Like save(Like like) {
         boolean alreadyLiked = likeRepositoryInterface.existsByPostIdAndUsername(like.getPostId(), like.getUsername());
 

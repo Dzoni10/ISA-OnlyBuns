@@ -62,7 +62,6 @@ public class PostService {
         return postRepositoryInterface.findById(id).map(post -> {
             post.setDescription(postDetails.getDescription());
             post.setUsername(postDetails.getUsername());
-            post.setCreationTime(LocalDateTime.now());
             return postRepositoryInterface.save(post);
         }).orElse(null);
     }

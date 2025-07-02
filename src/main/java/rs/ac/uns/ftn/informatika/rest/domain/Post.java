@@ -1,5 +1,7 @@
 package rs.ac.uns.ftn.informatika.rest.domain;
 
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 import rs.ac.uns.ftn.informatika.rest.dto.PostDTO;
 
 import javax.persistence.*;
@@ -7,6 +9,7 @@ import java.time.LocalDateTime;
 
 @Entity
 @Table(name="app_post")
+@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class Post {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,6 +24,7 @@ public class Post {
     @Column(name="creationTime",nullable = false)
     private LocalDateTime creationTime;
 
+    //@ManyToOne
     @Embedded
     private Location location;
 
@@ -48,6 +52,8 @@ public class Post {
         this.description = post.description;
         this.creationTime = post.creationTime;
         this.username = post.username;
+        this.imagePath = post.imagePath;
+        this.location = new Location(post.location);
     }
 
     public String getUsername() {
