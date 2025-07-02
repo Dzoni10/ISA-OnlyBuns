@@ -3,8 +3,11 @@ package rs.ac.uns.ftn.informatika.rest.Interface.RepositoryInterfaces;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import rs.ac.uns.ftn.informatika.rest.domain.Following;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 public interface FollowingRepositoryInterface extends JpaRepository<Following, Integer> {
@@ -25,6 +28,10 @@ public interface FollowingRepositoryInterface extends JpaRepository<Following, I
 
     // Vraca "following" zapis na osnovu username-a i korisnika kojeg prati
     Following findFollowingByUsernameAndFollowing(String username, String following);
+
+    @Query("SELECT f FROM Following f WHERE f.username = :username AND f.creationTime > :lastActivity")
+    List<Following> getAllByUserLastActivity(@Param("username") String username, @Param("lastActivity") LocalDateTime lastActivity);
     // Prebroj pratioce za ciljanu osobu
     long countByFollowing(String following);
+
 }

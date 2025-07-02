@@ -10,7 +10,7 @@
       <div class="profile-info">
         <div class="profile-username">
           <h2>{{ user?.username }}</h2>
-          <button class="follow-btn" (click)="onFollowClick()">
+          <button *ngIf="username!==registerUser?.username" class="follow-btn" (click)="onFollowClick()">
             {{ isFollowing ? 'Unfollow' : 'Follow' }}
           </button>   
       </div>

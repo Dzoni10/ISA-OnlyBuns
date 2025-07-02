@@ -23,6 +23,8 @@ public class EmailService {
 
     @Autowired
     private Environment env;
+    @Autowired
+    private FollowingService followingService;
 
     @Async
     public void sendVerificationEmail(UserDTO userDTO,String link) throws MailException, InterruptedException, MessagingException {
@@ -53,7 +55,8 @@ public class EmailService {
         helper.setFrom(env.getProperty("spring.mail.username"));
         helper.setSubject("Come back to Onlybuns");
         String htmlMsg = "<p>Pozdrav " + user.getUsername() + ",</p>"
-                + "<p>Nisi se ulogovao na onlybuns vec 7 dana. Cekamo te!</p>";
+                + "<p>Nisi se ulogovao na onlybuns vec 7 dana. Cekamo te!</p>"
+                + "<p>Imas " + followingService.getAllByUserLastActivityCount(user) + " novih pratilaca!</p>";
 
         helper.setText(htmlMsg, true);
 

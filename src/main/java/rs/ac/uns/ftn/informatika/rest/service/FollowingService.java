@@ -28,6 +28,14 @@ public class FollowingService {
         return followingRepository.findAllByFollowing(following);
     }
 
+    public List<Following> getAllByUserLastActivity(User user){
+        return followingRepository.getAllByUserLastActivity(user.getUsername(), user.getLastActivity());
+    }
+
+    public Integer getAllByUserLastActivityCount(User user){
+        return followingRepository.getAllByUserLastActivity(user.getUsername(), user.getLastActivity()).size();
+    }
+
     // Dodaj novo praćenje
     @Transactional
     public Following addFollowing(Following following) {

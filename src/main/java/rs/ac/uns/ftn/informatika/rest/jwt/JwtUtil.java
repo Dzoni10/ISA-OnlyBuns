@@ -3,6 +3,8 @@ package rs.ac.uns.ftn.informatika.rest.jwt;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.stereotype.Component;
+
+import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
 
 @Component
@@ -21,5 +23,22 @@ public class JwtUtil {
 
         return token;
 
+    }
+
+    public String extractEmailFromToken(String token) {
+        return Jwts.parser()
+                .setSigningKey(SECRET_KEY)
+                .parseClaimsJws(token)
+                .getBody()
+                .get("email", String.class);
+    }
+
+    public String extractEmailFromRequest(HttpServletRequest request) {
+        String authorizationHeader = request.getHeader("Authorization");
+        if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
+            String token = authorizationHeader.substring(7);
+            return extractEmailFromToken(token);
+        }
+        return null;
     }
 }
