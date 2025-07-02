@@ -1,5 +1,7 @@
 package rs.ac.uns.ftn.informatika.rest.service;
 
+import io.micrometer.core.instrument.Gauge;
+import io.micrometer.core.instrument.MeterRegistry;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -19,6 +21,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import org.springframework.transaction.annotation.Propagation;
 
@@ -31,9 +34,10 @@ public class UserService{
     private final UserRepositoryInterface userRepositoryInterface;
     private final BloomFilter<CharSequence> usernameBloomFilter;
 
+    private final AtomicInteger activeUsers = new AtomicInteger(0);
 
     @Autowired
-    public UserService(UserRepositoryInterface userRepositoryInterface) {
+    public UserService(UserRepositoryInterface userRepositoryInterface, MeterRegistry meterRegistry) {
         this.userRepositoryInterface = userRepositoryInterface;
 
         List<User> allUsers = userRepositoryInterface.findAll();
@@ -44,6 +48,10 @@ public class UserService{
             usernameBloomFilter.put(user.getUsername());
             usernameBloomFilter.put(user.getEmail());
         }
+
+        Gauge.builder("active_users", activeUsers, AtomicInteger::get)
+                .description("Number of currently active users")
+                .register(meterRegistry);
 
     }
     @Transactional(propagation = Propagation.REQUIRES_NEW)
@@ -141,5 +149,13 @@ public class UserService{
         for (User user : inactiveUsers) {
             userRepositoryInterface.delete(user);
         }
+    }
+
+    public void incrementActiveUsers() {
+        activeUsers.incrementAndGet();
+    }
+
+    public void decrementActiveUsers() {
+        activeUsers.updateAndGet(current -> Math.max(0, current - 1));
     }
 }

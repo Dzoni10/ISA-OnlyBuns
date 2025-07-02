@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import {HttpClient} from '@angular/common/http';
+import {HttpClient, HttpHeaders} from '@angular/common/http';
 import { TokenStorage } from './jwt/token.service';
 import { BehaviorSubject, Observable, tap } from 'rxjs';
 import { User } from './model/user.model';
@@ -18,6 +18,7 @@ import { PagedResults } from './model/paged-results.model';
 export class LoginService {
   user$=new BehaviorSubject<User>({email:"",id:0});
   logged = new BehaviorSubject<boolean>(this.isLoggedIn());
+  zone: any;
 
   constructor(private http: HttpClient, private tokenStorage: TokenStorage, private router: Router) { }
 
@@ -40,6 +41,7 @@ export class LoginService {
     return localStorage.getItem('isLoggedIn') === 'true'; 
   }
 
+  /*
   logout(): void {
     this.router.navigate(['login']).then(_ => {
       this.tokenStorage.clear();
@@ -48,7 +50,60 @@ export class LoginService {
       localStorage.removeItem('isLoggedIn');
       }
     );
-  }
+  }*//*
+    logout(): void {
+      this.http.post(environment.apiHost + 'users/logout', {}, { headers: this.getAuthHeaders() })
+        .subscribe({
+          next: () => {
+            console.log("Logout successful on backend");
+          },
+          error: (error) => {
+            console.error("Logout failed on backend", error);
+          },
+          complete: () => {
+            console.log("Clearing session and redirecting...");
+            this.tokenStorage.clear();
+            this.user$.next({ email: "", id: 0 });
+            this.logged.next(false);
+            localStorage.removeItem('isLoggedIn');
+            this.router.navigate(['login']).then(() => {
+              window.location.reload();
+            // 🚀 FORCE UI UPDATE
+            });
+          }}
+        )
+        
+    }
+        */
+
+    logout(): void {
+      this.http.post(environment.apiHost + 'users/logout', {}, { 
+        headers: this.getAuthHeaders(), 
+        responseType: 'text'  // 👈 Tell Angular to expect plain text
+      }).subscribe({
+        next: () => {
+          console.log("Logout successful on backend");
+        },
+        error: (error) => {
+          console.error("Logout failed on backend", error);
+        },
+        complete: () => {
+          console.log("Clearing session and redirecting...");
+          this.tokenStorage.clear();
+          this.user$.next({ email: "", id: 0 });
+          this.logged.next(false);
+          localStorage.removeItem('isLoggedIn');
+          this.router.navigate(['login']).then(/*() => window.location.reload()*/);
+        }
+      });
+    }
+    
+    private getAuthHeaders(): HttpHeaders {
+      const token = this.tokenStorage.getAccessToken();
+      return new HttpHeaders({
+        Authorization: `Bearer ${token}`
+      });
+    }
 
   register(registration: Registration): Observable<User> {
     return this.http
