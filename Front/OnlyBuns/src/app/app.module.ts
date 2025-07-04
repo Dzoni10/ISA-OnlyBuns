@@ -54,7 +54,7 @@ import { RecommendedLocationsComponent } from './recommended-locations/recommend
     MapPostComponent,
     TrendsComponent,
     ChatsComponent,
-    ChatOpenComponent
+    ChatOpenComponent,
     TrendsComponent,
     RecommendedLocationsComponent
     
