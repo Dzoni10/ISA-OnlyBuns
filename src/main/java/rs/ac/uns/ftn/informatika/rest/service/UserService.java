@@ -1,6 +1,9 @@
 package rs.ac.uns.ftn.informatika.rest.service;
 
+import io.micrometer.core.instrument.Gauge;
+import io.micrometer.core.instrument.MeterRegistry;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Lock;
 import org.springframework.data.jpa.repository.Query;
@@ -18,6 +21,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import org.springframework.transaction.annotation.Propagation;
 
@@ -30,9 +34,10 @@ public class UserService{
     private final UserRepositoryInterface userRepositoryInterface;
     private final BloomFilter<CharSequence> usernameBloomFilter;
 
+    private final AtomicInteger activeUsers = new AtomicInteger(0);
 
     @Autowired
-    public UserService(UserRepositoryInterface userRepositoryInterface) {
+    public UserService(UserRepositoryInterface userRepositoryInterface, MeterRegistry meterRegistry) {
         this.userRepositoryInterface = userRepositoryInterface;
 
         List<User> allUsers = userRepositoryInterface.findAll();
@@ -43,6 +48,10 @@ public class UserService{
             usernameBloomFilter.put(user.getUsername());
             usernameBloomFilter.put(user.getEmail());
         }
+
+        Gauge.builder("active_users", activeUsers, AtomicInteger::get)
+                .description("Number of currently active users")
+                .register(meterRegistry);
 
     }
     @Transactional(propagation = Propagation.REQUIRES_NEW)
@@ -64,12 +73,28 @@ public class UserService{
             userRepositoryInterface.save(user);
         }
     }
-
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    public void updateUserPostCount(String username, int number) {
+        Optional<User> userOptional = userRepositoryInterface.findByUsernameWithLock(username);
+        if (userOptional.isPresent()) {
+            User user = userOptional.get();
+            user.setPostCount(user.getPostCount()+ number);
+            userRepositoryInterface.save(user);
+        }
+    }
 
     public boolean isEmailExist(String email){
         return usernameBloomFilter.mightContain(email);
     }
-
+    public List<String> getAllUsernames() {
+        return userRepositoryInterface.findAllUsernames();
+    }
+    public List<String> getAllLoggedInUsernames() {
+        return userRepositoryInterface.findAllLoggedInUsernames();
+    }
+    public List<User> findUsersByCriteria(String name, String surname, String email, Integer minPosts, Integer maxPosts) {
+        return userRepositoryInterface.findUsersByCriteria(name,surname,email,minPosts,maxPosts);
+    }
     public List<User> findAll() {
         return userRepositoryInterface.findAll();
     }
@@ -109,6 +134,11 @@ public class UserService{
         return userRepositoryInterface.save(user);
     }
 
+    public List<User> getUsersForPagination(int pageNumber) {
+        int pageSize = 5;
+        Pageable pageable = PageRequest.of(pageNumber - 1, pageSize); // Spring koristi 0-indeksirane stranice
+        return userRepositoryInterface.getUsersForPagination(pageable);
+    }
 
     public void remove(int id) {
         userRepositoryInterface.deleteById(id);
@@ -119,5 +149,13 @@ public class UserService{
         for (User user : inactiveUsers) {
             userRepositoryInterface.delete(user);
         }
+    }
+
+    public void incrementActiveUsers() {
+        activeUsers.incrementAndGet();
+    }
+
+    public void decrementActiveUsers() {
+        activeUsers.updateAndGet(current -> Math.max(0, current - 1));
     }
 }

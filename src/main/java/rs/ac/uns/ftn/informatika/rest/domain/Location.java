@@ -1,5 +1,7 @@
 package rs.ac.uns.ftn.informatika.rest.domain;
 
+import rs.ac.uns.ftn.informatika.rest.dto.LocationDTO;
+
 import javax.persistence.Embeddable;
 
 @Embeddable
@@ -10,6 +12,11 @@ public class Location {
         this.latitude = latitude;
         this.longitude = longitude;
     }
+    public Location(LocationDTO location) {
+        this.latitude = location.latitude;
+        this.longitude = location.longitude;
+    }
+
     public Location() {}
     public double getLatitude() {
         return latitude;

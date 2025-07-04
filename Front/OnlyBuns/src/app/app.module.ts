@@ -32,6 +32,9 @@ import { NgChartsModule  } from 'ng2-charts';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MapPostComponent } from './map-post/map-post.component';
 import { TrendsComponent } from './trends/trends.component';
+import { ChatsComponent } from './chats/chats.component';
+import { ChatOpenComponent } from './chat-open/chat-open.component';  // Uvoz MatProgressSpinnerModule
+import { MatTooltipModule } from '@angular/material/tooltip'; // Importuj MatTooltipModule
 import { RecommendedLocationsComponent } from './recommended-locations/recommended-locations.component';  // Uvoz MatProgressSpinnerModule
 
 
@@ -49,6 +52,9 @@ import { RecommendedLocationsComponent } from './recommended-locations/recommend
     UsersProfilComponent,
     AppAnalyticsComponent,
     MapPostComponent,
+    TrendsComponent,
+    ChatsComponent,
+    ChatOpenComponent
     TrendsComponent,
     RecommendedLocationsComponent
     
@@ -71,7 +77,7 @@ import { RecommendedLocationsComponent } from './recommended-locations/recommend
     MatSnackBarModule,
     NgChartsModule ,
     MatProgressSpinnerModule,  
-  
+    MatTooltipModule
   ],
   providers: [{
     provide: JWT_OPTIONS,

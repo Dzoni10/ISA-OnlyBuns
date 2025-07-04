@@ -1,5 +1,6 @@
 package rs.ac.uns.ftn.informatika.rest.controller;
 
+import io.micrometer.core.instrument.MeterRegistry;
 import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -8,6 +9,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
+import rs.ac.uns.ftn.informatika.rest.config.RabbitMQProducer;
 import rs.ac.uns.ftn.informatika.rest.domain.Location;
 
 import rs.ac.uns.ftn.informatika.rest.domain.Post;
@@ -30,27 +32,40 @@ import java.time.LocalDateTime;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 import org.springframework.web.multipart.MultipartFile;
+import rs.ac.uns.ftn.informatika.rest.service.UserService;
+
 @RestController
 @RequestMapping("/api/posts")
 public class PostController {
     @Autowired
     private PostService postService;
-
+    @Autowired
+    private UserService userService;
     @Autowired
     private JwtUtil jwtUtil;
     @Autowired
     private PostDTOMapper postDTOMapper;
+    @Autowired
+    private RabbitMQProducer producer;
+  
+    private final MeterRegistry meterRegistry;
+
 
     @Value("${upload.directory}")
     private String uploadDir;
 
+    public PostController(MeterRegistry meterRegistry) {
+        this.meterRegistry = meterRegistry;
+    }
+
     @Operation(description = "Get all posts",method="GET")
     @GetMapping(value = "/all", produces= MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<PagedResults<PostDTO>> getAllPosts() {
-        List<Post> posts = postService.findAll();
+        List<Post> posts = postService.findAllPostsWithoutImages();
 
         List<PostDTO> postsDTO = new ArrayList<>();
         for (Post post : posts) {
@@ -65,7 +80,10 @@ public class PostController {
     @DeleteMapping("/{id}")
     @Operation(description = "Delete a post by ID", method = "DELETE")
     public ResponseEntity<Void> deletePost(@PathVariable Integer id) {
+        Post post = postService.findPostById(id);
+        userService.updateUserPostCount(post.getUsername(),-1);
         postService.remove(id);
+
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
@@ -88,6 +106,8 @@ public class PostController {
                                       @RequestParam(value = "location.latitude", required = false) Double latitude,
                                       @RequestParam(value = "location.longitude", required = false) Double longitude,
                                       @RequestParam(value = "imageFile", required = false) MultipartFile imageFile) throws IOException {
+
+        long start = System.nanoTime();
 
         // Validate inputs
         if (creatorId <= 0 || description == null || description.isEmpty()) {
@@ -128,7 +148,10 @@ public class PostController {
 
         // Save the post to the database
         savedPost = postService.save(savedPost);
+        userService.updateUserPostCount(savedPost.getUsername(),1);
 
+        long duration = System.nanoTime() - start;
+        meterRegistry.timer("http.requests.create_post").record(duration, TimeUnit.NANOSECONDS);
         // Return the saved post as a DTO
         return new ResponseEntity<>(new PostDTO(savedPost), HttpStatus.CREATED);
     }
@@ -177,5 +200,14 @@ public class PostController {
         return ResponseEntity.ok(postCount);
     }
 
+    @PostMapping("/{postId}/advertise")
+    public ResponseEntity<String> markPostForAds(@PathVariable int postId) {
+        // Ovdje možeš dodati logiku za označavanje posta
+        Post post = postService.findPostById(postId);
+        //String message = "Post " + postId + " označen za reklame";
+        String message = "Kreator: " + post.getUsername() + " Opis: " + post.getDescription() + " Datum objave: " + post.getCreationTime();
+        producer.sendMessage(message);
+        return ResponseEntity.ok("Post označen i poruka poslata agencijama.");
+    }
 
 }

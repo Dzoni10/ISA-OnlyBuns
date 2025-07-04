@@ -11,8 +11,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import rs.ac.uns.ftn.informatika.rest.Interface.RepositoryInterfaces.PostRepositoryInterface;
 import rs.ac.uns.ftn.informatika.rest.domain.Post;
+import rs.ac.uns.ftn.informatika.rest.dto.PostDTO;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -51,11 +53,15 @@ public class PostService {
         postRepositoryInterface.deleteById(id);
     }
 
+    @Cacheable(value = "imageCache", key = "#postId")
+    public String getImageForPost(int postId) {
+        Post post = postRepositoryInterface.findPostById(postId);
+        return post.getImagePath();
+    }
     public Post updatePost(int id, Post postDetails) {
         return postRepositoryInterface.findById(id).map(post -> {
             post.setDescription(postDetails.getDescription());
             post.setUsername(postDetails.getUsername());
-            post.setCreationTime(LocalDateTime.now());
             return postRepositoryInterface.save(post);
         }).orElse(null);
     }
@@ -68,6 +74,16 @@ public class PostService {
         return postRepositoryInterface.getPopularPostsIn7Days(sevenDaysAgo,pageable);
     }
 
+    public List<Post> findAllPostsWithoutImages() {
+        List<Post> posts = postRepositoryInterface.findAllPostsWithoutImages();
+        for (Post post : posts) {
+            PostDTO postDTO = new PostDTO(post);
+            // Provera da li je slika u kešu
+            String imagePath = getImageForPost(post.getId());  // Ovdje koristiš keširanje
+            post.setImagePath(imagePath);  // Postavljanje slike
+        }
+        return posts;
+    }
     @Cacheable("popularPostsAllTimeCache")
     public List<Post> getPopularPostsEver() {
         System.out.println("ikada");

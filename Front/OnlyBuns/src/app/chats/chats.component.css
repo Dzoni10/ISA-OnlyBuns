@@ -1,0 +1,372 @@
+.chats-container {
+  margin: 0 auto;
+  margin-top: 10px;
+  max-width: 800px;
+  display: grid; /* Koristimo grid layout */
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); /* Dve kolone sa fleksibilnom širinom */
+  gap: 30px; /* Razmak između kartica */
+}
+  
+  .chat-card h3 {
+    margin-top: 0;
+    color: #e9d5d5;
+  }
+  
+  .chat-card p {
+    margin: 5px 0;
+    color: #f7e0e0;
+  }
+  
+  
+  .chat-card h2 {
+    margin: 0 0 8px;
+    font-size: 1.5rem;
+    color: #f8e4e4;
+  }
+  
+  
+  .chat-card ul {
+    list-style: none;
+    padding: 0;
+  }
+  
+  .chat-card li {
+    padding: 4px 0;
+  }
+  
+  .error {
+    color: red;
+    font-weight: bold;
+  }
+ 
+  .chat-card {
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    padding: 15px;
+    background-image: url('https://t4.ftcdn.net/jpg/02/02/17/99/360_F_202179910_Uv0HNNaT1LklpUAwfC5eJY3QhGL2IkAc.jpg'); /* Postavljamo sliku kao pozadinu */
+    background-size: cover; /* Slika se rasteže da pokrije celu karticu */
+    background-position: center; /* Pozicioniramo sliku u centru */
+    background-repeat: no-repeat; /* Sprečavamo ponavljanje slike */
+    color: white; /* Menjamo boju teksta za bolju čitljivost */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    position: relative;
+    padding-bottom: 50px;
+  }
+  
+  .chat-header {
+    position: relative; /* Omogućava pozicioniranje unutar roditeljskog elementa */
+    display: flex;
+    align-items: center;
+  }
+  
+
+  .open-chat-btn {
+    position: absolute; /* Postavljamo dugme na apsolutnu poziciju unutar .chat-header */
+    right: 0; /* Dugme se pozicionira na desnu stranu */
+    top: 50%; /* Poravnanje po sredini */
+    transform: translateY(-50%); /* Centriramo dugme vertikalno */
+    padding: 10px 20px;
+    background-color: #5d4fde;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .open-chat-btn:hover {
+    background-color: #272ac6; /* Tamnija plava boja pri hover-u */
+  }
+  /* Naslov čata (centriran i veći font) */
+.chat-name {
+    font-size: 2rem; /* Veći font za naslov */
+    font-weight: bold;
+
+  }
+  
+  /* Stil poruka */
+  .message {
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    padding: 10px;
+    background-color: #f0f0f0;
+    margin-bottom: 10px;
+    position: relative;
+  }
+  
+  /* Ikonica profila pored imena */
+  .message-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 5px;
+    color: #191111;
+
+  }
+  
+  .profile-icon {
+    font-size: 1.2rem;
+    color: #555;
+    margin-right: 10px;
+  }
+  
+  /* Tekst poruke */
+  .message-text {
+    font-size: 1rem;
+    color: #333;
+  }
+  
+  /* Vreme (timestamp) poruke */
+  .timestamp {
+    font-size: 0.9rem;
+    color: #333;
+    text-align: right;
+    display: block;
+    margin-top: 5px;
+  }
+
+
+  /* Modal */
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+/* Modal content */
+.modal-content {
+  position: relative; /* Omogućava pozicioniranje unutar modala */
+  background-color: white;
+  padding: 30px;
+  border-radius: 10px;
+  width: 400px;
+  text-align: center;
+}
+
+/* Zatvaranje modala (X dugme u gornjem desnom kutu modala) */
+.close-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+/* Naslov modala */
+.modal-title {
+  font-size: 1.8rem;
+  margin-bottom: 20px;
+}
+
+/* Input za naslov */
+#chat-title {
+  width: 100%;
+  padding: 10px;
+  margin: 10px 0;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+}
+#participants-input {
+  width: 60%;
+  padding: 10px;
+  margin: 10px 0;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+}
+
+
+/* Dugme za dodavanje učesnika */
+button {
+  padding: 10px 20px;
+  background-color: #5d4fde;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+button:hover {
+  background-color: #272ac6;
+}
+
+/* Stil za dugme "New Chat" */
+.new-chat-btn {
+  padding: 8px 15px;
+  background-color: #5d4fde;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin-top: 90px;
+  display: block; /* Postavlja dugme da bude blok element, tj. da zauzme celu širinu i bude ispod prethodnih elemenata */
+  width: auto; /* Dugme neće zauzimati celu širinu */
+}
+
+.new-chat-btn:hover {
+  background-color: #272ac6;
+}
+
+
+/* Naslov i input u jednom redu */
+.input-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.input-row label {
+  white-space: nowrap;
+}
+
+/* Red za dodavanje participanta */
+.participant-input-row {
+  margin-left: 0px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 15px;
+  animation: slideDown 0.3s ease;
+
+}
+
+/* Dugme za dodavanje (zeleni kružić) */
+.add-icon-btn {
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+  background-color: #4CAF50;
+  color: white;
+  font-size: 20px;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.add-icon-btn:hover {
+  background-color: #388e3c;
+}
+
+/* Lista učesnika */
+.participants-list {
+  list-style-type: disc;
+  padding-left: 20px;
+  margin-top: 15px;
+  text-align: left;
+}
+
+/* Lista učesnika kao scrollable lista */
+.participants-list {
+  max-height: 150px;
+  overflow-y: auto;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  padding: 8px;
+  background-color: #f9f9f9;
+  margin-top: 15px;
+  animation: fadeIn 0.3s ease-in;
+
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-5px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Jedan učesnik u listi */
+.participant-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 6px 8px;
+  border-bottom: 1px solid #ddd;
+  font-size: 0.95rem;
+}
+
+/* Crvena kanta */
+.delete-icon {
+  color: red;
+  cursor: pointer;
+  margin-left: 10px;
+  transition: color 0.2s;
+}
+
+.delete-icon:hover {
+  color: darkred;
+}
+
+.add-btn {
+  transition: all 0.3s ease;
+}
+
+.add-btn:hover {
+  background-color: #007bff;
+  color: white;
+  transform: scale(1.05);
+}
+
+/* Dugme Create Chat */
+.create-chat-btn {
+  margin-top: 20px;
+  padding: 10px 20px;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.create-chat-btn:hover {
+  background-color: #388e3c;
+}
+
+
+/* SVG "+" kao lep kružić */
+.add-icon-btn {
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+  background-color: #4CAF50;
+  color: white;
+  font-size: 0;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+}
+
+.add-icon-btn svg {
+  width: 20px;
+  height: 20px;
+  fill: white;
+}
+
+.participant-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.user-icon {
+  color: #555;
+  font-size: 1rem;
+}
+
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}

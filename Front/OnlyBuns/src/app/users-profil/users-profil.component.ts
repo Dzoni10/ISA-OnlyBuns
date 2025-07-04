@@ -14,7 +14,6 @@ import { PostService } from '../post.service';
 })
 export class UsersProfilComponent implements OnInit {
 
-  posts: Post[] = []; 
   users: RegisterUser[] = []; 
   sortDirection: { [key: string]: boolean } = { 'name': true, 'surname': true, 'username': true, 'email': true, 'loginStatus': true };
   filteredUsers: RegisterUser[] = [];
@@ -22,9 +21,9 @@ export class UsersProfilComponent implements OnInit {
   emailOptions: string[] = []; 
   surnameOptions: string[] = []; 
   nameOptions: string[] = []; 
+  totalUsers = 0;
 
   currentPage: number = 1;
-  usersPerPage: number = 5;
   
   searchCriteria = {
     name: '',
@@ -36,34 +35,17 @@ export class UsersProfilComponent implements OnInit {
   constructor(private postService: PostService,private loginService: LoginService, private router: Router) { }
 
   ngOnInit(): void {
-    this.loadUsers(); 
-    this.loadPosts(); 
+    this.loadUsersForPagination(); 
   }
 
-  loadPosts(): void {
-    this.postService.getAllPosts().subscribe(
-      (data: PagedResults<Post>) => {
-        this.posts = data.results;
-        this.updateUserPostCounts();
-
-      },
-      (error) => {
-        console.error('Greška pri učitavanju postova', error); // Obrada greške
-      }
-    );
-  }
-
-
-  loadUsers(): void {
-    this.loginService.getUsers().subscribe(
+  loadUsersForPagination(): void {
+    this.loginService.getUsersPagination(this.currentPage).subscribe(
       (data: PagedResults<RegisterUser>) => {
-        this.users = data.results.filter(user => user.loginStatus === true);
+        this.users = data.results;
         this.filteredUsers = [...this.users]; // Prvobitno prikazujemo sve korisnike
         this.nameOptions = this.users.map(user => user.name);
         this.surnameOptions = this.users.map(user => user.surname);
         this.emailOptions = this.users.map(user => user.email);
-        this.updateUserPostCounts();
-
       },
       (error) => {
         console.error('Greška pri učitavanju korisnika', error); // Obrada greške
@@ -108,6 +90,28 @@ export class UsersProfilComponent implements OnInit {
     );
     */
   }
+  searchUsers(): void {
+    const { name, surname, email, minPosts, maxPosts } = this.searchCriteria;
+
+    this.loginService.searchUsers(
+      name || undefined,
+      surname || undefined,
+      email || undefined,
+      minPosts !== null ? minPosts : undefined,
+      maxPosts !== null ? maxPosts : undefined
+    ).subscribe({
+      next: (result) => {
+        this.users = result.results;
+        this.totalUsers = result.totalCount;
+        this.filteredUsers = [...this.users]; 
+        this.closeSearchModal();
+      },
+      error: (err) => {
+        console.error('Error fetching users:', err);
+      },
+    });
+    
+  }
 
   openSearchModal(): void {
     this.isSearchModalOpen = true;
@@ -117,30 +121,7 @@ export class UsersProfilComponent implements OnInit {
     this.isSearchModalOpen = false;
   }
 
-  searchUsers(): void {
-    this.filteredUsers = this.users.filter(user => {
-      const matchesName = this.searchCriteria.name.trim() 
-        ? user.name.toLowerCase().includes(this.searchCriteria.name.toLowerCase())
-        : true;
-      const matchesSurname = this.searchCriteria.surname.trim()
-        ? user.surname.toLowerCase().includes(this.searchCriteria.surname.toLowerCase())
-        : true;
-      const matchesEmail = this.searchCriteria.email.trim()
-        ? user.email.toLowerCase().includes(this.searchCriteria.email.toLowerCase())
-        : true;
-        const matchesMinPosts = this.searchCriteria.minPosts !== null
-        ? user.postNumber >= this.searchCriteria.minPosts
-        : true;
-        const matchesMaxPosts = this.searchCriteria.maxPosts !== null
-        ? user.postNumber <= this.searchCriteria.maxPosts
-        : true;
-
-        return matchesName && matchesSurname && matchesEmail && matchesMinPosts && matchesMaxPosts;
-
-    });
-
-    this.closeSearchModal();
-}
+ 
 isSearchCriteriaFilled(): boolean {
   return (
     (this.searchCriteria.name && this.searchCriteria.name.trim() !== '') ||
@@ -158,53 +139,35 @@ resetSearchCriteria(): void {
     minPosts: null,
     maxPosts: null
   };
-  this.searchUsers();
+  this.loadUsersForPagination();
 }
 
-updateUserPostCounts(): void {
-  this.users.forEach(user => {
-    if (user.postNumber === undefined) {
-      user.postNumber = 0; 
-    }
-  });
-
-  this.posts.forEach(post => {
-    const user = this.users.find(user => user.username === post.username);
-    if (user) {
-      user.postNumber += 1;
-    }
-  });
-}
-
- // Metoda za vraćanje korisnika za trenutnu stranicu
- getPagedUsers() {
-  const startIndex = (this.currentPage - 1) * this.usersPerPage;
-  return this.filteredUsers.slice(startIndex, startIndex + this.usersPerPage);
-}
 
 // Prebacivanje na sledeću stranicu
 goToNextPage() {
-  if (this.currentPage * this.usersPerPage < this.users.length) {
-    this.currentPage++;
-  }
+  this.currentPage++;
+  this.loadUsersForPagination();
 }
 
 // Prebacivanje na prethodnu stranicu
 goToPreviousPage() {
   if (this.currentPage > 1) {
     this.currentPage--;
+    this.loadUsersForPagination();
   }
 }
 
 // Prebacivanje na prvu stranicu
 goToFirstPage() {
   this.currentPage = 1;
+  this.loadUsersForPagination();
+
 }
 
 // Prebacivanje na poslednju stranicu
 goToLastPage() {
-  this.currentPage = Math.ceil(this.users.length / this.usersPerPage);
+  //posto je paginacija premestena na back vise nemam info o ukupnom broju usera tkd ovo nista sad pametno ne radi 
+  this.loadUsersForPagination();
 }
-
 
 }

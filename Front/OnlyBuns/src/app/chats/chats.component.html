@@ -1,0 +1,85 @@
+
+<!-- Dugme za otvaranje modala -->
+<button class="new-chat-btn" (click)="openNewChatModal()">New Chat</button>
+
+<!-- Modal za kreiranje novog chata -->
+<div class="modal" *ngIf="isModalOpen">
+  <div class="modal-content">
+    <span class="close-btn" (click)="closeModal()">X</span>
+    <h2 class="modal-title"> 🗨️   Create new chat</h2>
+
+    <!-- Naslov i input u istom redu -->
+    <div class="input-row">
+      <label for="chat-title">Title:</label>
+      <input #titleInput type="text" id="chat-title" [(ngModel)]="newChatTitle" placeholder="Enter chat title" (keydown.enter)="showParticipantInput= true" maxlength="18" />
+    </div>
+
+    <!-- Dugme za prikaz unosa učesnika -->
+    <button *ngIf="!showParticipantInput" (click)="showParticipantInput = true" class="add-btn"> Add participants</button>
+    <!-- Input za učesnika i dugme "+" -->
+    <div *ngIf="showParticipantInput" class="participant-input-row">
+      <label>Participants:</label>
+     <input #participantInput type="text"  id="participants-input" [(ngModel)]="newParticipant" placeholder="Enter participant name" (keydown.enter)="addParticipant()" />
+      <button class="add-icon-btn" (click)="addParticipant()" title="Add participant">
+        <svg viewBox="0 0 24 24">
+          <path d="M12 5v14M5 12h14" stroke="white" stroke-width="2" fill="none" stroke-linecap="round"/>
+        </svg>
+      </button>
+    </div>
+
+    <div *ngIf="participants.length > 0 && showParticipantInput" class="participants-list">
+      <div class="participant-item"*ngFor="let participant of participants; let i = index" [@fadeInOut]>       
+       <div class="participant-info">
+          <i class="fas fa-user-circle profile-icon"></i>
+          {{ participant }}
+        </div>
+        <i class="fas fa-trash delete-icon" (click)="removeParticipant(i)"  title="Remove participant"></i>
+      </div>
+    </div>
+
+<button *ngIf="participants.length > 0 && showParticipantInput" class="create-chat-btn" (click)="createChat()">Create Chat</button>
+
+  </div>
+</div>
+
+
+
+
+<div *ngIf="isLoading" class="spinner-container">
+  <mat-spinner></mat-spinner>
+</div>
+
+  
+<div class="chats-container">
+    <div *ngIf="errorMessage" class="error">{{ errorMessage }}</div>
+    <div *ngIf="chats.length === 0 && !errorMessage && !isLoading">No available chats.</div>
+    <div *ngFor="let chat of chats" class="chat-card">
+      <div class="chat-header">
+        <h2 class="chat-name">{{ chat.name }}</h2>
+        <button class="open-chat-btn" (click)="openChat(chat.id)">Open chat</button>
+      </div>     
+      <!-- Poruke -->
+      <div *ngIf="chat.messages.length > 0">
+        <h3>Last 3 messages:</h3>
+        <div *ngFor="let message of chat.messages.slice(-3)" class="message">
+          <!-- Ikonica i ime -->
+          <div class="message-header">
+            <i class="fas fa-user-circle profile-icon"></i>
+            <strong>{{ message.username }}</strong>
+          </div>
+          <!-- Tekst poruke -->
+          <div class="message-text">
+            {{ message.text }}
+          </div>
+          <span class="timestamp">({{ getTimeAgo(message.creationTime) }})</span>
+        </div>
+      </div>
+      
+  
+      <div *ngIf="chat.messages.length === 0">
+        <p>No message in this chat.</p>
+      </div>
+  
+    </div>
+  </div>
+  

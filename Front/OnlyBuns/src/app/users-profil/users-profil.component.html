@@ -13,19 +13,19 @@
         <th (click)="sortBy('surname')" class="sortable-column">Surname</th>
         <th (click)="sortBy('username')" class="sortable-column">Username</th>
         <th (click)="sortBy('email')" class="sortable-column">Email</th>
-        <th (click)="sortBy('postNumber')" class="sortable-column">Post number</th>
-        <th (click)="sortBy('postNumber')" class="sortable-column">Following</th>
+        <th (click)="sortBy('postCount')" class="sortable-column">Post number</th>
+        <th (click)="sortBy('postCount')" class="sortable-column">Following</th>
         <th (click)="sortBy('isAdmin')" class="sortable-column">Admin</th>
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let user of getPagedUsers()">
+      <tr *ngFor="let user of filteredUsers">
         <td>{{ user.name }}</td>
         <td>{{ user.surname }}</td>
         <td>{{ user.username }}</td>
         <td>{{ user.email }}</td>
-        <td>{{ user.postNumber  || 'No posts' }}</td>
-        <td>0</td>                                             
+        <td>{{ user.postCount  || 'No posts' }}</td>
+        <td>0</td>
         <td>
           <span *ngIf="user.isAdmin" class="admin-label">Admin</span>
           <button *ngIf="!user.isAdmin" (click)="makeAdmin(user)" class="add-admin-btn">Add Admin</button>
@@ -33,6 +33,9 @@
       </tr>
     </tbody>
   </table>
+  <div *ngIf="users.length === 0">
+    <p>No users found.</p>
+  </div>
 </div>
 
   <!-- Paginacija ispod tabele -->
@@ -44,10 +47,10 @@
       <i class="fa fa-arrow-left"></i>
     </button>
     <span class="page-info">Page {{ currentPage }}</span>
-    <button (click)="goToNextPage()" [disabled]="currentPage * usersPerPage >= users.length" class="pagination-btn">
+    <button (click)="goToNextPage()" class="pagination-btn">
       <i class="fa fa-arrow-right"></i>
     </button>
-    <button (click)="goToLastPage()" [disabled]="currentPage * usersPerPage >= users.length" class="pagination-btn">
+    <button (click)="goToLastPage()"  class="pagination-btn">
       <i class="fa fa-fast-forward"></i>
     </button>
   </div>
