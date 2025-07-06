@@ -7,7 +7,7 @@ import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { of } from 'rxjs';
 import { PostService } from '../post.service';
-import { Post } from '../model/post.model';
+import { Location, Post } from '../model/post.model';
 import { PagedResults } from '../model/paged-results.model';
 import { LikeService } from '../like.service';
 import { Like } from '../model/like.model';
@@ -35,6 +35,8 @@ private userCache: Map<number, RegisterUser> = new Map();
 loading: boolean = false;
 posts: Post[]=[];
 logged=false;
+countFollowers : number=0;
+addressString: string = 'Učitavanje adrese...';
 
 ngOnInit(): void {
   
@@ -53,9 +55,7 @@ ngOnInit(): void {
       alert("Greska pri ucitavanju profila");
     }
   });
-
   this.loadPosts();
-  
 }
 
   isEditingPassword = false;
@@ -65,8 +65,15 @@ ngOnInit(): void {
 
 loadUserData(userId:number): void{
   this.loginService.getUserForProfile(userId).subscribe({
-    next: (user) => {
+    next: async (user) => {
       this.registerUser = user;
+
+      if (this.registerUser?.adress) {
+        this.addressString = await this.getAddressFromCoordinates(this.registerUser.adress);
+      } else {
+        this.addressString = 'Nema lokacije';
+      }
+
       if(this.registerUser?.username!== undefined)
         {
           this.getFollowers(this.registerUser?.username);
@@ -145,6 +152,7 @@ getUserByID(id: number): Observable<RegisterUser>{
     this.followingService.getAllFollowersByUsername(username).subscribe({
       next: (followers) => {
         this.followers = followers;  // Učitavamo sve followerse
+        this.countFollowers=followers.length;
         this.checkIfFollowing(); // Proveri da li trenutni korisnik prati
       },
       error: (error) => {
@@ -154,7 +162,15 @@ getUserByID(id: number): Observable<RegisterUser>{
   }
 
   checkIfFollowing(): void {
-    this.isFollowing = this.followers.some(follower => follower.username === this.registerUser?.username);
+
+     this.loginService.user$.subscribe(currentUser => {
+    if (currentUser?.email && this.registerUser) {
+      this.loginService.getUserByEmail(currentUser.email).subscribe(fullUser => {
+        this.isFollowing = this.followers.some(f => f.username === fullUser.username);
+      });
+    }
+  });
+    //this.isFollowing = this.followers.some(follower => follower.username === this.registerUser?.username);
   }
 
   loadPosts(): void {
@@ -193,5 +209,38 @@ getUserByID(id: number): Observable<RegisterUser>{
         );
       }
     }
+
+    getUserByUsername(username: string): Observable<RegisterUser> {
+  if ([...this.userCache.values()].some(u => u.username === username)) {
+    const cached = [...this.userCache.values()].find(u => u.username === username)!;
+    return of(cached);
+  }
+
+  return this.loginService.getByUsername(username).pipe(
+    tap(user => {
+      if (user && user.id !== undefined) {
+    this.userCache.set(user.id, user);
+  }
+    })
+  );
+}
+
+async getAddressFromCoordinates(location : Location): Promise<string> {
+  
+  if(!location){
+    return 'Nema lokacije'
+  }
+
+  const lat = location.latitude;
+  const lon = location.longitude;
+  try {
+    const response = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}`);
+    const data = await response.json();
+    return data.display_name || 'Adresa nije pronađena';
+  } catch (error) {
+    console.error('Greška prilikom dobijanja adrese:', error);
+    return 'Greška prilikom dobijanja adrese';
+  }
+}
 
 }

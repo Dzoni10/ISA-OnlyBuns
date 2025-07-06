@@ -28,8 +28,12 @@ public class User {
     @Column(name="email",nullable = false)
     private String email;
 
-    @Column(name="adress",nullable = false,length = 50)
-    private String adress;
+    @Embedded
+    @AttributeOverrides({
+            @AttributeOverride(name = "latitude", column = @Column(name = "latitude")),
+            @AttributeOverride(name = "longitude", column = @Column(name = "longitude"))
+    })
+    private Location adress;
 
     @Column(name="loginStatus",nullable = false)
     private boolean loginStatus;
@@ -46,34 +50,32 @@ public class User {
         super();
     }
 
-    public User(String name, String surname, String username, String password,String email, String adress, boolean loginStatus,boolean isAdmin, int postcount) {
+    public User(String name, String surname, String username, String password,String email, boolean loginStatus,boolean isAdmin, int postcount) {
         super();
         this.name = name;
         this.surname = surname;
         this.username = username;
         this.password = password;
         this.email = email;
-        this.adress = adress;
         this.loginStatus = loginStatus;
         this.isAdmin = isAdmin;
         this.postCount = postcount;
         this.lastActivity = LocalDateTime.now();
     }
 
-    public User(String name, String surname, String username, String password,String email, String adress, boolean loginStatus,boolean isAdmin,int postCount, LocalDateTime lastActivity) {
+    public User(String name, String surname, String username, String password,String email, boolean loginStatus,boolean isAdmin,int postCount, LocalDateTime lastActivity) {
         super();
         this.name = name;
         this.surname = surname;
         this.username = username;
         this.password = password;
         this.email = email;
-        this.adress = adress;
         this.loginStatus = loginStatus;
         this.isAdmin = isAdmin;
         this.postCount = postCount;
         this.lastActivity = lastActivity;
     }
-    public User(int id,String name, String surname, String username, String password,String email, String adress, boolean loginStatus,boolean isAdmin,int postCount, LocalDateTime lastActivity) {
+    public User(int id,String name, String surname, String username, String password,String email, boolean loginStatus,boolean isAdmin,int postCount, LocalDateTime lastActivity) {
         super();
         this.id = id;
         this.name = name;
@@ -81,7 +83,6 @@ public class User {
         this.username = username;
         this.password = password;
         this.email = email;
-        this.adress = adress;
         this.loginStatus = loginStatus;
         this.isAdmin = isAdmin;
         this.postCount = postCount;
@@ -94,7 +95,7 @@ public class User {
         this.surname = user.surname;
         this.username = user.username;
         this.password = user.password;
-        this.adress = user.adress;
+        this.adress = new Location(user.adress);
         this.email = user.email;
         this.loginStatus=user.loginStatus;
         this.isAdmin=user.isAdmin;
@@ -115,8 +116,8 @@ public class User {
     public void setPassword(String password) {this.password = password;}
     public String getEmail() {return email;}
     public void setEmail(String email) {this.email = email;}
-    public String getAdress() {return adress;}
-    public void setAdress(String adress) {this.adress = adress;}
+    public Location getAdress() {return adress;}
+    public void setAdress(Location adress) {this.adress = adress;}
     public boolean getLoginStatus() {return loginStatus;}
     public void setLoginStatus(boolean loginStatus) {this.loginStatus = loginStatus;}
     public boolean getIsAdmin() {return isAdmin;}

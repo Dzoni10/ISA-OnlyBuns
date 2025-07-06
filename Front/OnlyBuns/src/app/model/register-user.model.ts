@@ -1,3 +1,5 @@
+import { Location } from "./post.model";
+
 export interface RegisterUser{
     id?: number;
     name: string;
@@ -5,7 +7,7 @@ export interface RegisterUser{
     username: string;
     password: string;
     email: string;
-    adress: string;
+    adress: Location;
     loginStatus: boolean;
     isAdmin: boolean;
     postCount: number;

@@ -136,6 +136,10 @@ export class LoginService {
     getUserByUsername(username: string): Observable<RegisterUser[]> {
       return this.http.get<RegisterUser[]>(`${environment.apiHost}/users/findUsername?username=${username}`);
     }
+
+    getByUsername(username: string): Observable<RegisterUser> {
+      return this.http.get<RegisterUser>(`${environment.apiHost}/users/findOneByUsername?username=${username}`);
+    }
     searchUsers(
       name?: string,
       surname?: string,
@@ -177,4 +181,8 @@ export class LoginService {
     };
     this.user$.next(user);
   }
+
+  getUserByEmail(email: string): Observable<RegisterUser> {
+  return this.http.get<RegisterUser>(`${environment.apiHost}/users/findByEmail/${email}`);
+}
 }

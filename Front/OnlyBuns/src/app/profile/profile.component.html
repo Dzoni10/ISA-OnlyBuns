@@ -15,12 +15,12 @@
   
       <mat-form-field class="full-width">
         <mat-label>Adresa</mat-label>
-        <input matInput [value]="registerUser?.adress"  readonly />
+        <input matInput [value]="addressString"  readonly />
       </mat-form-field>
   
       <mat-form-field class="full-width">
         <mat-label>Broj pratilaca</mat-label>
-        <input matInput  readonly />
+        <input matInput [value]="countFollowers" readonly />
       </mat-form-field>
   
       <!-- Sekcija za lozinku sa mogućnošću izmene -->
@@ -69,7 +69,7 @@
               </tr>
               
             <tr  mat-row *ngFor="let follow of followers">
-              <ng-container *ngIf="getUserByID(follow.id) | async as usr">
+              <ng-container *ngIf="getUserByUsername(follow.username) | async as usr">
               <td class="dat" mat-cell>{{usr.name}}</td>
               <td class="dat" mat-cell>{{usr.surname}}</td>
               <td class="dat" mat-cell>{{usr.username}}</td>
@@ -96,7 +96,7 @@
               </tr>
               
             <tr *ngFor="let following of followingUsers">
-              <ng-container *ngIf="getUserByID(following.id) | async as usr">
+              <ng-container *ngIf="getUserByUsername(following.following) | async as usr">
               <td class="dat" mat-cell>{{usr.name}}</td>
               <td class="dat" mat-cell>{{usr.surname}}</td>
               <td class="dat" mat-cell>{{usr.username}}</td>
