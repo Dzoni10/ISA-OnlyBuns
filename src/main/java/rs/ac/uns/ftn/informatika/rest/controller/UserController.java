@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import rs.ac.uns.ftn.informatika.rest.authentification.AuthenticationResponse;
 import rs.ac.uns.ftn.informatika.rest.authentification.LoginRateLimiter;
+import rs.ac.uns.ftn.informatika.rest.domain.Location;
 import rs.ac.uns.ftn.informatika.rest.dto.LogInRequest;
 import rs.ac.uns.ftn.informatika.rest.exception.UsernameAlreadyExistsException;
 import rs.ac.uns.ftn.informatika.rest.jwt.JwtUtil;
@@ -25,7 +26,9 @@ import rs.ac.uns.ftn.informatika.rest.domain.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import rs.ac.uns.ftn.informatika.rest.dto.UserDTO;
@@ -90,6 +93,15 @@ public class UserController {
         }
         return new ResponseEntity<>(usersDTO, HttpStatus.OK);
     }
+
+    @GetMapping("/findByEmail/{email}")
+    public ResponseEntity<UserDTO> getUserByEmail(@PathVariable String email) {
+        User user = userService.findByEmail(email);
+        if (user == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(new UserDTO(user), HttpStatus.OK);
+    }
     @Operation(description = "Get users by search criteria", method = "GET")
     @GetMapping(value = "/search", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<PagedResults<UserDTO>> getUsersByCriteria(
@@ -108,6 +120,15 @@ public class UserController {
         pagedResults.setResults(usersDTO);
         pagedResults.setTotalCount(users.size());
         return new ResponseEntity<>(pagedResults, HttpStatus.OK);
+    }
+
+    @GetMapping(value="/findOneByUsername")
+    public ResponseEntity<UserDTO> findOneByUsername(@RequestParam String username) {
+        User user = userService.findUserByUsername(username); // metoda koja vraća 1 user
+        if(user != null)
+            return new ResponseEntity<>(new UserDTO(user), HttpStatus.OK);
+        else
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
     @Operation(description = "Get special user by id", method = "GET")
@@ -145,9 +166,10 @@ public class UserController {
         savedUser.setPassword(userDTO.password);
         savedUser.setUsername(userDTO.username);
         savedUser.setEmail(userDTO.email);
-        savedUser.setAdress(userDTO.adress);
+        savedUser.setAdress(new Location(userDTO.adress));
         savedUser.setLoginStatus(false);
         savedUser.setIsAdmin(false);
+        savedUser.setLastActivity(LocalDateTime.now());
         try {
             savedUser = userService.saveUsernameCheck(savedUser);
 
@@ -176,7 +198,7 @@ public class UserController {
             user.setPassword(userDTO.password);
             user.setUsername(userDTO.username);
             user.setEmail(userDTO.email);
-            user.setAdress(userDTO.adress);
+            user.setAdress(new Location(userDTO.adress));
             user.setLoginStatus(userDTO.loginStatus);
             user.setIsAdmin(userDTO.isAdmin);
 
@@ -212,7 +234,7 @@ public class UserController {
         user.setName(userDTO.name);
         user.setPassword(userDTO.password);
         user.setSurname(userDTO.surname);
-        user.setAdress(userDTO.adress);
+        user.setAdress(new Location(userDTO.adress));
         user.setEmail(userDTO.email);
         user.setLoginStatus(userDTO.loginStatus);
         user.setIsAdmin(userDTO.isAdmin);

@@ -35,6 +35,7 @@ import { TrendsComponent } from './trends/trends.component';
 import { ChatsComponent } from './chats/chats.component';
 import { ChatOpenComponent } from './chat-open/chat-open.component';  // Uvoz MatProgressSpinnerModule
 import { MatTooltipModule } from '@angular/material/tooltip'; // Importuj MatTooltipModule
+import { RecommendedLocationsComponent } from './recommended-locations/recommended-locations.component';  // Uvoz MatProgressSpinnerModule
 
 
 @NgModule({
@@ -53,7 +54,9 @@ import { MatTooltipModule } from '@angular/material/tooltip'; // Importuj MatToo
     MapPostComponent,
     TrendsComponent,
     ChatsComponent,
-    ChatOpenComponent
+    ChatOpenComponent,
+    TrendsComponent,
+    RecommendedLocationsComponent
     
 
   ],

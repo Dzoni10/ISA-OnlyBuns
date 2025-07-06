@@ -12,6 +12,8 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import org.springframework.amqp.rabbit.connection.CachingConnectionFactory;
+import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 
 @EnableScheduling
 @SpringBootApplication
@@ -37,4 +39,11 @@ public class RestExampleApplication implements WebMvcConfigurer {
 				.allowedHeaders("*")
 				.allowCredentials(true);
 	}
+
+	@Bean
+	public ConnectionFactory connectionFactory() {
+		CachingConnectionFactory connectionFactory = new CachingConnectionFactory("localhost");
+		return connectionFactory;
+	}
+
 }

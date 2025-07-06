@@ -116,6 +116,9 @@ public class UserService{
         return userRepositoryInterface.findUserByEmail(email);
     }
 
+    public User findUserByUsername(String username) {
+        return userRepositoryInterface.findUserByUsername(username);
+    }
     public User findUserById(int id) {
         return userRepositoryInterface.findUserById(id);
     }

@@ -18,10 +18,12 @@ public interface FollowingRepositoryInterface extends JpaRepository<Following, I
     Following findFollowingById(int id);
 
     // Vraca listu svih koje prosledjeni username prati
-    List<Following> findAllByUsername(String username);
+    @Query("SELECT f FROM Following f WHERE f.username = :username")
+    List<Following> findAllByUsername(@Param("username") String username);
 
     // Vraca listu svih koji prate prosledjeni username
-    List<Following> findAllByFollowing(String following);
+    @Query("SELECT f FROM Following f WHERE f.following = :following")
+    List<Following>  findAllByFollowing(@Param("following") String following);
 
     // Provera da li korisnik prati drugog korisnika
     boolean existsByUsernameAndFollowing(String username, String following);

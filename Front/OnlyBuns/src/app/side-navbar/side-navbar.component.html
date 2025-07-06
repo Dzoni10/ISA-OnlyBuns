@@ -32,5 +32,9 @@
       <fa-icon [icon]="faUserFriends"></fa-icon>
       <span>Users Profiles</span>
     </li>
+    <li *ngIf=" logged" [routerLink]="['recommendedLocations']" routerLinkActive="active">
+      <fa-icon [icon]="faMap"></fa-icon>
+      <span>Recommended locations</span>
+    </li>
   </ul>
 </div>

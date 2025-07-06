@@ -18,8 +18,9 @@
         </mat-form-field>
         <mat-form-field>
             <mat-label>Adress</mat-label>
-            <input matInput formControlName="adress" type="text"/>
+            <input matInput id="location" (input)="updateMapLocation($event)" formControlName="adress" type="text" placeholder="Search location" />
         </mat-form-field>
+        <div #mapContainer class="map-container"></div>
         <mat-form-field>
             <mat-label>Password</mat-label>
             <input matInput formControlName="password" type="password"/>

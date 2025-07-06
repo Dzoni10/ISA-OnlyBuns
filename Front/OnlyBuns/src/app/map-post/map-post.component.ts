@@ -46,7 +46,7 @@ export class MapPostComponent implements OnInit {
       }
     });
 
-    this.loadPosts();
+    // this.loadPosts();
   }
 
   loadUserData(userId: number): void {
@@ -54,20 +54,25 @@ export class MapPostComponent implements OnInit {
       next: (user) => {
         this.registerUser = user;
         if (this.registerUser && this.registerUser.adress) {
-          let coordinates: { lat: number; lon: number };
-          this.getCoordinates(this.registerUser.adress)
-            .then((result) => {
-              coordinates = result; // Sačuvaj koordinate
-              return this.initializeMap(coordinates.lat, coordinates.lon);
-            })
-            .then(() => {
-              // Dodaj korisnički marker nakon inicijalizacije mape
-              this.addUserMarker(coordinates.lat, coordinates.lon);
-            })
-            .catch((error) => {
-              console.error('Greška prilikom geokodiranja adrese', error);
-              alert('Nije moguće prikazati mapu za zadatu adresu.');
-            });
+          // let coordinates: { lat: number; lon: number };
+          // this.getCoordinates(this.registerUser.adress)
+          //   .then((result) => {
+          //     coordinates = result; // Sačuvaj koordinate
+          //     return this.initializeMap(coordinates.lat, coordinates.lon);
+          //   })
+          //   .then(() => {
+          //     // Dodaj korisnički marker nakon inicijalizacije mape
+          //     this.addUserMarker(coordinates.lat, coordinates.lon);
+          //     this.loadPosts();
+          //   })
+          //   .catch((error) => {
+          //     console.error('Greška prilikom geokodiranja adrese', error);
+          //     alert('Nije moguće prikazati mapu za zadatu adresu.');
+          //   });
+
+          this.initializeMap(this.registerUser.adress.latitude,this.registerUser.adress.longitude);
+          this.addUserMarker(this.registerUser.adress.latitude,this.registerUser.adress.longitude);
+          this.loadPosts();
         }
       },
       error: (error) => {

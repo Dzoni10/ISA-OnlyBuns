@@ -11,6 +11,7 @@ import { AppAnalyticsComponent } from './app-analytics/app-analytics.component';
 import { AuthGuard } from './auth.guard';
 import { MapPostComponent } from './map-post/map-post.component';
 import { TrendsComponent } from './trends/trends.component';
+import { RecommendedLocationsComponent } from './recommended-locations/recommended-locations.component';
 import { ChatsComponent } from './chats/chats.component';
 import { ChatOpenComponent } from './chat-open/chat-open.component';
 
@@ -28,7 +29,8 @@ const routes: Routes = [
   {path: 'postcreate', component: PostCreationComponent, canActivate: [AuthGuard]},
   {path: 'user-profile/:username', component: UserProfileComponent, canActivate: [AuthGuard]},
   {path: 'postOnMap', component:MapPostComponent, canActivate:[AuthGuard]},
-  {path: 'trends', component:TrendsComponent, canActivate:[AuthGuard]}
+  {path: 'trends', component:TrendsComponent, canActivate:[AuthGuard]},
+  {path: 'recommendedLocations', component:RecommendedLocationsComponent,canActivate:[AuthGuard]}
 ];
 
 @NgModule({
