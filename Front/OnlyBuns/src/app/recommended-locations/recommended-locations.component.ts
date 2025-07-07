@@ -49,6 +49,11 @@ export class RecommendedLocationsComponent implements OnInit {
       }),
     });
 
+    const savedLocations = this.locationService.getSavedLocations();
+  savedLocations.forEach(loc => {
+    this.addMarker(loc.longitude, loc.latitude, loc.name);
+  });
+
     this.locationService.connect(this);
   }
 

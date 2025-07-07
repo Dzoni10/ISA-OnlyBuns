@@ -12,7 +12,7 @@ import VectorSource from 'ol/source/Vector';
 import VectorLayer from 'ol/layer/Vector';
 import { Coordinate } from 'ol/coordinate';
 import { Style, Icon, Circle as CircleStyle, Fill, Stroke } from 'ol/style';
-import { PostService } from '../post-service.service';
+import { PostService } from '../post.service';
 import { Router } from '@angular/router';
 import { LoginService } from '../login-service.service';
 

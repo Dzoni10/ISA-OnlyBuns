@@ -9,6 +9,12 @@ import { RecommendedLocationsComponent } from './recommended-locations/recommend
 })
 export class LocationService {
 
+  private locations: { latitude: number; longitude: number; name: string }[] = [];
+
+  getSavedLocations() {
+    return this.locations;
+  }
+
   private stompClient!: Client;
   private readonly serverUrl = 'http://localhost:8080/ws';
   private mapComponent!: RecommendedLocationsComponent;
@@ -32,6 +38,9 @@ export class LocationService {
         //const location: {latitude:number; longitude:number,name:string} = JSON.parse(message.body);
         const location = JSON.parse(message.body);
         console.log('Primljena lokacija: ', location);
+          if (!this.locations.some(l => l.latitude === location.latitude && l.longitude === location.longitude && l.name === location.name)) {
+            this.locations.push(location);
+}
         // Ažurirajte mapu sa koordinatama ovde
        // this.updateMap(location);
        this.mapComponent.addMarker(location.longitude,location.latitude,location.name ? location.name: "No name");

@@ -11,7 +11,7 @@ import Point from 'ol/geom/Point';
 import VectorSource from 'ol/source/Vector';
 import VectorLayer from 'ol/layer/Vector';
 import { Coordinate } from 'ol/coordinate';
-import { Style, Icon, Circle as CircleStyle, Fill, Stroke } from 'ol/style';
+import { Style, Icon,Text, Circle as CircleStyle, Fill, Stroke } from 'ol/style';
 import { HttpClient } from '@angular/common/http';
 import { Post } from '../model/post.model';
 import { PostService } from '../post.service';
@@ -140,7 +140,15 @@ export class MapPostComponent implements OnInit {
         new Style({
           image: new Icon({
             src: 'https://cdn-icons-png.flaticon.com/512/684/684908.png', // Ikonica korisnika
-          scale: 0.05,
+          scale: 0.05
+          }),
+          text: new Text({
+            text: 'You are here',
+            offsetY: -25,
+            fill: new Fill({
+              color: '#053C5E',
+            }),
+            font: 'bold 14px "MV Boli"',
           }),
         })
       );
@@ -164,6 +172,14 @@ export class MapPostComponent implements OnInit {
             image: new Icon({
               src: 'https://cdn-icons-png.flaticon.com/512/684/684908.png', // Ikonica za post
               scale: 0.05,
+            }),
+            text: new Text({
+              text: post.username + "'s post",
+              offsetY: -25,
+              fill: new Fill({
+                color: '#053C5E'
+              }),
+              font: 'bold 14px "MV Boli"'
             }),
           })
         );
