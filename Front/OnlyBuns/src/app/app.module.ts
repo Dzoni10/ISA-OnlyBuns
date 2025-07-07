@@ -24,7 +24,7 @@ import { FormsModule } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
 import { MatCardModule } from '@angular/material/card';
 import { PostCreationComponent } from './post-creation/post-creation.component';
-import { PostService } from './post-service.service';
+import { PostService } from './post.service';
 import {MatSnackBarModule} from '@angular/material/snack-bar';
 import { UsersProfilComponent } from './users-profil/users-profil.component';
 import { AppAnalyticsComponent } from './app-analytics/app-analytics.component';

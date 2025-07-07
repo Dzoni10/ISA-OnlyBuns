@@ -58,7 +58,7 @@ export class TrendsComponent implements OnInit {
   }
 
   loadPosts(): void {
-        this.postService.getAllPosts().subscribe(
+        this.postService.getAllPosts(true).subscribe(
           (data: PagedResults<Post>) => {
             this.posts = data.results; // Uzimamo postove iz rezultata
             this.posts.forEach(post => {
@@ -120,7 +120,7 @@ export class TrendsComponent implements OnInit {
       }
 
       loadMostPopularPostsEver(): void{
-        this.postService.getMosPopularPostsEver().subscribe({
+        this.postService.getMosPopularPostsEver(true).subscribe({
           next:(result)=>{
             this.mostPopularPosts = result.results;
             this.mostPopularPosts.forEach(mppe=>{

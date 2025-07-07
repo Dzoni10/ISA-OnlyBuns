@@ -20,7 +20,7 @@ public class RabbitMQConsumer {
     @Autowired
     private ObjectMapper objectMapper;
 
-    @RabbitListener(queues="${myqueue2}")
+    @RabbitListener(queues="myqueue2")
     public void receive(String message){
 
         try{

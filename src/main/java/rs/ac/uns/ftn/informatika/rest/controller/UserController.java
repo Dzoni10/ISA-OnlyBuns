@@ -201,7 +201,7 @@ public class UserController {
             user.setAdress(new Location(userDTO.adress));
             user.setLoginStatus(userDTO.loginStatus);
             user.setIsAdmin(userDTO.isAdmin);
-
+            user.setLastActivity(userDTO.lastActivity);
             userService.save(user);
 
             return new ResponseEntity<>("Password changed", HttpStatus.OK);
