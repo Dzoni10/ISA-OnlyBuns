@@ -58,7 +58,6 @@ export class HomePageComponent implements OnInit {
 
 
   ngOnInit(): void {
-    this.loadPosts(); 
     
     this.loginService.logged.subscribe(isLogged=>{
       this.logged = isLogged;
@@ -92,6 +91,8 @@ export class HomePageComponent implements OnInit {
     this.loginService.getUserForProfile(userId).subscribe({
       next: (user) => {
         this.registerUser = user;
+            this.loadPosts(); 
+
       },
       error: (error) => {
         console.error('Greška prilikom učitavanja profila', error);
@@ -101,7 +102,9 @@ export class HomePageComponent implements OnInit {
 
 
   loadPosts(): void {
-    this.postService.getAllPosts().subscribe(
+     const username = this.registerUser?.username;
+     if(username){
+  this.postService.getFollowedPosts(username).subscribe(
       (data: PagedResults<Post>) => {
         this.posts = data.results; // Uzimamo postove iz rezultata
         this.posts.forEach(post => {
@@ -113,13 +116,12 @@ export class HomePageComponent implements OnInit {
       }
     );
   }
+  }
 
   likePost(postId: number): void {
     if (!this.registerUser?.id) {
       alert("Ako želite da lajkujete objavu ili da je komentarišete morate da se ulogujete!");
     } else {
-      //alert(`Lajkovao/la post ID: ${postId} kao korisnik. ID korisnika: ${this.registerUser?.id}, USERNAME: ${this.registerUser?.username}`);
-      
       const newLike : Like = {
         id: 0,
         postId: postId,

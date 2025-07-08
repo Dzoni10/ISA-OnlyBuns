@@ -40,6 +40,13 @@ export class PostService {
   getCountPostLastMonth(): Observable<number>{
     return this.http.get<number>(environment.apiHost + 'posts/popular/count-last-month');
   }
+  getPostsByUsername(username: string): Observable<PagedResults<Post>> {
+    return this.http.get<PagedResults<Post>>(environment.apiHost + '/posts/user/' + `${username}`);
+}
+
+  getFollowedPosts(username: string): Observable<PagedResults<Post>> {
+    return this.http.get<PagedResults<Post>>(environment.apiHost + '/posts/followed/' + `${username}`);
+}
 
   getAllPosts(forceRefresh: boolean = false): Observable<PagedResults<Post>> {
     const cached = sessionStorage.getItem('allPosts');

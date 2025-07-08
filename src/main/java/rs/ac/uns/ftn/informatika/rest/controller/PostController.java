@@ -13,10 +13,12 @@ import rs.ac.uns.ftn.informatika.rest.config.RabbitMQProducer;
 import rs.ac.uns.ftn.informatika.rest.domain.Location;
 
 import rs.ac.uns.ftn.informatika.rest.domain.Post;
+import rs.ac.uns.ftn.informatika.rest.domain.Following;
 import rs.ac.uns.ftn.informatika.rest.dto.PostDTO;
 import rs.ac.uns.ftn.informatika.rest.jwt.JwtUtil;
 import rs.ac.uns.ftn.informatika.rest.mapper.PostDTOMapper;
 import rs.ac.uns.ftn.informatika.rest.paged_result.PagedResults;
+import rs.ac.uns.ftn.informatika.rest.service.FollowingService;
 import rs.ac.uns.ftn.informatika.rest.service.PostService;
 
 import org.springframework.web.bind.annotation.PutMapping;
@@ -43,6 +45,8 @@ import rs.ac.uns.ftn.informatika.rest.service.UserService;
 public class PostController {
     @Autowired
     private PostService postService;
+    @Autowired
+    private FollowingService followingService;
     @Autowired
     private UserService userService;
     @Autowired
@@ -76,7 +80,22 @@ public class PostController {
         pagedResults.setTotalCount(posts.size());
         return new ResponseEntity<>(pagedResults, HttpStatus.OK);
     }
+    @Operation(description = "Get all posts for specific username", method="GET")
+    @GetMapping(value = "/user/{username}", produces= MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<PagedResults<PostDTO>> getPostsByUsername(@PathVariable String username) {
+        List<Post> posts = postService.findPostsByUsername(username);
 
+        List<PostDTO> postsDTO = new ArrayList<>();
+        for (Post post : posts) {
+            postsDTO.add(new PostDTO(post));
+        }
+
+        PagedResults<PostDTO> pagedResults = new PagedResults<>();
+        pagedResults.setResults(postsDTO);
+        pagedResults.setTotalCount(posts.size());
+
+        return new ResponseEntity<>(pagedResults, HttpStatus.OK);
+    }
     @DeleteMapping("/{id}")
     @Operation(description = "Delete a post by ID", method = "DELETE")
     public ResponseEntity<Void> deletePost(@PathVariable Integer id) {
@@ -208,6 +227,25 @@ public class PostController {
         String message = "Kreator: " + post.getUsername() + " Opis: " + post.getDescription() + " Datum objave: " + post.getCreationTime();
         producer.sendMessage(message);
         return ResponseEntity.ok("Post označen i poruka poslata agencijama.");
+    }
+
+
+    @Operation(description = "Get posts by followed users", method = "GET")
+    @GetMapping(value = "/followed/{username}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<PagedResults<PostDTO>> getPostsByFollowedUsers(@PathVariable String username) {
+        List<Following> followedUsers = followingService.getAllFollowedByUsername(username);
+        List<String> followedUsernames = followedUsers.stream()
+                .map(Following::getFollowing)
+                .collect(Collectors.toList());
+        List<Post> posts = postService.findPostsByUsernames(followedUsernames);
+        List<PostDTO> postsDTO = new ArrayList<>();
+        for (Post post : posts) {
+            postsDTO.add(new PostDTO(post));
+        }
+        PagedResults<PostDTO> pagedResults = new PagedResults<>();
+        pagedResults.setResults(postsDTO);
+        pagedResults.setTotalCount(posts.size());
+        return new ResponseEntity<>(pagedResults, HttpStatus.OK);
     }
 
 }

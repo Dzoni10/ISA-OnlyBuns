@@ -73,14 +73,25 @@ public class PostService {
         Pageable pageable = PageRequest.of(0, 5);
         return postRepositoryInterface.getPopularPostsIn7Days(sevenDaysAgo,pageable);
     }
+    public List<Post> findPostsByUsername(String username) {
+        return postRepositoryInterface.findByUsername(username);
+    }
+
+    public List<Post> findPostsByUsernames(List<String> usernames) {
+        List<Post> posts = postRepositoryInterface.findAllByUsernameIn(usernames);
+        for (Post post : posts) {
+            String imagePath = getImageForPost(post.getId());
+            post.setImagePath(imagePath);
+        }
+        return posts;
+    }
 
     public List<Post> findAllPostsWithoutImages() {
         List<Post> posts = postRepositoryInterface.findAllPostsWithoutImages();
         for (Post post : posts) {
             PostDTO postDTO = new PostDTO(post);
-            // Provera da li je slika u kešu
-            String imagePath = getImageForPost(post.getId());  // Ovdje koristiš keširanje
-            post.setImagePath(imagePath);  // Postavljanje slike
+            String imagePath = getImageForPost(post.getId());
+            post.setImagePath(imagePath);
         }
         return posts;
     }
