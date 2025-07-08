@@ -16,7 +16,7 @@
       </div>
   
         <div class="profile-stats">
-          <span><b>0</b> Posts</span>
+        <span><b>{{ userPosts.length }}</b> Posts</span>
           <p (click)="openFollowersModal()"  style="cursor: pointer;"><strong >{{ followers.length }}</strong> Followers</p>
           <p (click)="openFollowingModal()"  style="cursor: pointer;"><strong >{{ followingUsers.length }}</strong> Following</p>
         
@@ -37,14 +37,103 @@
     </div>
   
     <!-- Objave korisnika -->
-    <div class="user-posts">
-      <div *ngFor="let post of userPosts" class="post-item">
-        <p>{{ post.content }}</p>
+   <!-- User Posts with same design as home page -->
+<div class="user-posts">
+  <div *ngFor="let post of userPosts" class="post-item">
+    <!-- Post actions for edit and delete (if user owns the post) -->
+    <div class="post-actions-top-right" *ngIf="post.creatorId === registerUser?.id">
+      <button *ngIf="!post.isEditing" (click)="editPost(post)" class="post-action-button">
+        <fa-icon [icon]="faEdit"></fa-icon> Edit
+      </button>
+      <div *ngIf="post.isEditing" class="edit-actions">
+        <button (click)="confirmEdit(post)" class="post-action-button">
+          <fa-icon [icon]="faCheck"></fa-icon> Confirm
+        </button>
+        <button (click)="cancelEdit(post)" class="post-action-button">
+          <fa-icon [icon]="faTimes"></fa-icon> Cancel
+        </button>
       </div>
+      <button *ngIf="!post.isEditing" (click)="deletePost(post.id)" class="post-action-button">
+        <fa-icon [icon]="faTrash"></fa-icon> Delete
+      </button>
+    </div>
+
+    <!-- Post content -->
+    <h3 class="post-title" (click)="showUsername(post.username)">
+      <fa-icon [icon]="faProfileCircle" class="profile-icon"></fa-icon>
+      <b>{{ post.username }}</b>
+    </h3>
+    
+    <p *ngIf="!post.isEditing" class="post-description">{{ post.description }}</p>
+    <textarea *ngIf="post.isEditing" [(ngModel)]="post.description" class="edit-description" rows="3"></textarea>
+
+    <!-- Post image -->
+    <img *ngIf="post.imagePath && post.imagePath.trim() !== ''; else defaultImage" 
+         [src]="'http://localhost:8080/' + post.imagePath" alt="Post Image" class="post-image">
+    <ng-template #defaultImage>
+      <img src="https://i.redd.it/hiojgqpu0cl81.jpg" alt="Zec" class="post-image">
+    </ng-template>
+
+    <div class="post-footer">
+      <span *ngIf="post.likeCount >= 0"> • {{ post.likeCount }} {{ post.likeCount === 1 ? 'like' : 'likes' }}</span>
+    </div>
+    
+    <!-- Post actions -->
+    <div class="post-actions">
+      <button 
+        (click)="toggleLike(post)" 
+        class="post-action-button" 
+        [ngClass]="{ 'liked': post.userHasLiked }">
+        <fa-icon [icon]="faLike"></fa-icon> 
+        {{ post.userHasLiked ? 'Liked' : 'Like' }}
+      </button>
+      <button (click)="openModal(post)" class="post-action-button">
+        <fa-icon [icon]="faComment"></fa-icon> Comment
+      </button>
+      <span class="post-time">{{ post.creationTime | date: 'short' }}</span>
     </div>
   </div>
-  
+</div>
 
+  </div>
+  
+ <!-- Modal for viewing and adding comments -->
+  <div class="modal" *ngIf="isModalOpen">
+    <div class="modal-content">
+      <!-- Close button in the top right corner -->
+      <span class="close-modal" (click)="closeModal()">
+        <fa-icon [icon]="faTimes"></fa-icon>
+      </span>    
+      <h3>Author: <b>{{ selectedPost?.username }}</b></h3>
+      <p>{{ selectedPost?.description }}</p>
+      <div *ngIf="selectedPost?.imagePath" class="post-image-container">
+        <img *ngIf="selectedPost?.imagePath && selectedPost?.imagePath?.trim() !== ''; else defaultImage" 
+        [src]="'http://localhost:8080/' + selectedPost?.imagePath" alt="Post Image" class="post-image2">
+        <ng-template #defaultImage>
+        <img src="https://i.redd.it/hiojgqpu0cl81.jpg" alt="Zec" class="post-image2">
+        </ng-template>
+      </div>
+      <div class="comments-section">
+        <h4>Comments ({{ comments.length }})</h4>
+        <div *ngFor="let comment of comments" class="comment">
+          <div class="comment-header">
+            <div class="comment-author">
+              <fa-icon [icon]="faProfileCircle" class="profile-icon2"></fa-icon>
+              <strong>{{ comment.username }}</strong>
+            </div>
+            <span class="comment-time">{{ getTimeAgo(comment.creationTime) }}</span>
+          </div>
+          <p>{{ comment.text }}</p>
+        </div>
+      </div>
+       <div class="comment-input-container">
+      <textarea [(ngModel)]="newCommentText" placeholder="Text here..." class="new-comment"></textarea>
+      <button (click)="addComment(selectedPost?.id)" class="submit-comment-button">
+        <fa-icon [icon]="faPaperPlane"></fa-icon> Send
+      </button>
+    </div>
+    </div>
+  </div>
 
 
 <!-- Modal za Followers -->

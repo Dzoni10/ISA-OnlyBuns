@@ -14,6 +14,7 @@ public interface PostRepositoryInterface extends JpaRepository<Post, Integer> {
 
     public Page<Post> findAll(Pageable pageable);
     Post findPostById(int id);
+    List<Post> findByUsername(String username);
     public List<Post> findAllByCreatorId(int creatorId);
     @Query("SELECT p FROM Post p")
     List<Post> findAllPostsWithoutImages();
@@ -33,5 +34,6 @@ public interface PostRepositoryInterface extends JpaRepository<Post, Integer> {
     @Query("SELECT COUNT(l.id) FROM Like l WHERE l.postId = :postId")
     int countLikesByPostId(int postId);
 
+    List<Post> findAllByUsernameIn(List<String> usernames);
 
 }

@@ -191,3 +191,239 @@
     background-color: #444;
   }
   
+
+  /* User Posts - same styling as home page posts */
+.user-posts {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));  
+  gap: 15px;  
+  width: 100%;
+  margin-top: 20px;
+}
+
+.post-item {
+  background-color: #e9e7f7;
+  background-image: url('https://img.freepik.com/free-photo/elevated-view-fresh-carrots-orange-backdrop_23-2147927312.jpg');
+  background-size: cover;
+  background-position: right;
+  background-repeat: no-repeat;
+  border-radius: 12px;
+  padding: 15px 18px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  position: relative;
+}
+
+.post-item:hover {
+  transform: translateY(-8px);  
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+}
+
+
+/* Sekcija za komentare */
+.comments-section {
+  margin-top: 20px;
+  padding: 15px;
+  background-color: #2c2c2c;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  max-height: 180px;  /* Ovdje možeš podesiti željenu visinu */
+  overflow-y: auto;  /* Omogućava vertikalno skrolovanje */
+}
+
+/* Stilizovanje svakog komentara */
+.comment {
+  background-color: #3e3e3e;
+  padding: 15px;
+  margin-bottom: 15px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  transition: background-color 0.3s;
+}
+
+/* Efekat pri hoveru na komentar */
+.comment:hover {
+  background-color: #4b4b4b;
+}
+
+.comment-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.comment-author {
+  display: flex;
+  align-items: center;
+}
+
+.profile-icon2 {
+  margin-right: 8px;
+  color: #6c757d;
+  font-size: 20px; /* Veličina ikone */
+}
+
+.comment-header strong {
+  font-size: 16px;
+  color: #1976d2;
+}
+
+.comment-time {
+  font-size: 12px;
+  color: #aaa;
+}
+
+
+/* Razmak između komentara */
+.comment p {
+  font-size: 14px;
+  color: white;
+  line-height: 1.5;
+}
+
+/* Dodavanje linije između komentara */
+.comment:not(:last-child) {
+  border-bottom: 1px solid #555;
+}
+
+.post-action-button.liked {
+  color: purple;
+}
+.post-title {
+  cursor: pointer;
+}
+
+/* Comment input and Send button */
+/* Komentar unosa i dugme */
+.comment-input-container {
+  display: flex;
+  gap: 10px; /* Razmak između textarea i dugmeta */
+  margin-top: 15px; /* Razmak od prethodnog sadržaja */
+}
+
+.new-comment {
+  width: calc(100% - 110px);
+  padding: 10px;
+  background-color: #333;
+  border: 1px solid #555;
+  color: white;
+  border-radius: 5px;
+  resize: none; /* Onemogućava promenljivost veličine textarea */
+}
+
+.submit-comment-button {
+  background: #1976d2;
+  color: white;
+  padding: 10px 10px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  border: #064a98;
+}
+
+.submit-comment-button:hover {
+  background-color: #1565c0;
+}
+
+.submit-comment-button fa-icon {
+  font-size: 20px;
+}
+.close-modal {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  font-size: 1.8rem;
+  color: #fff;
+  cursor: pointer;
+}
+/* Modal - pozadinska boja tamna, sa efektima */
+.modal {
+  display: flex;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.7);  /* Tamna polu providna pozadina */
+  z-index: 1000;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-content {
+  background-color: #222;  /* Tamna pozadina za sadržaj */
+  color: #fff;  /* Bela boja teksta */
+  border-radius: 10px;
+  width: 50%;
+  max-width: 800px;
+  max-height: 600px;
+  padding: 20px;
+  position: relative;
+  overflow-y: auto;
+}   
+
+.post-actions {
+  display: flex;
+  gap: 13px;
+  margin-top: 5px;
+}
+
+.profile-icon {
+  font-size: 30px;      /* Veličina ikonice */
+  color: #6c757d;       /* Boja ikonice */
+  margin-right: 8px;    /* Razmak između ikonice i korisničkog imena */
+  vertical-align: middle;
+}
+
+.edit-actions {
+  display: flex;
+  gap: 10px;  /* Razmak između dugmadi */
+  align-items: center;  /* Poravnanje vertikalno ako je potrebno */
+}
+
+.post-action-button {
+  background: none;
+  border: none;
+  color: #1976d2;
+  font-size: 16px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  transition: color 0.3s;
+}
+
+.post-action-button:hover {
+  color: #064a98;
+}
+.edit-description {
+  margin-bottom: 5px;
+}
+
+.post-action-button fa-icon {
+  font-size: 20px;
+}
+
+.post-actions-top-right {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  position: absolute;
+  top: 10px;
+  right: 10px;
+}
+
+
+.post-time {
+  font-style: italic;
+  font-size: 11px;
+  margin-top: 3px;
+  margin-left: 40px;
+}
+.post-footer{
+  margin-top: 7px;
+}

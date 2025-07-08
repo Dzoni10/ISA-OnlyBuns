@@ -1,14 +1,14 @@
 
-INSERT INTO "app_user" (name, surname, username, password, email, adress, login_status, is_admin,post_count, last_activity)
+INSERT INTO "app_user" (name, surname, username, password, email, login_status, is_admin,post_count, last_activity,latitude,longitude)
 VALUES
-    ('Administrator', 'Administratorovic', 'admin', 'admin', 'admin@gmail', 'Ulica122000', TRUE, TRUE,0, '2024-11-01T10:00:00'),
-    ('Pera', 'Peric', 'pera123', '123', 'pera@gmail', 'Ulica122000', TRUE, FALSE,0, '2024-11-14T10:00:00'),
-    ('Mika', 'Mikic', 'mika123', '123', 'mika@gmail', 'Ulica122000', TRUE, FALSE, 1,'2024-10-31T10:00:00'),
-    ('Laza', 'Lazic', 'laza123', '123', 'djordjer88@gmail.com', 'Ulica122000', TRUE, FALSE,1, '2024-11-02T10:00:00'),
-    ('Djura', 'Djuric', 'djura123', '123', 'djura@gmail', 'Ulica122000', TRUE, FALSE,0, '2024-11-05T10:00:00'),
-    ('Aca', 'Acic', 'aca123', '123', 'aca@gmail', 'Ulica122000', TRUE, FALSE, 0,'2024-11-15T10:00:00'),
-    ('Mila', 'Milic', 'mila123', '123', 'mila@gmail', 'Ulica122000', TRUE, FALSE,0, '2024-11-02T10:00:00'),
-    ('Ljuba', 'Ljubic', 'ljuba123', '123', 'ljuba@gmail', 'Ulica122000', TRUE, FALSE,0, '2024-10-25T10:00:00');
+    ('Administrator', 'Administratorovic', 'admin', 'admin', 'admin@gmail', TRUE, TRUE, 0, '2024-11-01T10:00:00', 44.787052, 20.4828698),
+    ('Pera', 'Peric', 'pera123', '123', 'pera@gmail', TRUE, FALSE, 0, '2024-11-14T10:00:00', 44.8167, 20.4569),
+    ('Mika', 'Mikic', 'mika123', '123', 'mika@gmail', TRUE, FALSE, 1, '2024-10-31T10:00:00', 43.3209, 21.8958),
+    ('Laza', 'Lazic', 'laza123', '123', 'djordjer88@gmail.com', TRUE, FALSE, 1, '2024-11-02T10:00:00', 44.0165, 21.0059),
+    ('Djura', 'Djuric', 'djura123', '123', 'djura@gmail', TRUE, FALSE, 0, '2024-11-05T10:00:00', 43.8600, 20.2976),
+    ('Aca', 'Acic', 'aca123', '123', 'aca@gmail', TRUE, FALSE, 0, '2024-11-15T10:00:00', 44.6673, 21.1881),
+    ('Mila', 'Milic', 'mila123', '123', 'mila@gmail', TRUE, FALSE, 0, '2024-11-02T10:00:00', 43.2535, 22.0059),
+    ('Ljuba', 'Ljubic', 'ljuba123', '123', 'ljuba@gmail', TRUE, FALSE, 0, '2024-10-25T10:00:00', 45.2517, 19.8369);
 
 
 INSERT INTO "app_post" (creator_id, description, creation_time, latitude, longitude, image_path, username)

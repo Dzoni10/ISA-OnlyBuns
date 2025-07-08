@@ -6,6 +6,14 @@ import { faComments, faUser, faThumbsUp,faUserCircle, faCommentDots , faEdit, fa
 import { FollowingService } from '../following.service';
 import { Following } from '../model/following.model';
 import { Router } from '@angular/router';
+import { Post } from '../model/post.model';
+import { PostService } from '../post.service';
+import { PagedResults } from '../model/paged-results.model';
+import { Like } from '../model/like.model';
+import { LikeService } from '../like.service';
+import { Comment } from '../model/comment.model';
+import { CommentService } from '../comment.service';
+import { formatDistanceToNow } from 'date-fns';
 
 @Component({
     selector: 'app-user-profile',
@@ -16,13 +24,32 @@ import { Router } from '@angular/router';
   })
 
   export class UserProfileComponent implements OnInit {
-    faProfileCircle = faUserCircle;
-    faTimes=faTimes;
-    userPosts: { content: string }[] = [
-        { content: 'Prva objava korisnika' },
-        { content: 'Druga objava korisnika' },
-        { content: 'Treća objava korisnika' }
-      ];                                                        // OVO JE SAMO PRIVREMENO
+        faProfileCircle = faUserCircle;
+    faPaperPlane = faPaperPlane;
+    faChat = faComments;
+    faProfile = faUser;
+    faLike = faThumbsUp;
+    faComment = faCommentDots;
+    faEdit = faEdit;  
+    faTrash = faTrash; 
+    faCheck = faCheck;
+    faTimes = faTimes;
+  
+    userPosts: Post[] = []; // Zamenio userPosts sa posts
+    comments: Comment[] = []; 
+  newComment: Comment = {
+    id: 0,
+    postId: -1,
+    text: "",
+    creationTime: new Date(),
+    username: ""
+    };
+  isModalOpen = false;
+  selectedPost: Post | undefined;
+   beforeEditDescription = "";
+
+  newCommentText = '';
+
     username: string | null = '';
     user: RegisterUser | undefined;                 // ovo je na ciji profil si usao
     registerUser: RegisterUser | undefined;         // ovo je onaj ko je ulogovan
@@ -31,7 +58,7 @@ import { Router } from '@angular/router';
     isFollowersModalOpen: boolean = false;  
     isFollowingModalOpen: boolean = false;  
     isFollowing: boolean = false; 
-    constructor(private route: ActivatedRoute, private userService: LoginService, private router: Router,private followingService: FollowingService) {}
+    constructor(private route: ActivatedRoute,  private commentService: CommentService,  private likeService: LikeService, private postService: PostService, private userService: LoginService, private router: Router,private followingService: FollowingService) {}
 
 
     ngOnInit(): void {
@@ -64,7 +91,7 @@ import { Router } from '@angular/router';
               alert("Greska pri ucitavanju profila");
             }
           })
-
+          if(this.username) this.loadPostsByUsername(this.username);
         }
 
         onFollowClick(): void {
@@ -103,14 +130,37 @@ import { Router } from '@angular/router';
                           }               
                      },
                     error: (err) => {
-                      alert('Error occurred while following the user.');
-                      console.error(err);
+                      alert('Too many follow requests, please try again later.');
                     }
                   });
           }
         }
 
+ loadPostsByUsername(username: string): void {
+        this.postService.getPostsByUsername(username).subscribe({
+            next: (data: PagedResults<Post>) => {
+                this.userPosts = data.results;
+                this.userPosts.forEach(post => {
+                    this.loadLikes(post);
+                });
+            },
+            error: (error) => {
+                console.error('Greška pri učitavanju postova korisnika', error);
+            }
+        });
+    }
+      loadLikes(post: any): void {
+        this.likeService.getLikesByPostId(post.id).subscribe((pagedResults: PagedResults<Like>) => {
+          post.likes = pagedResults.results;
+          post.likeCount = pagedResults.results.length;
+          post.userHasLiked = post.likes.some((like:Like)=> like.username === this.registerUser?.username);
+        });
+      }
 
+  getTimeAgo(date: Date): string {
+    return formatDistanceToNow(date) + ' ago';  
+  }
+      
           loadFollowData(username: string): void {
             this.followingService.getAllFollowedByUsername(username).subscribe({
               next: (following) => {
@@ -166,4 +216,130 @@ import { Router } from '@angular/router';
           closeFollowingModal(): void {
             this.isFollowingModalOpen = false;
           }
+
+toggleLike(post: Post): void {
+              if (!this.registerUser) {
+                alert("Please log in to like posts.");
+                return;
+              }
+            
+              if (post.userHasLiked) {
+                // Unlike the post
+                this.likeService.removeLike(post.id, this.registerUser.username).subscribe(
+                  () => {
+                    post.likeCount--;
+                    post.userHasLiked = false;
+                  },
+                  error => {
+                    console.error("Error while unliking the post", error);
+                  }
+                );
+              } else {
+                // Like the post
+                const newLike: Like = {
+                  id: 0,
+                  postId: post.id,
+                  username: this.registerUser.username
+                };
+            
+                this.likeService.addLike(newLike).subscribe(
+                  () => {
+                    post.likeCount++;
+                    post.userHasLiked = true;
+                  },
+                  error => {
+                    if (error.status === 409) {
+                      alert("You have already liked this post.");
+                      post.userHasLiked = true;
+                    }
+                    console.error("Error while liking the post", error);
+                  }
+                );
+              }
+            }
+ loadComments(postId: number): void {
+    this.commentService.getCommentsByPostId(postId).subscribe(
+      (data: PagedResults<Comment>) => {
+        this.comments =  data.results;;
+      },
+      (error) => {
+        console.error("Greška pri učitavanju komentara", error);
+      }
+    );
+  }
+addComment(postId?: number): void {   
+    if(this.newCommentText.trim()){
+
+      this.newComment.text= this.newCommentText || "Unknown";
+      this.newComment.postId= postId || -999;
+      this.newComment.username = this.registerUser?.username || "Unknown";
+        this.commentService.addComment(this.newComment).subscribe(
+          () => {
+            this.loadComments(this.newComment?.postId); // Osvežava komentare
+            this.newCommentText = ''; // Čisti polje za unos
+          },
+          (error) => {
+            console.error("Greška pri dodavanju komentara", error);
+          }
+        );
+        }
+        else{
+          alert("Morate uneti text!");
+        }
+  }
+
+openModal(post: Post): void {
+
+    if (!this.registerUser?.id) {
+      alert("Ako želite da lajkujete objavu ili da je komentarišete morate da se ulogujete!");
+    } else {
+      this.selectedPost = post;
+      this.isModalOpen = true;
+      this.loadComments(post.id);
+    }
+  }
+  
+  closeModal(): void {
+    this.isModalOpen = false;
+    this.selectedPost = undefined;
+    this.newCommentText="";
+  }
+ 
+deletePost(postId: number): void {
+    const confirmed = window.confirm('Are you sure you want to delete this post?');
+    
+    if (confirmed) {
+      this.postService.deletePost(postId).subscribe(
+        () => {
+          if(this.username) this.loadPostsByUsername(this.username);
+        },
+        (error) => {
+          console.error('Error deleting post', error);
+        }
+      );
+    }
+  }
+ confirmEdit(post: any): void {
+    post.isEditing = false;
+
+    this.postService.updatePost(post.id, post).subscribe(
+      (updatedPost) => {
+          if(this.username) this.loadPostsByUsername(this.username);
+      },
+      (error) => {
+        console.error('Greška prilikom ažuriranja posta', error);
+        alert('Došlo je do greške prilikom ažuriranja posta.');
+      }
+    );  }
+
+  cancelEdit(post: any): void {
+    post.isEditing = false;
+    post.description=this.beforeEditDescription;
+  }
+
+    editPost(post: any): void {
+    post.isEditing = true;
+    this.beforeEditDescription= post.description;
+  }
+
   }
