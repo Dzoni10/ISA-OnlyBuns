@@ -45,8 +45,14 @@ export class PostService {
 }
 
   getFollowedPosts(username: string): Observable<PagedResults<Post>> {
-    return this.http.get<PagedResults<Post>>(environment.apiHost + '/posts/followed/' + `${username}`);
+    return this.http.get<PagedResults<Post>>(environment.apiHost  + 'posts/followed/' + `${username}`);
 }
+
+/*         // OVO JE ZA LOAD BALANCER
+  getFollowedPosts(username: string): Observable<PagedResults<Post>> {
+    return this.http.get<PagedResults<Post>>(environment.apiUrl  + 'posts/followed/' + `${username}`);  // OVO JE ZA LOAD BALANCER
+}
+*/          // OVO JE ZA LOAD BALANCER
 
   getAllPosts(forceRefresh: boolean = false): Observable<PagedResults<Post>> {
     const cached = sessionStorage.getItem('allPosts');

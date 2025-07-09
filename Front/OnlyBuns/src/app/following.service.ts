@@ -5,6 +5,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Following } from './model/following.model';
 import { environment } from './env/enviroment';
+import { PagedResults } from './model/paged-results.model';
 @Injectable({
     providedIn: 'root'
   })
@@ -13,11 +14,14 @@ import { environment } from './env/enviroment';
 
     constructor(private http: HttpClient, private router: Router) { }
 
+getAllFollowing(): Observable<PagedResults<Following>> {
+  return this.http.get<PagedResults<Following>>(environment.apiHost + '/following/all');
+}
 
-    // Dohvati sve korisnike koje je korisnik zapratio
-  getAllFollowedByUsername(username: string): Observable<Following[]> {
-    return this.http.get<Following[]>(`${this.apiUrl}/followed-by/${username}`);
-  }
+// Dohvati sve koje korisnik prati (followed users)
+getAllFollowedByUsername(username: string): Observable<Following[]> {
+  return this.http.get<Following[]>(`${this.apiUrl}/followed-by/${username}`);
+}
 
   // Dohvati sve pratioce korisnika
   getAllFollowersByUsername(username: string): Observable<Following[]> {

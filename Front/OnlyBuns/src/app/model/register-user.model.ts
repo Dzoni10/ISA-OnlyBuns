@@ -13,3 +13,19 @@ export interface RegisterUser{
     postCount: number;
     commentNumber: number;
 }
+
+export interface RegisterUserWithFollowing {
+  id?: number;
+  name: string;
+  surname: string;
+  username: string;
+  password: string;
+  email: string;
+  adress: Location;
+  loginStatus: boolean;
+  isAdmin: boolean;
+  postCount: number;
+  commentNumber: number;
+
+  followingCount?: number;
+}

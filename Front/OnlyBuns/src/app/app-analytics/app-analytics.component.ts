@@ -16,6 +16,7 @@ import { ChangeDetectorRef } from '@angular/core';
   standalone: false
 })
 export class AppAnalyticsComponent implements OnInit {
+public selectedChartType: 'pie' | 'radar' = 'radar'; // podrazumevano
 
   isLoading = true;  // Dodajemo promenljivu za status učitavanja
   posts: Post[] = [];
@@ -35,6 +36,50 @@ export class AppAnalyticsComponent implements OnInit {
   public radialChartLabels: string[] = ['Posted', 'Commented Only', 'Did Nothing'];
   public radialChartData: number[] = [];
   public radialChartType: ChartType = 'pie';  // Postavi na 'pie'
+
+
+public radarChartType: ChartType = 'radar';
+public radarChartOptions: ChartOptions = {
+  responsive: true,
+  scales: {
+    r: {
+      angleLines: { display: true },
+      suggestedMin: 0,
+      suggestedMax: 100,
+      ticks: {
+        stepSize: 20,
+        color: '#555',
+        backdropColor: 'transparent'
+      }
+    }
+  },
+  plugins: {
+    legend: {
+      position: 'top',
+      labels: { font: { size: 14 } }
+    },
+    tooltip: {
+      titleFont: { size: 16 },
+      bodyFont: { size: 14 }
+    }
+  }
+};
+
+public radarChartDataSet: ChartData<'radar'> = {
+  labels: ['Posted', 'Commented Only', 'Did Nothing'],
+  datasets: [
+    {
+      label: 'User Activity',
+      data: this.radialChartData, // [npr. 40, 30, 30]
+      backgroundColor: 'rgba(255, 87, 51, 0.4)',     // BOJA ISPUNE
+      borderColor: 'rgba(255, 87, 51, 1)',           // IVICA POLIGONA
+      pointBackgroundColor: ['#FF5733', '#33FF57', '#3357FF'], // TAČKE U BOJI
+      pointBorderColor: '#fff',
+      pointHoverBackgroundColor: '#fff',
+      pointHoverBorderColor: 'rgba(0,0,0,0.7)'
+    }
+  ]
+};
 
   public radialChartOptions: ChartOptions = {
     responsive: true,
@@ -151,6 +196,7 @@ export class AppAnalyticsComponent implements OnInit {
 
     // Osveži podatke za grafikon
     this.radialChartDataSet.datasets[0].data = this.radialChartData;
+      this.radarChartDataSet.datasets[0].data =  this.radialChartData;
     this.changeDetectorRef.detectChanges();
     this.isLoading = false;  // Kada su podaci učitani, isključujemo indikator učitavanja
     

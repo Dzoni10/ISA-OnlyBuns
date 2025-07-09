@@ -10,10 +10,15 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import rs.ac.uns.ftn.informatika.rest.domain.Comment;
 import rs.ac.uns.ftn.informatika.rest.domain.Following;
+import rs.ac.uns.ftn.informatika.rest.dto.CommentDTO;
+import rs.ac.uns.ftn.informatika.rest.dto.FollowingDTO;
+import rs.ac.uns.ftn.informatika.rest.paged_result.PagedResults;
 import rs.ac.uns.ftn.informatika.rest.service.FollowingService;
 
 import java.time.Duration;
+import java.util.ArrayList; 
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -25,6 +30,22 @@ public class FollowingController {
     private FollowingService followingService;
 
     private final ConcurrentHashMap<String, Bucket> followingBuckets = new ConcurrentHashMap<>();
+
+    @Operation(description = "Get all followings", method = "GET")
+    @GetMapping(value = "/all", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<PagedResults<FollowingDTO>> getAllComments() {
+        List<Following> followings = followingService.findAll();
+
+        List<FollowingDTO> followingDTO = new ArrayList<>();
+        for (Following following : followings) {
+            followingDTO.add(new FollowingDTO(following));
+        }
+
+        PagedResults<FollowingDTO> pagedResults = new PagedResults<>();
+        pagedResults.setResults(followingDTO);
+        pagedResults.setTotalCount(followings.size());
+        return new ResponseEntity<>(pagedResults, HttpStatus.OK);
+    }
 
     @Operation(description = "Get all users followed by a specific username", method = "GET")
     @GetMapping(value = "/followed-by/{username}", produces = MediaType.APPLICATION_JSON_VALUE)

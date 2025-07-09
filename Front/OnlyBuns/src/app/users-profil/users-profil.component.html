@@ -14,7 +14,7 @@
         <th (click)="sortBy('username')" class="sortable-column">Username</th>
         <th (click)="sortBy('email')" class="sortable-column">Email</th>
         <th (click)="sortBy('postCount')" class="sortable-column">Post number</th>
-        <th (click)="sortBy('postCount')" class="sortable-column">Following</th>
+        <th (click)="sortBy('followingCount')" class="sortable-column">Following</th>
         <th (click)="sortBy('isAdmin')" class="sortable-column">Admin</th>
       </tr>
     </thead>
@@ -25,7 +25,7 @@
         <td>{{ user.username }}</td>
         <td>{{ user.email }}</td>
         <td>{{ user.postCount  || 'No posts' }}</td>
-        <td>0</td>
+        <td>{{ user.followingCount || 0 }}</td>
         <td>
           <span *ngIf="user.isAdmin" class="admin-label">Admin</span>
           <button *ngIf="!user.isAdmin" (click)="makeAdmin(user)" class="add-admin-btn">Add Admin</button>
