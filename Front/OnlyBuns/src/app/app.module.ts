@@ -36,6 +36,7 @@ import { ChatsComponent } from './chats/chats.component';
 import { ChatOpenComponent } from './chat-open/chat-open.component';  // Uvoz MatProgressSpinnerModule
 import { MatTooltipModule } from '@angular/material/tooltip'; // Importuj MatTooltipModule
 import { RecommendedLocationsComponent } from './recommended-locations/recommended-locations.component';  // Uvoz MatProgressSpinnerModule
+import { MatRadioModule } from '@angular/material/radio';
 
 
 @NgModule({
@@ -77,7 +78,8 @@ import { RecommendedLocationsComponent } from './recommended-locations/recommend
     MatSnackBarModule,
     NgChartsModule ,
     MatProgressSpinnerModule,  
-    MatTooltipModule
+    MatTooltipModule,
+    MatRadioModule
   ],
   providers: [{
     provide: JWT_OPTIONS,

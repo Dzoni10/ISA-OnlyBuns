@@ -9,7 +9,7 @@ import { Login } from './model/login.model';
 import { environment } from './env/enviroment';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { Registration } from './model/registration.model';
-import { RegisterUser } from './model/register-user.model';
+import { RegisterUser, RegisterUserWithFollowing } from './model/register-user.model';
 import { PagedResults } from './model/paged-results.model';
 
 @Injectable({
@@ -127,8 +127,8 @@ export class LoginService {
   getUsers(): Observable<PagedResults<RegisterUser>>{
     return this.http.get<PagedResults<RegisterUser>>(environment.apiHost +'/users/all');
   }
-  getUsersPagination(page: number): Observable<PagedResults<RegisterUser>>{
-    return this.http.get<PagedResults<RegisterUser>>(environment.apiHost +`/users/users?pageNumber=${page}`);
+  getUsersPagination(page: number): Observable<PagedResults<RegisterUserWithFollowing>>{
+    return this.http.get<PagedResults<RegisterUserWithFollowing>>(environment.apiHost +`/users/users?pageNumber=${page}`);
   }
   getUserForProfile(id: number): Observable<RegisterUser>{
     return this.http.get<RegisterUser>(environment.apiHost + '/users/' + id);
@@ -185,4 +185,5 @@ export class LoginService {
   getUserByEmail(email: string): Observable<RegisterUser> {
   return this.http.get<RegisterUser>(`${environment.apiHost}/users/findByEmail/${email}`);
 }
+
 }

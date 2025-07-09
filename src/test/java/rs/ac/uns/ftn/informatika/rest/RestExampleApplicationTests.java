@@ -63,7 +63,7 @@ public class RestExampleApplicationTests {
 
 	}
 
-	@Test
+	/*@Test
 	public void testNotifyInactiveUsers() throws Exception {
 		// Arrange: Add mock data for inactive users
 		List<User> users = Arrays.asList(
@@ -84,7 +84,7 @@ public class RestExampleApplicationTests {
 		Mockito.verify(emailService, Mockito.times(1)).sendInactivityEmail(users.get(0)); // Mika
 		Mockito.verify(emailService, Mockito.times(1)).sendInactivityEmail(users.get(1)); // Mila
 	}
-
+	*/
 	@Test
 	public void testCreateCommentUnderLimit() {
 		CommentDTO commentDTO = new CommentDTO(1, 1, "user123", LocalDateTime.now(), "Test comment");

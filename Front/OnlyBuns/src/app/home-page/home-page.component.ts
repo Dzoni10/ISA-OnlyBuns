@@ -67,6 +67,8 @@ export class HomePageComponent implements OnInit {
       next: (user) =>{
         if(user&& user.id){
           this.loadUserData(user.id);
+        }else{
+          this.loadAllPost();
         }
       },
       error: (error)=>{
@@ -76,6 +78,19 @@ export class HomePageComponent implements OnInit {
     })
 
     
+  }
+  loadAllPost() {
+ this.postService.getAllPosts().subscribe(
+      (data: PagedResults<Post>) => {
+        this.posts = data.results; // Uzimamo postove iz rezultata
+        this.posts.forEach(post => {
+          this.loadLikes(post);
+        });
+      },
+      (error) => {
+        console.error('Greška pri učitavanju postova', error); // Obrada greške
+      }
+    );
   }
 
   showUsername(username: string): void {
@@ -92,10 +107,8 @@ export class HomePageComponent implements OnInit {
       next: (user) => {
         this.registerUser = user;
             this.loadPosts(); 
-
       },
       error: (error) => {
-        console.error('Greška prilikom učitavanja profila', error);
       }
     });
   }

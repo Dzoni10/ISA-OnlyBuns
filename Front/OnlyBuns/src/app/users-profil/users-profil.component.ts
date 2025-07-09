@@ -1,10 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import { RegisterUser } from '../model/register-user.model';
+import {  RegisterUserWithFollowing } from '../model/register-user.model';
 import { LoginService } from '../login-service.service';
 import { Router } from '@angular/router';
 import { PagedResults } from '../model/paged-results.model';
 import { Post } from '../model/post.model';
 import { PostService } from '../post.service';
+import { FollowingService } from '../following.service';
+import { Following } from '../model/following.model';
 
 @Component({
   selector: 'app-users-profil',
@@ -13,10 +15,10 @@ import { PostService } from '../post.service';
   standalone: false
 })
 export class UsersProfilComponent implements OnInit {
-
-  users: RegisterUser[] = []; 
-  sortDirection: { [key: string]: boolean } = { 'name': true, 'surname': true, 'username': true, 'email': true, 'loginStatus': true };
-  filteredUsers: RegisterUser[] = [];
+  followings: Following[] = [];
+  users: RegisterUserWithFollowing[] = []; 
+  sortDirection: { [key: string]: boolean } = { 'name': true, 'surname': true, 'username': true, 'email': true, 'loginStatus': true, 'followingCount': true };
+  filteredUsers: RegisterUserWithFollowing[] = [];
   isSearchModalOpen: boolean = false;
   emailOptions: string[] = []; 
   surnameOptions: string[] = []; 
@@ -32,28 +34,47 @@ export class UsersProfilComponent implements OnInit {
     minPosts: null,
     maxPosts: null
   };
-  constructor(private postService: PostService,private loginService: LoginService, private router: Router) { }
+  constructor(private postService: PostService,private followingService: FollowingService,private loginService: LoginService, private router: Router) { }
 
   ngOnInit(): void {
     this.loadUsersForPagination(); 
   }
 
-  loadUsersForPagination(): void {
-    this.loginService.getUsersPagination(this.currentPage).subscribe(
-      (data: PagedResults<RegisterUser>) => {
-        this.users = data.results;
-        this.filteredUsers = [...this.users]; // Prvobitno prikazujemo sve korisnike
-        this.nameOptions = this.users.map(user => user.name);
-        this.surnameOptions = this.users.map(user => user.surname);
-        this.emailOptions = this.users.map(user => user.email);
-      },
-      (error) => {
-        console.error('Greška pri učitavanju korisnika', error); // Obrada greške
-      }
-    );
-  }
+ loadUsersForPagination(): void {
+  this.loginService.getUsersPagination(this.currentPage).subscribe(
+    (data: PagedResults<RegisterUserWithFollowing>) => {
+      this.users = data.results;
+      console.log('Dobijeni korisnici:', this.users);
 
-  sortBy(field: keyof RegisterUser): void {
+        this.followingService.getAllFollowing().subscribe(
+        (response: PagedResults<Following>) => {
+         this.followings = response.results;
+
+          this.users.forEach(user => {
+            const count = this.followings.filter(f => f.username === user.username).length;
+            user.followingCount = count;
+          });
+
+          this.filteredUsers = [...this.users];
+          console.log('Filtrirani korisnici:', this.filteredUsers);
+
+          this.nameOptions = this.users.map(user => user.name);
+          this.surnameOptions = this.users.map(user => user.surname);
+          this.emailOptions = this.users.map(user => user.email);
+        },
+        (error) => {
+          console.error('Greška pri učitavanju followinga', error);
+        }
+      );
+    },
+    (error) => {
+      console.error('Greška pri učitavanju korisnika', error);
+    }
+  );
+}
+
+
+  sortBy(field: keyof RegisterUserWithFollowing): void {
     this.sortDirection[field] = !this.sortDirection[field]; // Promena pravca sortiranja za to polje
     this.filteredUsers.sort((a, b) => {
       const aValue = a[field];
@@ -74,7 +95,7 @@ export class UsersProfilComponent implements OnInit {
     });
   }
   
-  makeAdmin(user: RegisterUser): void {
+  makeAdmin(user: RegisterUserWithFollowing): void {
     // Primer logike za ažuriranje korisnika na serveru
     user.isAdmin = true;
     /*
@@ -91,27 +112,50 @@ export class UsersProfilComponent implements OnInit {
     */
   }
   searchUsers(): void {
-    const { name, surname, email, minPosts, maxPosts } = this.searchCriteria;
+  const { name, surname, email, minPosts, maxPosts } = this.searchCriteria;
 
-    this.loginService.searchUsers(
-      name || undefined,
-      surname || undefined,
-      email || undefined,
-      minPosts !== null ? minPosts : undefined,
-      maxPosts !== null ? maxPosts : undefined
-    ).subscribe({
-      next: (result) => {
-        this.users = result.results;
-        this.totalUsers = result.totalCount;
-        this.filteredUsers = [...this.users]; 
-        this.closeSearchModal();
-      },
-      error: (err) => {
-        console.error('Error fetching users:', err);
-      },
-    });
-    
-  }
+  this.loginService.searchUsers(
+    name || undefined,
+    surname || undefined,
+    email || undefined,
+    minPosts !== null ? minPosts : undefined,
+    maxPosts !== null ? maxPosts : undefined
+  ).subscribe(
+    (data: PagedResults<RegisterUserWithFollowing>) => {
+      this.users = data.results;
+      console.log('Pretraga korisnika:', this.users);
+
+      // Učitaj sve followinge
+      this.followingService.getAllFollowing().subscribe(
+        (response: PagedResults<Following>) => {
+          this.followings = response.results;
+
+          // Dodeli followingCount svakom korisniku
+          this.users.forEach(user => {
+            const count = this.followings.filter(f => f.username === user.username).length;
+            user.followingCount = count;
+          });
+
+          this.filteredUsers = [...this.users];
+          this.totalUsers = data.totalCount;
+
+          this.nameOptions = this.users.map(user => user.name);
+          this.surnameOptions = this.users.map(user => user.surname);
+          this.emailOptions = this.users.map(user => user.email);
+
+          this.closeSearchModal();
+        },
+        (error) => {
+          console.error('Greška pri učitavanju followinga', error);
+        }
+      );
+    },
+    (error) => {
+      console.error('Greška pri pretrazi korisnika', error);
+    }
+  );
+}
+
 
   openSearchModal(): void {
     this.isSearchModalOpen = true;
