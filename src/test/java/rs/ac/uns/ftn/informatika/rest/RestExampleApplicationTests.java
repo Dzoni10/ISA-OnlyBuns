@@ -63,6 +63,37 @@ public class RestExampleApplicationTests {
 
 	}
 
+	@Test
+	public void testConcurrentRegistration() throws Throwable {
+		ExecutorService executor = Executors.newFixedThreadPool(2);
+
+		Future<?> future1 = executor.submit(() -> {
+			User user1 = new User("name1","surname1","username","123","email@gmail.com",false,false,0);
+			System.out.println("Startovan Thread 1");
+			userService.save(user1);
+			try { Thread.sleep(5000); } catch (InterruptedException e) { }
+		});
+
+		Future<?> future2 = executor.submit(() -> {
+			User user2 = new User("name2","surname2","username","123","email2@gmail.com",false,false,0);
+			System.out.println("Startovan Thread 2");
+			try { Thread.sleep(200); } catch (InterruptedException e) { }
+			userService.save(user2);
+		});
+
+		executor.shutdown();
+		executor.awaitTermination(10, TimeUnit.SECONDS);
+
+		try {
+			future1.get();
+			future2.get();
+		} catch (ExecutionException e) {
+			System.out.println("Expected exception: " + e.getCause().getClass());
+			// Ovde možeš očekivati DataIntegrityViolationException
+		}
+	}
+
+
 	/*@Test
 	public void testNotifyInactiveUsers() throws Exception {
 		// Arrange: Add mock data for inactive users
