@@ -27,7 +27,7 @@ const routes: Routes = [
   {path: 'profile', component: ProfileComponent, canActivate: [AuthGuard]},
   {path: 'usersprofile', component: UsersProfilComponent, canActivate: [AuthGuard]},
   {path: 'postcreate', component: PostCreationComponent, canActivate: [AuthGuard]},
-  {path: 'user-profile/:username', component: UserProfileComponent, canActivate: [AuthGuard]},
+  {path: 'user-profile/:username', component: UserProfileComponent},
   {path: 'postOnMap', component:MapPostComponent, canActivate:[AuthGuard]},
   {path: 'trends', component:TrendsComponent, canActivate:[AuthGuard]},
   {path: 'recommendedLocations', component:RecommendedLocationsComponent,canActivate:[AuthGuard]}

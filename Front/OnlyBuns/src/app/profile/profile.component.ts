@@ -174,7 +174,7 @@ getUserByID(id: number): Observable<RegisterUser>{
   }
 
   loadPosts(): void {
-      this.postService.getAllPosts().subscribe(
+      this.postService.getAllPosts(true).subscribe(
         (data: PagedResults<Post>) => {
           this.posts = data.results.filter(p=>p.creatorId === this.registerUser?.id); // Uzimamo postove iz rezultata
           this.posts.forEach(post => {
