@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import rs.ac.uns.ftn.informatika.rest.domain.Like;
 import rs.ac.uns.ftn.informatika.rest.dto.LikeDTO;
@@ -71,6 +72,7 @@ public class LikeController {
 
     @Operation(description = "Create new like", method = "POST")
     @PostMapping(value = "/create", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("@userPermissionEvaluator.canInteract(#likeDTO.username)")
     public ResponseEntity<?> createLike(@RequestBody LikeDTO likeDTO) {
         try {
             // Map LikeDTO to Like entity

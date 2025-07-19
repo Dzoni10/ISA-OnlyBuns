@@ -19,6 +19,7 @@ public class RabbitMQPublisher {
         try{
             String jsonMessage = objectMapper.writeValueAsString(message);
             rabbitTemplate.convertAndSend("my-exchange", "routing-key", jsonMessage);
+            System.out.println("Publisher> Sent message to RabbitMQ: " + jsonMessage);
         }catch (JsonProcessingException e) {
             e.printStackTrace();
         }
