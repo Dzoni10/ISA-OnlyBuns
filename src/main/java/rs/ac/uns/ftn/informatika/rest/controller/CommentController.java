@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import rs.ac.uns.ftn.informatika.rest.domain.Comment;
 import rs.ac.uns.ftn.informatika.rest.dto.CommentDTO;
@@ -80,6 +81,7 @@ public class CommentController {
 
     @Operation(description = "Create new comment", method = "POST")
     @PostMapping(value = "/create", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("@userPermissionEvaluator.canInteract(#commentDTO.username)")
     public ResponseEntity<CommentDTO> createComment(@RequestBody CommentDTO commentDTO) {
         Bucket bucket = userBuckets.computeIfAbsent(commentDTO.username, this::newBucket);
 

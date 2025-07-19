@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import rs.ac.uns.ftn.informatika.rest.config.RabbitMQProducer;
@@ -119,6 +120,7 @@ public class PostController {
 
     @Operation(description = "Create new post", method = "POST")
     @PostMapping(value = "/create", consumes = "multipart/form-data", produces = "application/json")
+    @PreAuthorize("@userPermissionEvaluator.canInteract(#username)")
     public ResponseEntity<?> savePost(@RequestParam("creatorId") int creatorId,
                                       @RequestParam("description") String description,
                                       @RequestParam("username") String username,
